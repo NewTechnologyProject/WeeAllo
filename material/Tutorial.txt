@@ -1,0 +1,8 @@
+In Visual Code Clone Source in github
+
+First switch to the "dev" branch
+
+Step 1: Open terminal
+Step 2: run "cd client"
+Step 3: run "npm install"
+Step 4: run "npm start"
