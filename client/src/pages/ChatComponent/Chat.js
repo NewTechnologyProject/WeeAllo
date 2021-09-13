@@ -24,7 +24,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
 }));
 export default function Chat() {
   return (
-    <Page title="Dashboard: Blog | Minimal-UI">
+    <Page title="Chat | WeeAllo">
       <Container maxWidth="100%" style={{ paddingTop: 10 }}>
         <Card>
           <Grid container spacing={1}>
