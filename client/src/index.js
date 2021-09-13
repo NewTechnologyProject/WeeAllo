@@ -4,20 +4,26 @@ import 'simplebar/src/simplebar.css';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-
 //
+
+import { Provider, useSelector } from "react-redux";
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
-
+import { store } from "./reducers/store";
+import { ToastProvider } from "react-toast-notifications";
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
-  <HelmetProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </HelmetProvider>,
+  <Provider store={store}>
+    <ToastProvider autoDismiss={true}>
+      <HelmetProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </HelmetProvider>
+    </ToastProvider>
+  </Provider>,
   document.getElementById('root')
 );
 

@@ -1,7 +1,10 @@
 // material
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Grid, Container, Typography } from '@material-ui/core';
 // components
 import Page from '../components/Page';
+import * as actions from "../actions/customer.action";
+import { useDispatch, useSelector } from "react-redux";
 import {
   AppTasks,
   AppNewUsers,
@@ -20,6 +23,12 @@ import {
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
+  const dispatch = useDispatch();
+  const userProfile = useSelector(state => state.customer.list);
+  useEffect(() => {
+    dispatch(actions.fetchAll())
+  }, [])
+  console.log(userProfile)
   return (
     <Page title="Dashboard | Minimal-UI">
       <Container maxWidth="xl">
