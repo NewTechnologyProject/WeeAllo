@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-WeealloApplication<weeallo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "sv.iuh.weeallo.WeealloApplication",
+            "projectName": "weeallo",
+            "args": ""
+        }
+    ]
+}
