@@ -37,6 +37,8 @@ public class UserChat implements Serializable {
     private String lastname;
     @Column(name = "email")
     private String email;
+    @Column(name = "phone")
+    private String phone;
     @Column(name = "password")
     private String password;
     @Column(name = "isActive")
@@ -187,6 +189,14 @@ public class UserChat implements Serializable {
 
     public void setUserGroupList(List<UserGroup> userGroupList) {
         this.userGroupList = userGroupList;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Override

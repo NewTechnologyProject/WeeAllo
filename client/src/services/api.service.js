@@ -3,9 +3,10 @@ import axios from "axios";
 
 const baseApi = "http://localhost:4000/api/"
 export default {
-    user(url = baseApi + "user/get-all-users") {
+    user(url = baseApi + "user/") {
         return {
-            fetchAll: () => axios.get(url),
+            fetchAll: () => axios.get(url + "get-all-users"),
+            login: (phone, pass) => axios.post(url + "login/" + phone + "&" + pass),
         }
     },
 }

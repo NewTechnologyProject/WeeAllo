@@ -1,10 +1,15 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
+import * as actions from "src/actions/customer.action";
+import { useDispatch, useSelector } from "react-redux";
+import { isAuthenticated } from "src/actions/customer.action";
+import { Button } from '@material-ui/core';
+import { useForm } from 'react-hook-form';
 // material
 import {
   Link,
@@ -22,6 +27,21 @@ import { LoadingButton } from '@material-ui/lab';
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
+  const [phone, setPhone] = useState('');
+  const [pass, setPass] = useState('');
+  const user = useSelector(state => state.customer.login);
+  const { handleSubmit } = useForm({});
+  useEffect(() => {
+    dispatch(actions.login(phone, pass))
+  }, [phone, pass])
+  const onLogin = () => {
+    if (user === '' || user === undefined) {
+      window.alert('Faile')
+    } else {
+      dispatch(isAuthenticated(user.id))
+    }
+  }
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -40,7 +60,7 @@ export default function LoginForm() {
     }
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { values, getFieldProps } = formik;
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -48,16 +68,14 @@ export default function LoginForm() {
 
   return (
     <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <Form autoComplete="off" noValidate onSubmit={handleSubmit(onLogin)}>
         <Stack spacing={3}>
           <TextField
             fullWidth
             autoComplete="username"
             type="email"
-            label="Email address"
-            {...getFieldProps('email')}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
+            label="Phone"
+            onChange={(event) => setPhone(event.target.value)}
           />
 
           <TextField
@@ -65,7 +83,6 @@ export default function LoginForm() {
             autoComplete="current-password"
             type={showPassword ? 'text' : 'password'}
             label="Password"
-            {...getFieldProps('password')}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -75,8 +92,7 @@ export default function LoginForm() {
                 </InputAdornment>
               )
             }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
+            onChange={(event) => setPass(event.target.value)}
           />
         </Stack>
 
@@ -91,15 +107,14 @@ export default function LoginForm() {
           </Link>
         </Stack>
 
-        <LoadingButton
+        <Button
           fullWidth
           size="large"
           type="submit"
           variant="contained"
-          loading={isSubmitting}
         >
           Login
-        </LoadingButton>
+        </Button>
       </Form>
     </FormikProvider>
   );
