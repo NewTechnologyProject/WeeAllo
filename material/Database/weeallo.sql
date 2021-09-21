@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Cấu trúc bảng cho bảng `contact`
 --
+CREATE DATABASE `weeallo`
 
 CREATE TABLE `contact` (
   `id` bigint(20) NOT NULL,

@@ -15,4 +15,7 @@ public class UserService {
     public List<UserChat> getAllUser() {
         return userRepository.findAll();
     }
+    public  UserChat getLogin(String phone, String pass){
+        return  userRepository.getLogin(phone,pass);
+    }
 }
