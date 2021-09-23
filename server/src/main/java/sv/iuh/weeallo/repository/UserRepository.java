@@ -6,8 +6,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sv.iuh.weeallo.models.UserChat;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<UserChat, Long> {
     @Query("Select u from UserChat u where u.phone=:phone and u.password=:password")
     UserChat getLogin(@Param("phone") String phone, @Param("password") String pass);
+    @Query("Select new UserChat(u.id,u.firstname,u.lastname,u.email,u.phone,u.avartar,u.coverImage) from UserChat u where u.phone like %:phone%")
+    List<UserChat> searchFriend(@Param("phone") String phone);
 }

@@ -10,6 +10,7 @@ import Products from './pages/Products';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 import Chat from './pages/ChatComponent/Chat';
+import Contact from './pages/ContactComponent/Contact'
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -21,7 +22,7 @@ export default function Router() {
         { path: '/', element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
-        { path: 'products', element: <Products /> },
+        { path: 'contact', element: <Contact /> },
         { path: 'chat', element: <Chat /> }
       ]
     },

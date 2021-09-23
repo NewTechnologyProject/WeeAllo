@@ -67,6 +67,16 @@ public class UserChat implements Serializable {
     public UserChat() {
     }
 
+    public UserChat(Long id, String firstname, String lastname, String email, String phone, String avartar, String coverImage) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.phone = phone;
+        this.avartar = avartar;
+        this.coverImage = coverImage;
+    }
+
     public UserChat(Long id) {
         this.id = id;
     }

@@ -38,6 +38,13 @@ public class Contact implements Serializable {
     @ManyToOne
     private UserChat receiveId;
 
+    public Contact(Long id, String status, UserChat sendId, UserChat receiveId) {
+        this.id = id;
+        this.status = status;
+        this.sendId = sendId;
+        this.receiveId = receiveId;
+    }
+
     public Contact() {
     }
 
