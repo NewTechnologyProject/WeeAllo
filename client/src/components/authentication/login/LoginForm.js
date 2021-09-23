@@ -32,14 +32,17 @@ export default function LoginForm() {
   const [pass, setPass] = useState('');
   const user = useSelector(state => state.customer.login);
   const { handleSubmit } = useForm({});
+
   useEffect(() => {
     dispatch(actions.login(phone, pass))
   }, [phone, pass])
+
   const onLogin = () => {
     if (user === '' || user === undefined) {
-      window.alert('Faile')
+      window.alert('Fail')
     } else {
       dispatch(isAuthenticated(user.id))
+      navigate('/dashboard', { replace: true });
     }
   }
 
