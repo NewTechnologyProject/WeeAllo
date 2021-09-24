@@ -21,7 +21,7 @@ const sidebarConfig = [
     icon: getIcon(peopleFill)
   },
   {
-    path: '/dashboard/products',
+    path: '/dashboard/contact',
     icon: getIcon(shoppingBagFill)
   },
   {
