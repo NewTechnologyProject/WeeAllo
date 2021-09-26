@@ -8,11 +8,8 @@ export default {
         return {
             fetchAll: () => axios.get(url + "get-all-users"),
             login: (phone, pass) => axios.post(url + "login/" + phone + "&" + pass),
-<<<<<<< HEAD
-            findByIdUser: (id) => axios.get(url + "get-user/" + id)
-=======
-            register:(phone,password,firstname,lastname)=>axios.post(url + "register/" + phone + "&" + password + "&" + firstname + "&" + lastname),
->>>>>>> d8cd84bea923e4c0b98a8a1232ae283dd06df693
+            findByIdUser: (id) => axios.get(url + "get-user/" + id),
+            register: (phone, password, firstname, lastname) => axios.post(url + "register/" + phone + "&" + password + "&" + firstname + "&" + lastname),
         }
     },
     contact(url = baseApi + "contact/") {

@@ -621,7 +621,7 @@ export default function SearchContact() {
                                         <img src={imageUrl} alt="img" style={{ width: '50%' }} />
                                     </a>) : null}
                             </Grid>
-                            {genderQR()}
+                            {/* {genderQR()} */}
                         </div>
                     )}
                 </DialogContent>

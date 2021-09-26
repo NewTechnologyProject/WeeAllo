@@ -14,31 +14,31 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
     @GetMapping("/get-all-users")
     public List<UserChat> getAllUser() {
         return userService.getAllUser();
     }
+
     @PostMapping("/login/{phone}&{password}")
     public UserChat userLogin(@PathVariable("phone") String phone, @PathVariable("password") String pass) {
-        UserChat userChat=userService.getLogin(phone, pass);
-        if(userChat==null){
+        UserChat userChat = userService.getLogin(phone, pass);
+        if (userChat == null) {
             return null;
-        }else {
+        } else {
             return userChat;
         }
     }
-<<<<<<< HEAD
+
     @GetMapping("/get-user/{id}")
     public UserChat getUser(@PathVariable("id") Long id) {
         return userService.getById(id);
     }
-=======
+
     @PostMapping("/register/{phone}&{password}&{firstname}&{lastname}")
-    public String userRegister(@PathVariable("phone") String phone,@PathVariable("password") String password,
-                             @PathVariable("firstname") String firstname,@PathVariable("lastname") String lastname){
-        userService.userRegister(phone,password,firstname,lastname);
+    public String userRegister(@PathVariable("phone") String phone, @PathVariable("password") String password,
+            @PathVariable("firstname") String firstname, @PathVariable("lastname") String lastname) {
+        userService.userRegister(phone, password, firstname, lastname);
         return "register successfully";
     }
-    
->>>>>>> d8cd84bea923e4c0b98a8a1232ae283dd06df693
 }
