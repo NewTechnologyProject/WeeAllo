@@ -7,6 +7,7 @@ export default {
         return {
             fetchAll: () => axios.get(url + "get-all-users"),
             login: (phone, pass) => axios.post(url + "login/" + phone + "&" + pass),
+            register:(phone,password,firstname,lastname)=>axios.post(url + "register/" + phone + "&" + password + "&" + firstname + "&" + lastname),
         }
     },
 }

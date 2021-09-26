@@ -18,8 +18,8 @@ public class UserController {
     public List<UserChat> getAllUser() {
         return userService.getAllUser();
     }
-    @PostMapping("/login/{phone}&{pass}")
-    public UserChat getAllUser(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
+    @PostMapping("/login/{phone}&{password}")
+    public UserChat userLogin(@PathVariable("phone") String phone, @PathVariable("password") String pass) {
         UserChat userChat=userService.getLogin(phone, pass);
         if(userChat==null){
             return null;
@@ -27,4 +27,11 @@ public class UserController {
             return userChat;
         }
     }
+    @PostMapping("/register/{phone}&{password}&{firstname}&{lastname}")
+    public String userRegister(@PathVariable("phone") String phone,@PathVariable("password") String password,
+                             @PathVariable("firstname") String firstname,@PathVariable("lastname") String lastname){
+        userService.userRegister(phone,password,firstname,lastname);
+        return "register successfully";
+    }
+    
 }

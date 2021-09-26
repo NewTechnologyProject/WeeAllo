@@ -15,6 +15,7 @@ export const userlogout = () => {
 export const ACTION_TYPES = {
     LOGIN: 'LOGIN',
     FETCH_ALL: 'FETCH_ALL',
+    REGISTER:'REGISTER'
 }
 export const login = (phone, pass) => dispatch => {
     apiService.user().login(phone, pass)
@@ -28,6 +29,19 @@ export const login = (phone, pass) => dispatch => {
             err => console.log(err)
         )
 }
+export const register = (phone,password,firstname,lastname) =>dispatch =>{
+    apiService.user().register(phone,password,firstname,lastname)
+        .then(response=>{
+            dispatch({
+                type:ACTION_TYPES.REGISTER,
+                payload:response.data
+            })
+        })
+        .catch(
+            err=>console.log(err)
+        )
+}
+
 export const fetchAll = () => dispatch => {
     apiService.user().fetchAll()
         .then(response => {

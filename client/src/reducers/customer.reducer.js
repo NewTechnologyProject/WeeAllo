@@ -28,6 +28,11 @@ export const customerReducer = (state = initialState, action) => {
                 ...state,
                 login: action.payload
             }
+        case ACTION_TYPES.REGISTER:
+            return{
+                ...state,
+                register:action.payload
+            }    
         case 'AUTHENTICATE_SIGNAL': {
             if (localStorage.getItem(SET_USER_AUTHENTICATE) === 'undefined') {
                 localStorage.setItem(SET_USER_AUTHENTICATE, JSON.stringify(action.userExitedid))

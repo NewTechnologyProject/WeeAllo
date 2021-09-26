@@ -18,5 +18,8 @@ public class UserService {
     public  UserChat getLogin(String phone, String pass){
         return  userRepository.getLogin(phone,pass);
     }
+    public void userRegister(String phone,String password,String firstname,String lastname){
+         userRepository.userRegister(phone,password,firstname,lastname);
+    }
 
 }
