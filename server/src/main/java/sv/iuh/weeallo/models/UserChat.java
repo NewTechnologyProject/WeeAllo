@@ -53,6 +53,8 @@ public class UserChat implements Serializable {
     private String avartar;
     @Column(name = "coverImage")
     private String coverImage;
+    @Column(name = "status")
+    private String status;
     @OneToMany(mappedBy = "sendId")
     private List<Contact> contactList;
     @OneToMany(mappedBy = "receiveId")
@@ -65,6 +67,18 @@ public class UserChat implements Serializable {
     private List<UserGroup> userGroupList;
 
     public UserChat() {
+    }
+
+
+    public UserChat(Long id, String firstname, String lastname, String email, String phone, String avartar, String coverImage, String status) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.phone = phone;
+        this.avartar = avartar;
+        this.coverImage = coverImage;
+        this.status = status;
     }
 
     public UserChat(Long id, String firstname, String lastname, String email, String phone, String avartar, String coverImage) {
@@ -80,7 +94,13 @@ public class UserChat implements Serializable {
     public UserChat(Long id) {
         this.id = id;
     }
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public Long getId() {
         return id;
     }

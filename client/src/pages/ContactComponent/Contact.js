@@ -7,6 +7,8 @@ import Page from 'src/components/Page';
 import { Container, Stack, Typography } from '@material-ui/core';
 import SearchContact from './Search';
 import AllContact from './AllContact';
+import AllSend from './AllSend';
+import AllReceive from './AllReceive';
 // components
 
 // ----------------------------------------------------------------------
@@ -64,8 +66,8 @@ export default function Contact() {
                         </Box>
                         <TabPanel value="1"><SearchContact /></TabPanel>
                         <TabPanel value="2"><AllContact /></TabPanel>
-                        <TabPanel value="3">Item Three</TabPanel>
-                        <TabPanel value="4">Item Three</TabPanel>
+                        <TabPanel value="3"><AllSend /></TabPanel>
+                        <TabPanel value="4"><AllReceive /></TabPanel>
                     </TabContext>
                 </Box>
             </Container>

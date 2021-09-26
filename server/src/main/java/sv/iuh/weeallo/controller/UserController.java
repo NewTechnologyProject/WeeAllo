@@ -27,4 +27,8 @@ public class UserController {
             return userChat;
         }
     }
+    @GetMapping("/get-user/{id}")
+    public UserChat getUser(@PathVariable("id") Long id) {
+        return userService.getById(id);
+    }
 }
