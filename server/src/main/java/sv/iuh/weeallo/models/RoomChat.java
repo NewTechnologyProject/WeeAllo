@@ -47,6 +47,14 @@ public class RoomChat implements Serializable {
     public RoomChat() {
     }
 
+    public RoomChat(Long id, Long creator, String roomName, String createAt, String email) {
+        this.id = id;
+        this.creator = creator;
+        this.roomName = roomName;
+        this.createAt = createAt;
+        this.email = email;
+    }
+
     public RoomChat(Long id) {
         this.id = id;
     }

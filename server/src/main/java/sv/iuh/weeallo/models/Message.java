@@ -31,6 +31,8 @@ public class Message implements Serializable {
     private Long id;
     @Column(name = "status")
     private String status;
+    @Column(name="content")
+    private String content;
     @JoinColumn(name = "roomChatId", referencedColumnName = "id")
     @ManyToOne
     private RoomChat roomChatId;
@@ -39,6 +41,14 @@ public class Message implements Serializable {
     private UserChat userId;
 
     public Message() {
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Message(Long id) {

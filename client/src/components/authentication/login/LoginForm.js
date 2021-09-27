@@ -1,15 +1,15 @@
-import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useFormik, Form, FormikProvider } from 'formik';
-import { Icon } from '@iconify/react';
-import eyeFill from '@iconify/icons-eva/eye-fill';
-import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
+import * as Yup from "yup";
+import { useState, useEffect } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useFormik, Form, FormikProvider } from "formik";
+import { Icon } from "@iconify/react";
+import eyeFill from "@iconify/icons-eva/eye-fill";
+import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
 import * as actions from "src/actions/customer.action";
 import { useDispatch, useSelector } from "react-redux";
 import { isAuthenticated } from "src/actions/customer.action";
-import { Button } from '@material-ui/core';
-import { useForm } from 'react-hook-form';
+import { Button } from "@material-ui/core";
+import { useForm } from "react-hook-form";
 // material
 import {
   Link,
@@ -18,9 +18,9 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  FormControlLabel
-} from '@material-ui/core';
-import { LoadingButton } from '@material-ui/lab';
+  FormControlLabel,
+} from "@material-ui/core";
+import { LoadingButton } from "@material-ui/lab";
 
 // ----------------------------------------------------------------------
 
@@ -28,36 +28,43 @@ export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
-  const [phone, setPhone] = useState('');
-  const [pass, setPass] = useState('');
-  const user = useSelector(state => state.customer.login);
+  const [phone, setPhone] = useState("");
+  const [pass, setPass] = useState("");
+  const user = useSelector((state) => state.customer.login);
   const { handleSubmit } = useForm({});
+
   useEffect(() => {
-    dispatch(actions.login(phone, pass))
-  }, [phone, pass])
+    dispatch(actions.login(phone, pass));
+  }, [phone, pass]);
+
   const onLogin = () => {
-    if (user === '' || user === undefined) {
-      window.alert('Faile')
+    if (!user) {
+      window.alert("Fail");
     } else {
-      dispatch(isAuthenticated(user.id))
+      const { id, firstname, email } = user;
+      dispatch(isAuthenticated(id));
+      //redirect to dashboard
+      navigate("/dashboard");
     }
-  }
+  };
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    email: Yup.string()
+      .email("Email must be a valid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
   });
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
-      remember: true
+      email: "",
+      password: "",
+      remember: true,
     },
     validationSchema: LoginSchema,
     onSubmit: () => {
-      navigate('/dashboard', { replace: true });
-    }
+      navigate("/dashboard", { replace: true });
+    },
   });
 
   const { values, getFieldProps } = formik;
@@ -81,7 +88,7 @@ export default function LoginForm() {
           <TextField
             fullWidth
             autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             label="Password"
             InputProps={{
               endAdornment: (
@@ -90,15 +97,25 @@ export default function LoginForm() {
                     <Icon icon={showPassword ? eyeFill : eyeOffFill} />
                   </IconButton>
                 </InputAdornment>
-              )
+              ),
             }}
             onChange={(event) => setPass(event.target.value)}
           />
         </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ my: 2 }}
+        >
           <FormControlLabel
-            control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
+            control={
+              <Checkbox
+                {...getFieldProps("remember")}
+                checked={values.remember}
+              />
+            }
             label="Remember me"
           />
 
@@ -107,12 +124,7 @@ export default function LoginForm() {
           </Link>
         </Stack>
 
-        <Button
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-        >
+        <Button fullWidth size="large" type="submit" variant="contained">
           Login
         </Button>
       </Form>
