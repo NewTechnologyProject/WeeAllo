@@ -17,7 +17,6 @@ public interface UserRepository extends JpaRepository<UserChat, Long> {
 
     @Query("Select new UserChat(u.id,u.firstname,u.lastname,u.email,u.phone,u.avartar,u.coverImage) from UserChat u where u.phone like %:phone%")
     List<UserChat> searchFriend(@Param("phone") String phone);
-<<<<<<< HEAD
 
     @Query("Select new UserChat(u.id,u.firstname,u.lastname,u.email,u.phone,u.avartar,u.coverImage,u.status) from UserChat u")
     List<UserChat> getAllUser();
@@ -27,10 +26,8 @@ public interface UserRepository extends JpaRepository<UserChat, Long> {
 
     @Query("Select new UserChat(u.id,u.firstname,u.lastname,u.email,u.phone,u.avartar,u.coverImage,u.status) from UserChat u where u.id=:id")
     UserChat findContactById(@Param("id") Long id);
-=======
     @Transactional
     @Modifying
     @Query(value="Insert into user_chat(phone,password,firstname,lastname) values (?1,?2,?3,?4)",nativeQuery = true)
     void userRegister(String phone,String password, String firstname, String lastname);
->>>>>>> d8cd84bea923e4c0b98a8a1232ae283dd06df693
 }
