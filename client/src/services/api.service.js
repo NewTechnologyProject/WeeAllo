@@ -9,7 +9,7 @@ export default {
             fetchAll: () => axios.get(url + "get-all-users"),
             login: (phone, pass) => axios.post(url + "login/" + phone + "&" + pass),
             findByIdUser: (id) => axios.get(url + "get-user/" + id),
-            register: (phone, password, firstname, lastname) => axios.post(url + "register/" + phone + "&" + password + "&" + firstname + "&" + lastname),
+            addUser: userChat => axios.post(url+"register", userChat),
         }
     },
     contact(url = baseApi + "contact/") {

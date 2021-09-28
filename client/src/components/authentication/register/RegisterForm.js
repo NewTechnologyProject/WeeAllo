@@ -1,12 +1,12 @@
 import * as Yup from "yup";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { useFormik, Form, FormikProvider } from "formik";
 import eyeFill from "@iconify/icons-eva/eye-fill";
 import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as actions from "src/actions/customer.action";
+import useForm from "./useForm";
 // material
 import {
   Stack,
@@ -27,35 +27,53 @@ export default function RegisterForm() {
   const [firstName, setFirstname] = useState("");
   const [lastName, setLastname] = useState("");
 
-  const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
-      .required("First name required"),
-    lastName: Yup.string()
-      .min(2, "Too Short!")
-      .max(50, "Too Long!")
-      .required("Last name required"),
-    phone: Yup.string()
-      .email("Email must be a valid email address")
-      .required("Email is required"),
-    password: Yup.string().required("Password is required"),
-  });
+  const initialFieldValues = {
+    firstname: "",
+    lastname: "",
+    email: null,
+    phone: "",
+    password: "",
+    isActive: "false",
+    createAt: null,
+    updateAt: null,
+    avartar: "access/UserImage/user.png",
+    coverImage: null,
+    status: null,
+    contactList: null,
+    contactList1: null,
+    toDoUserList: null,
+    messageList: null,
+    userGroupList: null,
+  };
 
-  const formik = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      phone: "",
-      password: "",
-    },
-    validationSchema: RegisterSchema,
-    onSubmit: () => {
-      navigate("/dashboard", { replace: true });
-    },
-  });
+  const validate = (fieldValues = values) => {
+    let temp = { ...errors };
+    if ("firstname" in fieldValues)
+      temp.firstname = fieldValues.firstname ? "" : "Họ không được để rỗng.";//toán tử 3 ngôi
+    if ("lastname" in fieldValues)
+      temp.lastname = fieldValues.lastname ? "" : "Tên không được để rỗng.";
+    if ("phone" in fieldValues)
+      temp.phone = fieldValues.phone ? "" : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
+    if("password" in fieldValues)
+      temp.password=fieldValues.password ? "":"Mật khẩu không được để trống";
+   
+    setErrors({
+      ...temp,
+    });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+    if (fieldValues == values) return Object.values(temp).every((x) => x == "");
+  };
+
+  const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
+    useForm(initialFieldValues, validate);
+
+    const handleSubmit = e => {
+      e.preventDefault()
+      if (validate()) {
+        dispatch(actions.register(values))
+        navigate('/registerotp', { replace: true });
+      }
+  }    
 
   const register = () => {
     //e.preventDefault();
@@ -65,68 +83,75 @@ export default function RegisterForm() {
   };
 
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={register}>
-        <Stack spacing={3}>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <TextField
-              fullWidth
-              label="First name"
-              {...getFieldProps("firstName")}
-              value={firstName}
-              onChange={(e) => setFirstname(e.target.value)}
-            />
-
-            <TextField
-              fullWidth
-              label="Last name"
-              value={lastName}
-              onChange={(e) => setLastname(e.target.value)}
-            />
-          </Stack>
-
+    <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <Stack spacing={3}>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           <TextField
             fullWidth
-            autoComplete="username"
-            label="Phone number"
-            {...getFieldProps("phone")}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            label="Họ"
+            name="firstname"
+            value={values.firstname}
+            onChange={handleInputChange}
+            {...(errors.firstname && {
+              error: true,
+              helperText: errors.firstname,
+            })}
           />
 
           <TextField
             fullWidth
-            autoComplete="current-password"
-            type={showPassword ? "text" : "password"}
-            label="Password"
-            {...getFieldProps("password")}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    edge="end"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                  >
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            label="Tên"
+            name="lastname"
+            value={values.lastname}
+            onChange={handleInputChange}
+            {...(errors.lastname && {
+              error: true,
+              helperText: errors.lastname,
+            })}
           />
-
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-           
-          >
-            Register
-          </LoadingButton>
         </Stack>
-      </Form>
-    </FormikProvider>
+
+        <TextField
+          fullWidth
+          label="Số điện thoại"
+          name="phone"
+          value={values.phone}
+            onChange={handleInputChange}
+            {...(errors.phone && {
+              error: true,
+              helperText: errors.phone,
+            })}
+        />
+
+        <TextField
+          fullWidth
+          type={showPassword ? "text" : "password"}
+          label="Mật khẩu"
+          name="password"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  edge="end"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          value={values.password}
+            onChange={handleInputChange}
+            {...(errors.password && {
+              error: true,
+              helperText: errors.password,
+            })}
+        />
+
+        <LoadingButton fullWidth size="large" type="submit" variant="contained">
+          Register
+        </LoadingButton>
+      </Stack>
+    </form>
   );
 }

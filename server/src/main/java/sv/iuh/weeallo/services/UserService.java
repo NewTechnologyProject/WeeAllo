@@ -1,5 +1,6 @@
 package sv.iuh.weeallo.services;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sv.iuh.weeallo.models.UserChat;
@@ -24,7 +25,7 @@ public class UserService {
         return userRepository.findContactById(id);
     }
 
-    public void userRegister(String phone, String password, String firstname, String lastname) {
-        userRepository.userRegister(phone, password, firstname, lastname);
+    public UserChat userRegister(UserChat userChat) {
+        return userRepository.save(userChat);
     }
 }

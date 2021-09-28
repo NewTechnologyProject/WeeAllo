@@ -12,6 +12,7 @@ const initialState = {
     isAuthenticated: null,
     userAuth: userAuth,
     list: [],
+    register:null
 }
 
 

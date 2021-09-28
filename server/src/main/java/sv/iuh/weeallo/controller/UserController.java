@@ -35,10 +35,9 @@ public class UserController {
         return userService.getById(id);
     }
 
-    @PostMapping("/register/{phone}&{password}&{firstname}&{lastname}")
-    public String userRegister(@PathVariable("phone") String phone, @PathVariable("password") String password,
-            @PathVariable("firstname") String firstname, @PathVariable("lastname") String lastname) {
-        userService.userRegister(phone, password, firstname, lastname);
-        return "register successfully";
+    @PostMapping("/register")
+    public UserChat userRegister(@RequestBody UserChat userChat) {
+        userService.userRegister(userChat);
+        return userChat;
     }
 }

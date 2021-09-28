@@ -29,8 +29,8 @@ export const login = (phone, pass) => dispatch => {
             err => console.log(err)
         )
 }
-export const register = (phone,password,firstname,lastname) =>dispatch =>{
-    apiService.user().register(phone,password,firstname,lastname)
+export const register = (userChat) =>dispatch =>{
+    apiService.user().addUser(userChat)
         .then(response=>{
             dispatch({
                 type:ACTION_TYPES.REGISTER,
@@ -42,6 +42,7 @@ export const register = (phone,password,firstname,lastname) =>dispatch =>{
         )
 }
 
+///
 export const fetchAll = () => dispatch => {
     apiService.user().fetchAll()
         .then(response => {
