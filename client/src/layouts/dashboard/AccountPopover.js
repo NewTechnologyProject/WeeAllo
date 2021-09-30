@@ -3,7 +3,10 @@ import { useRef, useState } from "react";
 import homeFill from "@iconify/icons-eva/home-fill";
 import personFill from "@iconify/icons-eva/person-fill";
 import settings2Fill from "@iconify/icons-eva/settings-2-fill";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import * as actions from "src/actions/customer.action";
+import UserDetail from "./../../pages/UserDetail";
 // material
 import { alpha } from "@material-ui/core/styles";
 import {
@@ -29,9 +32,9 @@ const MENU_OPTIONS = [
     linkTo: "/",
   },
   {
-    label: "Profile",
+    label: "Thông tin cá nhân",
     icon: personFill,
-    linkTo: "#",
+    linkTo: "userdetail",
   },
   {
     label: "Settings",
@@ -44,14 +47,28 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const accountInfo = account();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [openPop, setOpenPop] = useState(false);
 
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const logout = () => {
+    dispatch(actions.userlogout());
+    navigate("/login", { replace: true });
+  };
+  const openPopup = () => {
+    if (openPop === false) {
+      setOpenPop(true);
+    } else {
+      setOpenPop(false);
+    }
   };
 
   return (
@@ -117,10 +134,18 @@ export default function AccountPopover() {
             {option.label}
           </MenuItem>
         ))}
-
+        {/* <Box
+          sx={{
+            p: 2,
+            pt: 1.5,
+          }}
+          icon={personFill}
+        >
+          <Button onClick={openPopup}>Thông tin cá nhân</Button>
+        </Box> */}
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined">
-            Logout
+          <Button fullWidth color="inherit" variant="outlined" onClick={logout}>
+            Đăng xuất
           </Button>
         </Box>
       </MenuPopover>

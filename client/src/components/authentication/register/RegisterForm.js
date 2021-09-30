@@ -49,14 +49,18 @@ export default function RegisterForm() {
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
     if ("firstname" in fieldValues)
-      temp.firstname = fieldValues.firstname ? "" : "Họ không được để rỗng.";//toán tử 3 ngôi
+      temp.firstname = fieldValues.firstname ? "" : "Họ không được để rỗng."; //toán tử 3 ngôi
     if ("lastname" in fieldValues)
       temp.lastname = fieldValues.lastname ? "" : "Tên không được để rỗng.";
     if ("phone" in fieldValues)
-      temp.phone = fieldValues.phone ? "" : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
-    if("password" in fieldValues)
-      temp.password=fieldValues.password ? "":"Mật khẩu không được để trống";
-   
+      temp.phone = fieldValues.phone
+        ? ""
+        : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
+    if ("password" in fieldValues)
+      temp.password = fieldValues.password
+        ? ""
+        : "Mật khẩu không được để trống";
+
     setErrors({
       ...temp,
     });
@@ -67,13 +71,13 @@ export default function RegisterForm() {
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
     useForm(initialFieldValues, validate);
 
-    const handleSubmit = e => {
-      e.preventDefault()
-      if (validate()) {
-        dispatch(actions.register(values))
-        navigate('/registerotp', { replace: true });
-      }
-  }    
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      dispatch(actions.register(values));
+      navigate("/registerotp", { replace: true });
+    }
+  };
 
   const register = () => {
     //e.preventDefault();
@@ -116,11 +120,11 @@ export default function RegisterForm() {
           label="Số điện thoại"
           name="phone"
           value={values.phone}
-            onChange={handleInputChange}
-            {...(errors.phone && {
-              error: true,
-              helperText: errors.phone,
-            })}
+          onChange={handleInputChange}
+          {...(errors.phone && {
+            error: true,
+            helperText: errors.phone,
+          })}
         />
 
         <TextField
@@ -141,15 +145,15 @@ export default function RegisterForm() {
             ),
           }}
           value={values.password}
-            onChange={handleInputChange}
-            {...(errors.password && {
-              error: true,
-              helperText: errors.password,
-            })}
+          onChange={handleInputChange}
+          {...(errors.password && {
+            error: true,
+            helperText: errors.password,
+          })}
         />
 
         <LoadingButton fullWidth size="large" type="submit" variant="contained">
-          Register
+          Đăng kí
         </LoadingButton>
       </Stack>
     </form>
