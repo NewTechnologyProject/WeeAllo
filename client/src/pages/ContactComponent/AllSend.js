@@ -2,22 +2,22 @@ import { Grid, TextField } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from "react";
 import * as actions from "../../actions/contact.action";
 import { Card, CardActions, CardContent, CardMedia, Button, Typography } from '@material-ui/core';
+import { useDispatch, useSelector } from "react-redux";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { useDispatch, useSelector } from "react-redux";
 import userAvatar from 'src/access/UserImage/user.png';
 import { Search } from '@material-ui/icons';
 import Snackbar from '@material-ui/core/Snackbar';
 
-export default function AllContact() {
+export default function AllSend() {
     const dispatch = useDispatch();
-    const allContact = useSelector(state => state.contact.listcontact);
+    const allSend = useSelector(state => state.contact.listSend);
     const user = useSelector(state => state.customer.userAuth);
-    const [contact, setContact] = useState([])
     const [open, setOpen] = React.useState(false);
+    const [sendContact, setSendContact] = useState([])
     const [idDelete, setIdDelete] = useState(0);
     const [openToast, setOpenToast] = React.useState(false);
     const handleClick = () => {
@@ -35,33 +35,32 @@ export default function AllContact() {
         setOpenToast(false);
     };
 
+
     const handleClose = () => {
         setOpen(false);
     };
     useEffect(() => {
-        dispatch(actions.fetchAllContact(user))
+        dispatch(actions.fetchSendContact(user))
     }, [])
     useEffect(() => {
-        setContact(allContact)
-    }, [allContact])
-    console.log(contact)
-    console.log(user)
-    const genderListAllContact = () => {
-        if (!contact.length) {
+        setSendContact(allSend)
+    }, [allSend])
+    console.log(sendContact)
+    const genderListSendContact = () => {
+        if (!sendContact.length) {
             return (
                 <div style={{ width: '100%', textAlign: 'center' }}>
                     <Search fontSize="large" />
                     <Typography variant="h5">
-                        Không tìm thấy bạn bè nào
+                        Không tìm thấy lời mời nào đã gửi
                     </Typography>
                 </div>
             )
         }
         else {
             return (
-
                 <Grid container style={{ display: 'flex', position: 'inherit' }}>
-                    {contact.map((record, index) =>
+                    {sendContact.map((record, index) =>
                         <Grid item xs={6} sm={12} md={3} style={{ padding: 10 }} key={index}>
                             <Card >
                                 <CardMedia
@@ -86,7 +85,7 @@ export default function AllContact() {
                                         onClick={(ev) => {
                                             handleClickOpen(record.id);
                                         }}
-                                    >Hủy Kết Bạn</Button>
+                                    >Hủy Lời Mời</Button>
                                 </CardActions>
                             </Card>
                         </Grid>
@@ -97,7 +96,7 @@ export default function AllContact() {
     }
     return (
         <div style={{ height: '100%', padding: '20px', width: '100%', display: 'flex', position: 'inherit' }}>
-            {genderListAllContact()}
+            {genderListSendContact()}
             <Dialog
                 open={open}
                 onClose={handleClose}
@@ -107,19 +106,19 @@ export default function AllContact() {
                 <DialogTitle>{""}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Người này sẽ không còn liên hệ <br /> với bạn
+                        Xóa lời mời kết bạn của người này
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button
                         style={{ fontSize: 10, backgroundColor: 'rgb(180, 0, 0)', color: 'white' }}
                         onClick={() => {
-                            dispatch(actions.deleteAllContact(user, idDelete))
-                            handleClick()
+                            dispatch(actions.deleteSendContact(user, idDelete));
+                            handleClick();
                             handleClose();
                         }}
                         color="primary">
-                        Xóa kết bạn
+                        Xóa lời mời
                     </Button>
                     <Button style={{ fontSize: 10, backgroundColor: '#C67732 ', color: 'white' }} onClick={handleClose} color="primary" autoFocus>
                         Hủy
@@ -134,8 +133,7 @@ export default function AllContact() {
                     horizontal: 'right'
                 }}
                 onClose={handleCloseToast}
-
-                message="Đã từ chối lời đề nghị kết bạn"
+                message="Đã hủy yêu cầu kết bạn với người này"
             />
         </div >
     );
