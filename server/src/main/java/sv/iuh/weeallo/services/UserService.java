@@ -15,11 +15,19 @@ public class UserService {
     private UserRepository userRepository;
 
     public List<UserChat> getAllUser() {
-        return userRepository.findAll();
+        return userRepository.getAllUser();
     }
 
-    public  UserChat getLogin(String phone, String pass){
-        return  userRepository.getLogin(phone,pass);
+    public UserChat getLogin(String phone, String pass) {
+        return userRepository.getLogin(phone, pass);
+    }
+
+    public UserChat getById(Long id) {
+        return userRepository.findContactById(id);
+    }
+
+    public UserChat userRegister(UserChat userChat) {
+        return userRepository.save(userChat);
     }
 
     public UserChat getUserById(Long userId){

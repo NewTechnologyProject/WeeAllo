@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import sv.iuh.weeallo.models.Message;
 import sv.iuh.weeallo.models.RoomChat;
 import sv.iuh.weeallo.models.UserChat;
-import sv.iuh.weeallo.repository.MessageRepository;
 import sv.iuh.weeallo.services.MessageService;
 import sv.iuh.weeallo.services.RoomChatService;
 
@@ -40,7 +39,7 @@ public class RoomChatController {
                         message.getUserId().getLastname(), message.getUserId().getEmail(), message.getUserId().getPhone(),
                         message.getUserId().getPassword(),message.getUserId().getIsActive(),
                         message.getUserId().getCreateAt(), message.getUserId().getUpdateAt(), message.getUserId().getAvartar(),
-                        message.getUserId().getCoverImage());
+                        message.getUserId().getCoverImage(), message.getUserId().getStatus());
 
                 newListMessages.add(new Message(message.getId(), message.getStatus(), message.getContent(), roomChat, user));
             }

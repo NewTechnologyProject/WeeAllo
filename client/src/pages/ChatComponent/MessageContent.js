@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) =>
 export default function App(props) {
   const classes = useStyles();
   const userId = localStorage.getItem("user_authenticated");
-  console.log(userId);
 
   return (
     <div className={classes.container}>

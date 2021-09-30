@@ -13,20 +13,29 @@ const initialState = {
   userAuth: userAuth,
   list: [],
   listRooms: [],
+  register: null,
 };
 
 export const customerReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ACTION_TYPES.FETCH_ALL:
+    case ACTION_TYPES.FETCH_ALL: {
       return {
         ...state,
         list: [...action.payload],
       };
-    case ACTION_TYPES.LOGIN:
+    }
+    case ACTION_TYPES.LOGIN: {
       return {
         ...state,
         login: action.payload,
       };
+    }
+    case ACTION_TYPES.REGISTER: {
+      return {
+        ...state,
+        register: action.payload,
+      };
+    }
     case "AUTHENTICATE_SIGNAL": {
       if (localStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
         localStorage.setItem(
@@ -56,7 +65,7 @@ export const customerReducer = (state = initialState, action) => {
         userAuth: "undefined",
       };
     }
-    //Get list rooms action
+    //Get list rooms
     case "LIST ROOMS": {
       return {
         ...state,

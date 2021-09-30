@@ -38,13 +38,11 @@ export default function LoginForm() {
   }, [phone, pass]);
 
   const onLogin = () => {
-    if (!user) {
+    if (user === "" || user === undefined) {
       window.alert("Fail");
     } else {
-      const { id, firstname, email } = user;
-      dispatch(isAuthenticated(id));
-      //redirect to dashboard
-      navigate("/dashboard");
+      dispatch(isAuthenticated(user.id));
+      navigate("/dashboard", { replace: true });
     }
   };
 

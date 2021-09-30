@@ -31,7 +31,7 @@ public class UserController {
         if(userChat != null){
             return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(),
                     userChat.getEmail(), userChat.getPhone(), userChat.getPassword(),userChat.getIsActive(),
-                    userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage());
+                    userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(), userChat.getStatus());
         }
         return null;
     }
@@ -72,4 +72,14 @@ public class UserController {
         return user;
     }
 
+    @GetMapping("/get-user/{id}")
+    public UserChat getUser(@PathVariable("id") Long id) {
+        return userService.getById(id);
+    }
+
+    @PostMapping("/register")
+    public UserChat userRegister(@RequestBody UserChat userChat) {
+        userService.userRegister(userChat);
+        return userChat;
+    }
 }

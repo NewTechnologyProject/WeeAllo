@@ -16,8 +16,8 @@ export const userlogout = () => {
 export const ACTION_TYPES = {
   LOGIN: "LOGIN",
   FETCH_ALL: "FETCH_ALL",
+  REGISTER: "REGISTER",
 };
-
 export const login = (phone, pass) => (dispatch) => {
   apiService
     .user()
@@ -30,8 +30,21 @@ export const login = (phone, pass) => (dispatch) => {
     })
     .catch((err) => console.log(err));
 };
+export const register = (userChat) => (dispatch) => {
+  apiService
+    .user()
+    .addUser(userChat)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.REGISTER,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
-export const fetchAllUser = () => (dispatch) => {
+///
+export const fetchAll = () => (dispatch) => {
   apiService
     .user()
     .fetchAll()
@@ -44,7 +57,7 @@ export const fetchAllUser = () => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
-//get all room chat
+// Get all rooms
 export const fetchAllRoom = (userId) => (dispatch) => {
   apiService
     .user()
