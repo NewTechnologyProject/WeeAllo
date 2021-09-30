@@ -1,3 +1,7 @@
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+
+import * as actions from "src/actions/roomchat.action";
 import { Avatar } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import List from "@material-ui/core/List";
@@ -19,6 +23,7 @@ import ImageIcon from "@material-ui/icons/Image";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Menu from "@material-ui/core/Menu";
+
 const SORT_OPTIONS = [
   { value: "latest", label: "Latest" },
   { value: "popular", label: "Popular" },
@@ -28,7 +33,15 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function MessageChat(props) {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const listMessages = useSelector((state) => state.roomchat.listMessages);
+
+  useEffect(() => {
+    dispatch(actions.fetchAllMessages(props.activeRoom.id));
+  }, [props.activeRoom]);
+
+  // console.log(listMessages);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -37,6 +50,7 @@ export default function MessageChat(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>
@@ -67,7 +81,11 @@ export default function MessageChat(props) {
             md={12}
             style={{ height: "75%", borderBottom: "1px solid #e9e7e5" }}
           >
-            <MessageContent />
+            {listMessages.length > 0 ? (
+              <MessageContent listMessages={listMessages} />
+            ) : (
+              <p>Let's say something</p>
+            )}
           </Grid>
 
           {/* Typing message */}

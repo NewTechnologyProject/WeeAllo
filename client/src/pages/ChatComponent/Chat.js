@@ -32,13 +32,12 @@ export default function Chat() {
   const [activeRoom, setActiveRoom] = useState(null);
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
+  const userId = localStorage.getItem("user_authenticated");
 
   // Get list roomChat
   useEffect(() => {
-    dispatch(actions.fetchAllRoom());
+    dispatch(actions.fetchAllRoom(userId));
   }, []);
-
-  // console.log(listRooms);
 
   const getActiveRoom = (room) => {
     setActiveRoom(room);

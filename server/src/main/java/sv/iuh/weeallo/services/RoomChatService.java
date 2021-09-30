@@ -2,11 +2,13 @@ package sv.iuh.weeallo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sv.iuh.weeallo.models.Message;
 import sv.iuh.weeallo.models.RoomChat;
 import sv.iuh.weeallo.models.UserGroup;
 import sv.iuh.weeallo.repository.RoomChatRepository;
 import sv.iuh.weeallo.repository.UserGroupRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +23,32 @@ public class RoomChatService {
         this.userGroupRepository = userGroupRepository;
     }
 
-  
     public RoomChat getById(Long roomId) {
-        return roomChatRepository.getById(roomId);
+        RoomChat roomChat =null;
+        Optional<RoomChat> roomObj = roomChatRepository.findById(roomId);
+
+        if(roomObj.isPresent()){
+            roomChat = roomObj.get();
+        }
+
+        return roomChat;
     }
 
+    public List<Message> getAllMessages(Long roomId){
+        RoomChat roomChat =null;
+        Optional<RoomChat> roomObj = roomChatRepository.findById(roomId);
+        List<Message> listMessage = new ArrayList<Message>();
+
+        if(roomObj.isPresent()){
+            roomChat = roomObj.get();
+        }
+
+        if(roomChat != null){
+            return roomChat.getMessageList();
+        }
+
+        return null;
+    }
 
     public List<RoomChat> getAllByUser(Long userId) {
         List<UserGroup> listUserGroup = userGroupRepository.getAllByUser(userId);

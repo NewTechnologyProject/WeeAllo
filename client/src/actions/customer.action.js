@@ -45,9 +45,7 @@ export const fetchAllUser = () => (dispatch) => {
 };
 
 //get all room chat
-export const fetchAllRoom = () => (dispatch) => {
-  const userId = localStorage.getItem("user_authenticated");
-
+export const fetchAllRoom = (userId) => (dispatch) => {
   apiService
     .user()
     .listRoom(userId)

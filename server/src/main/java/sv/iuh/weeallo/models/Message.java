@@ -43,6 +43,14 @@ public class Message implements Serializable {
     public Message() {
     }
 
+    public Message(Long id, String status, String content, RoomChat roomChatId, UserChat userId) {
+        this.id = id;
+        this.status = status;
+        this.content = content;
+        this.roomChatId = roomChatId;
+        this.userId = userId;
+    }
+
     public String getContent() {
         return content;
     }

@@ -35,8 +35,6 @@ public class RoomChat implements Serializable {
     private String roomName;
     @Column(name = "createAt")
     private String createAt;
-    @Column(name = "email")
-    private String email;
     @OneToMany(mappedBy = "roomChatId")
     private List<Todo> todoList;
     @OneToMany(mappedBy = "roomChatId")
@@ -47,12 +45,11 @@ public class RoomChat implements Serializable {
     public RoomChat() {
     }
 
-    public RoomChat(Long id, Long creator, String roomName, String createAt, String email) {
+    public RoomChat(Long id, Long creator, String roomName, String createAt) {
         this.id = id;
         this.creator = creator;
         this.roomName = roomName;
         this.createAt = createAt;
-        this.email = email;
     }
 
     public RoomChat(Long id) {
@@ -89,14 +86,6 @@ public class RoomChat implements Serializable {
 
     public void setCreateAt(String createAt) {
         this.createAt = createAt;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public List<Todo> getTodoList() {

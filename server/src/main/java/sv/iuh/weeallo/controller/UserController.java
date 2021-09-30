@@ -54,13 +54,11 @@ public class UserController {
         List<RoomChat> listRoom = new ArrayList<RoomChat>();
 
         if(user != null){
-//            System.out.println(user.getUserGroupList());
             List<UserGroup> listUserGroup = user.getUserGroupList();
             if(listUserGroup.size() > 0){
                 for(UserGroup ug : listUserGroup){
-//                    System.out.println(ug.getRoomChatId());
                     listRoom.add(new RoomChat(ug.getRoomChatId().getId(), ug.getRoomChatId().getCreator(),
-                            ug.getRoomChatId().getRoomName(), ug.getRoomChatId().getCreateAt(), ug.getRoomChatId().getEmail()));
+                            ug.getRoomChatId().getRoomName(), ug.getRoomChatId().getCreateAt()));
                 }
             }
         }

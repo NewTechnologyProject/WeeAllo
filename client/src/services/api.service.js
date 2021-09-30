@@ -10,4 +10,9 @@ export default {
       listRoom: (userId) => axios.get(url + userId + "/rooms"),
     };
   },
+  roomchat(url = baseApi + "rooms/") {
+    return {
+      listMessages: (roomId) => axios.get(url + roomId + "/messages"),
+    };
+  },
 };

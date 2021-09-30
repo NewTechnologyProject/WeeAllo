@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import sv.iuh.weeallo.models.Message;
 import sv.iuh.weeallo.services.MessageService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class MessageController {
