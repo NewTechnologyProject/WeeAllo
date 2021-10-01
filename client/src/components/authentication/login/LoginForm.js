@@ -38,7 +38,7 @@ export default function LoginForm() {
   }, [phone, pass]);
 
   const onLogin = () => {
-    if (user === "" || user === undefined) {
+    if (user === "" || user === "undefined") {
       window.alert("Fail");
     } else {
       dispatch(isAuthenticated(user.id));
@@ -79,7 +79,7 @@ export default function LoginForm() {
             fullWidth
             autoComplete="username"
             type="email"
-            label="Phone"
+            label="Số điện thoại"
             onChange={(event) => setPhone(event.target.value)}
           />
 
@@ -87,7 +87,7 @@ export default function LoginForm() {
             fullWidth
             autoComplete="current-password"
             type={showPassword ? "text" : "password"}
-            label="Password"
+            label="Mật khẩu"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -118,12 +118,12 @@ export default function LoginForm() {
           />
 
           <Link component={RouterLink} variant="subtitle2" to="#">
-            Forgot password?
+            Quên mật khẩu?
           </Link>
         </Stack>
 
         <Button fullWidth size="large" type="submit" variant="contained">
-          Login
+          Đăng nhập
         </Button>
       </Form>
     </FormikProvider>

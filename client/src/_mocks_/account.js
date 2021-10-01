@@ -7,7 +7,9 @@ const account = () => {
   // console.log(user.firstname, user.email);
 
   return {
-    displayName: `${user ? user.firstname : "Jaydon Frankie"}`,
+    displayName: `${
+      user ? user.firstname + " " + user.lastname : "Jaydon Frankie"
+    }`,
     email: `${user ? user.email : "demo@minimals.cc"}`,
     photoURL: "/static/mock-images/avatars/avatar_default.jpg",
   };

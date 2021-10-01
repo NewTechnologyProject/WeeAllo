@@ -4,7 +4,9 @@ import { Box, Grid, Container, Typography } from "@material-ui/core";
 // components
 import Page from "../components/Page";
 import * as actions from "../actions/customer.action";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   AppTasks,
   AppNewUsers,
@@ -23,12 +25,17 @@ import {
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
-  const dispatch = useDispatch();
-  const userProfile = useSelector((state) => state.customer.login);
+  // const dispatch = useDispatch();
+  // const userProfile = useSelector((state) => state.customer.login);
+  const navigate = useNavigate();
+  const SET_USER_AUTHENTICATE = "user_authenticated";
 
-  // useEffect(() => {
-  //   dispatch(actions.fetchAll());
-  // }, []);
+  useEffect(() => {
+    // dispatch(actions.fetchAll());
+    if (localStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
+      navigate("/login", { replace: true });
+    }
+  }, []);
 
   return (
     <Page title="Dashboard | Minimal-UI">
