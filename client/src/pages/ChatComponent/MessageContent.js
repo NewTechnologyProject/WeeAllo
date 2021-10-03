@@ -4,25 +4,46 @@ import { Paper } from "@material-ui/core";
 import { MessageLeft, MessageRight } from "./CustomMessage";
 
 const useStyles = makeStyles((theme) =>
-    createStyles({
-        container: {
-            padding: 10
-        }
-    })
+  createStyles({
+    container: {
+      padding: 10,
+    },
+  })
 );
 
-export default function App() {
-    const classes = useStyles();
-    return (
-        <div className={classes.container}>
-            <MessageLeft
-                message="Chào mọi người"
-                timestamp="MM/DD 00:00"
-                photoURL=""
-                displayName="Nam"
-                avatarDisp={false}
+export default function App(props) {
+  const classes = useStyles();
+  const userId = localStorage.getItem("user_authenticated");
+
+  return (
+    <div className={classes.container}>
+      {props.listMessages.map((message) => {
+        if (Number(userId) === message.userId.id) {
+          return (
+            <MessageRight
+              key={message.id}
+              message={message.content}
+              timestamp="MM/DD 00:00"
+              photoURL="Chao cc"
+              displayName={`${message.userId.firstname} ${message.userId.lastname}`}
+              avatarDisp={true}
             />
-            <MessageLeft
+          );
+        }
+
+        return (
+          <MessageLeft
+            key={message.id}
+            message={message.content}
+            timestamp="MM/DD 00:00"
+            photoURL=""
+            displayName={`${message.userId.firstname} ${message.userId.lastname}`}
+            avatarDisp={false}
+          />
+        );
+      })}
+
+      {/* <MessageLeft
                 message="Chào cc"
                 timestamp="MM/DD 00:00"
                 photoURL=""
@@ -35,7 +56,7 @@ export default function App() {
                 photoURL="Chào cc"
                 displayName="Huy"
                 avatarDisp={true}
-            />
-        </div>
-    );
+            /> */}
+    </div>
+  );
 }

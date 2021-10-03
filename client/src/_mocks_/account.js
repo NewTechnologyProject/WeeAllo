@@ -1,9 +1,18 @@
-// ----------------------------------------------------------------------
+import { useSelector } from "react-redux";
 
-const account = {
-  displayName: 'Jaydon Frankie',
-  email: 'demo@minimals.cc',
-  photoURL: '/static/mock-images/avatars/avatar_default.jpg'
+// ----------------------------------------------------------------------
+const account = () => {
+  const user = useSelector((state) => state.customer.login);
+
+  // console.log(user.firstname, user.email);
+
+  return {
+    displayName: `${
+      user ? user.firstname + " " + user.lastname : "Jaydon Frankie"
+    }`,
+    email: `${user ? user.email : "demo@minimals.cc"}`,
+    photoURL: "/static/mock-images/avatars/avatar_default.jpg",
+  };
 };
 
-export default account;
+export { account };

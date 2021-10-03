@@ -1,10 +1,12 @@
 // material
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Grid, Container, Typography } from '@material-ui/core';
+import { Box, Grid, Container, Typography } from "@material-ui/core";
 // components
-import Page from '../components/Page';
+import Page from "../components/Page";
 import * as actions from "../actions/customer.action";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   AppTasks,
   AppNewUsers,
@@ -17,18 +19,24 @@ import {
   AppWebsiteVisits,
   AppTrafficBySite,
   AppCurrentSubject,
-  AppConversionRates
-} from '../components/_dashboard/app';
+  AppConversionRates,
+} from "../components/_dashboard/app";
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
-  const dispatch = useDispatch();
-  const userProfile = useSelector(state => state.customer.list);
+  // const dispatch = useDispatch();
+  // const userProfile = useSelector((state) => state.customer.login);
+  const navigate = useNavigate();
+  const SET_USER_AUTHENTICATE = "user_authenticated";
+
   useEffect(() => {
-    dispatch(actions.fetchAll())
-  }, [])
-  console.log(userProfile)
+    // dispatch(actions.fetchAll());
+    if (localStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
+      navigate("/login", { replace: true });
+    }
+  }, []);
+
   return (
     <Page title="Dashboard | Minimal-UI">
       <Container maxWidth="xl">
