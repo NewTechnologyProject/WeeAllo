@@ -11,7 +11,8 @@ export const ACTION_TYPES = {
     DELETE_RECEIVE_CONTACT: 'DELETE_RECEIVE_CONTACT',
     ACCEPT_CONTACT: 'ACCEPT_CONTACT',
     ADD_CONTACT: 'ADD_CONTACT',
-    FIND_USER_BY_ID: 'FIND_USER_BY_ID'
+    FIND_USER_BY_ID: 'FIND_USER_BY_ID',
+    FIND_USER_BY_PHONE: 'FIND_USER_BY_PHONE'
 }
 
 export const fetchAllContact = (id) => dispatch => {
@@ -119,6 +120,16 @@ export const findUserById = (id) => dispatch => {
         .then(response => {
             dispatch({
                 type: ACTION_TYPES.FIND_USER_BY_ID,
+                payload: response.data
+            })
+        })
+        .catch(err => console.log(err))
+}
+export const findUserByPhone = (phone, id) => dispatch => {
+    apiService.contact().searchbyphone(phone, id)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.FIND_USER_BY_PHONE,
                 payload: response.data
             })
         })
