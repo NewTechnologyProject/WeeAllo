@@ -12,6 +12,7 @@ import * as actions from "src/actions/customer.action";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import classes from "./Chat.module.css";
+import { useNavigate } from "react-router-dom";
 
 const SORT_OPTIONS = [
   { value: "latest", label: "Latest" },
@@ -30,6 +31,8 @@ const RootStyle = styled(Card)(({ theme }) => ({
 
 export default function Chat() {
   const [activeRoom, setActiveRoom] = useState(null);
+  const SET_USER_AUTHENTICATE = "user_authenticated";
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
   const userId = localStorage.getItem("user_authenticated");
@@ -37,6 +40,9 @@ export default function Chat() {
   // Get list roomChat
   useEffect(() => {
     dispatch(actions.fetchAllRoom(userId));
+    if (localStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
+      navigate("/login", { replace: true });
+    }
   }, []);
 
   const getActiveRoom = (room) => {
