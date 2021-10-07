@@ -31,6 +31,8 @@ export default {
         axios.put(url + "accept-contact/" + id1 + "&" + id2),
       addContact: (id1, id2) =>
         axios.post(url + "add-contact/" + id1 + "&" + id2),
+      searchbyphone: (phone, id) =>
+        axios.get(url + "search-by-phone/" + phone + "&" + id),
     };
   },
   roomchat(url = baseApi + "rooms/") {

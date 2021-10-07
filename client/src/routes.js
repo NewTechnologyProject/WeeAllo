@@ -12,7 +12,7 @@ import NotFound from "./pages/Page404";
 import Chat from "./pages/ChatComponent/Chat";
 import Contact from "./pages/ContactComponent/Contact";
 import RegisterOTP from "./pages/RegisterOTP";
-// import UserDetail from "./../src/pages/UserDetail";
+
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -40,7 +40,6 @@ export default function Router() {
         { path: "registerotp", element: <RegisterOTP /> },
       ],
     },
-
     { path: "*", element: <Navigate to="/404" replace /> },
   ]);
 }
