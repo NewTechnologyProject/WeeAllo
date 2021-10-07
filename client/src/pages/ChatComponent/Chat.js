@@ -32,13 +32,10 @@ const RootStyle = styled(Card)(({ theme }) => ({
 }));
 
 export default function Chat() {
-<<<<<<< HEAD
-  const [activeRoom, setActiveRoom] = useState(3);
-=======
+
   const [activeRoom, setActiveRoom] = useState(null);
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const navigate = useNavigate();
->>>>>>> caea27571a23312febb5ee53ca70670f67c943ff
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
   const userId = localStorage.getItem("user_authenticated");
