@@ -66,7 +66,6 @@ public class ContactService {
         return userRepository.searchFriend(phone);
     }
     public UserChat showDetailContact(Long idAuth, Long idShow){
-
         UserChat userChat=userRepository.findContactById(idShow);
         userChat.setStatus("none");
         if(idAuth==idShow){
@@ -120,5 +119,33 @@ public class ContactService {
         contactRepository.save(contact);
         List<UserChat> list=getAllReceive(id2);
         return list;
+    }
+    public UserChat findByPhone(String phone,Long idAuth){
+        UserChat userChat=userRepository.findContactByPhone(phone);
+        userChat.setStatus("none");
+        if(idAuth==userChat.getId()){
+            userChat.setStatus("you");
+        }else {
+            List<Contact> contacts=contactRepository.findAll();
+            for (Contact contact:contacts) {
+
+                if(contact.getSendId().getId()==idAuth && contact.getReceiveId().getId()==userChat.getId() && contact.getStatus().equals("wait")){
+                    userChat.setStatus("receive");
+                }
+                else if(contact.getReceiveId().getId()==idAuth && contact.getSendId().getId()==userChat.getId() && contact.getStatus().equals("wait")){
+                    userChat.setStatus("send");
+                }
+                else if((contact.getReceiveId().getId()==idAuth
+                        && contact.getSendId().getId()==userChat.getId()
+                        && contact.getStatus().equals("friend"))
+                        || (contact.getSendId().getId()==idAuth
+                        && contact.getReceiveId().getId()==userChat.getId()
+                        && contact.getStatus().equals("friend"))){
+                    userChat.setStatus("friend");
+                }
+            }
+        }
+
+        return userChat;
     }
 }

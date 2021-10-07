@@ -15,7 +15,7 @@ const ChosenMember = (props) => {
   return (
     <div className={classes["choose-member"]}>
       <div className={classes.amount}>
-        Đã thêm <strong>0/50</strong>{" "}
+        Đã thêm: <strong>{`${props.chosenMembers.length}`}</strong>{" "}
       </div>
 
       <Scrollbar
