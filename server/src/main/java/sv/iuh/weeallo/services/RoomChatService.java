@@ -64,4 +64,8 @@ public class RoomChatService {
         }
         return listRoomChat;
     }
+
+    public RoomChat addRoomChat (RoomChat roomChat){
+        return roomChatRepository.save(roomChat);
+    }
 }

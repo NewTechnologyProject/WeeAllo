@@ -1,3 +1,6 @@
+import { combineReducers } from "redux";
+import { INITIALIZE_APP, UPDATE_MESSAGES_LIST } from '../constants/internal-action-types.const'
+
 const initialState = {
   listMessages: [],
 };
@@ -11,7 +14,12 @@ export const roomChatReducer = (state = initialState, action) => {
         listMessages: [...action.payload],
       };
     }
+    case INITIALIZE_APP:
+    case UPDATE_MESSAGES_LIST:
+      return { ...action.payload.messages }
     default:
       return state;
   }
 };
+
+

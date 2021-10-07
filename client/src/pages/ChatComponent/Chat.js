@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import classes from "./Chat.module.css";
 
+
 const SORT_OPTIONS = [
   { value: "latest", label: "Latest" },
   { value: "popular", label: "Popular" },
@@ -29,7 +30,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
 }));
 
 export default function Chat() {
-  const [activeRoom, setActiveRoom] = useState(null);
+  const [activeRoom, setActiveRoom] = useState(3);
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
   const userId = localStorage.getItem("user_authenticated");

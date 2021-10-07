@@ -10,6 +10,9 @@ import sv.iuh.weeallo.services.RoomChatService;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @CrossOrigin
 @RestController
@@ -48,4 +51,11 @@ public class RoomChatController {
         return newListMessages;
     }
 
+    @PostMapping(value="/room")
+    public RoomChat creaRoomChat(@RequestBody RoomChat roomChat) {
+        //TODO: process POST request
+        
+        return roomChatService.addRoomChat(roomChat);
+    }
+    
 }

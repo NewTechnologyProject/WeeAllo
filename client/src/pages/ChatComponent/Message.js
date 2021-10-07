@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import PropTypes from 'prop-types'
 
 import * as actions from "src/actions/roomchat.action";
 import { Avatar } from "@material-ui/core";
@@ -23,6 +24,8 @@ import ImageIcon from "@material-ui/icons/Image";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Menu from "@material-ui/core/Menu";
+import { MessageInput } from "./Message-Input";
+//import MessageInput from "./Message-Input";
 
 const SORT_OPTIONS = [
   { value: "latest", label: "Latest" },
@@ -36,6 +39,10 @@ export default function MessageChat(props) {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+
+  MessageChat.propTypes = {
+    props: PropTypes.bool.isRequired,
+  }
 
   useEffect(() => {
     dispatch(actions.fetchAllMessages(props.activeRoom.id));
@@ -129,11 +136,12 @@ export default function MessageChat(props) {
                 style={{ height: "60%" }}
                 style={{ paddingLeft: 10, paddingRight: 10, display: "flex" }}
               >
-                <InputBase
+                {/* <InputBase
                   placeholder="Nhập tin nhắn của bạn"
                   inputProps={{ "aria-label": "search google maps" }}
                   fullWidth
-                />
+                /> */}
+                <MessageInput/>
 
                 {/* Sending Icon */}
                 {/* <IconButton
@@ -175,4 +183,6 @@ export default function MessageChat(props) {
       </Grid>
     </div>
   );
+
 }
+
