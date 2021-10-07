@@ -12,10 +12,4 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    @PostMapping("/messages")
-    public Message createMessage(@RequestBody Message message){
-        return messageService.sendMessage(message);
-    }
-
-
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import sv.iuh.weeallo.models.Message;
 import sv.iuh.weeallo.repository.MessageRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -20,7 +21,4 @@ public class MessageService {
         return messageRepository.getAllByRoom(roomId);
     }
 
-    public Message sendMessage(Message message) {
-        return messageRepository.save(message);
-    }
 }

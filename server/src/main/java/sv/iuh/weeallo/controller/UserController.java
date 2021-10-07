@@ -2,6 +2,7 @@ package sv.iuh.weeallo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sv.iuh.weeallo.models.Contact;
 import sv.iuh.weeallo.models.RoomChat;
 import sv.iuh.weeallo.models.UserChat;
 import sv.iuh.weeallo.models.UserGroup;
@@ -29,24 +30,10 @@ public class UserController {
     public UserChat getAllUser(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
         UserChat userChat=userService.getLogin(phone, pass);
         if(userChat != null){
-            return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(),
-                    userChat.getEmail(), userChat.getPhone(), userChat.getPassword(),userChat.getIsActive(),
-                    userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(), userChat.getStatus());
+            return sliceUser(userChat);
         }
         return null;
     }
-
-
-//    @PostMapping("/login/info/{phone}&{pass}")
-//    public UserChat getLoginUser(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
-//        UserChat userChat=userService.getLogin(phone, pass);
-//        if(userChat != null){
-//            return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(),
-//                    userChat.getEmail(), userChat.getPhone(), userChat.getPassword(),userChat.getIsActive(),
-//                    userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage());
-//        }
-//        return null;
-//    }
 
     @GetMapping("/{userId}/rooms")
     public List<RoomChat> getAllRoomByUser(@PathVariable("userId") Long userId){
@@ -66,6 +53,28 @@ public class UserController {
         return listRoom;
     }
 
+    @GetMapping("/{userId}/friends")
+    public List<UserChat> getAllContatc(@PathVariable("userId") Long userId){
+        UserChat user = userService.getUserById(userId);
+        List<Contact> contacts = new ArrayList<Contact>();
+        List<Contact> contacts1 = new ArrayList<Contact>();
+        List<UserChat> friends = new ArrayList<UserChat>();
+
+        if(user !=null){
+            contacts = user.getContactList();
+            contacts1 = user.getContactList1();
+
+            if(contacts != null && contacts.size() > 0){
+                friends.addAll(getFriends(userId, contacts));
+            }
+            if(contacts1 != null && contacts1.size() >0){
+                friends.addAll(getFriends(userId, contacts1));
+            }
+        }
+
+        return friends;
+    }
+
     @GetMapping("/{userId}")
     public UserChat getUserById(@PathVariable("userId") Long userId){
         UserChat user = userService.getUserById(userId);
@@ -81,5 +90,28 @@ public class UserController {
     public UserChat userRegister(@RequestBody UserChat userChat) {
         userService.userRegister(userChat);
         return userChat;
+    }
+
+    //get list friends
+    public List<UserChat> getFriends(Long userId, List<Contact> listContacts){
+        List<UserChat> users = new ArrayList<UserChat>();
+        for(Contact c : listContacts){
+            if (c.getStatus().equalsIgnoreCase("friend")){
+                if(c.getReceiveId().getId() == userId){
+                    users.add(sliceUser( c.getSendId()));
+                }else{
+                    users.add(sliceUser( c.getReceiveId()));
+                }
+
+            }
+        }
+        return users;
+    }
+
+    //Slice user
+    public UserChat sliceUser(UserChat userChat){
+        return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(),
+                userChat.getEmail(), userChat.getPhone(), userChat.getPassword(),userChat.getIsActive(),
+                userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(), userChat.getStatus());
     }
 }
