@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState, useRef } from "react";
-import React from "react";
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 
 import * as actions from "src/actions/roomchat.action";
 import { Avatar } from "@material-ui/core";
@@ -9,7 +9,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import MessageContent from "./MessageContent";
-import InputBase from "@material-ui/core/InputBase";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
@@ -17,13 +16,9 @@ import SendIcon from "@material-ui/icons/Send";
 import ChildCareIcon from "@material-ui/icons/ChildCare";
 import ImageIcon from "@material-ui/icons/Image";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
-import classes from "./Message.module.css";
-
-// import { ClassSharp } from "@material-ui/icons";
-// import { makeStyles } from "@material-ui/core/styles";
-// import Paper from "@material-ui/core/Paper";
-// import List from "@material-ui/core/List";
-// import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
+import { MessageInput } from "./Message-Input";
+// import InputBase from "@material-ui/core/InputBase";
+//import MessageInput from "./Message-Input";
 // import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 // import Menu from "@material-ui/core/Menu";
 
@@ -40,6 +35,10 @@ export default function MessageChat(props) {
   // const inputMessageRef = useRef();
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+
+  MessageChat.propTypes = {
+    props: PropTypes.bool.isRequired,
+  };
 
   useEffect(() => {
     dispatch(actions.fetchAllMessages(props.activeRoom.id));
@@ -127,11 +126,12 @@ export default function MessageChat(props) {
                 style={{ height: "60%" }}
                 style={{ paddingLeft: 10, paddingRight: 10, display: "flex" }}
               >
-                <InputBase
+                {/* <InputBase
                   placeholder="Nhập tin nhắn của bạn"
                   inputProps={{ "aria-label": "search google maps" }}
                   fullWidth
-                />
+                /> */}
+                <MessageInput />
 
                 {/* Sending Icon */}
                 {/* <IconButton

@@ -15,6 +15,7 @@ import classes from "./Chat.module.css";
 import { useNavigate } from "react-router-dom";
 import ChatInfomation from "./ChatInfomation";
 
+
 const SORT_OPTIONS = [
   { value: "latest", label: "Latest" },
   { value: "popular", label: "Popular" },
@@ -31,6 +32,7 @@ const RootStyle = styled(Card)(({ theme }) => ({
 }));
 
 export default function Chat() {
+
   const [activeRoom, setActiveRoom] = useState(null);
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const navigate = useNavigate();

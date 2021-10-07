@@ -68,8 +68,11 @@ public class RoomChatService {
     }
 
     //Add room chat
-    public void addRoomChat(RoomChat roomChat){
+    public void addRoom(RoomChat roomChat){
         roomChatRepository.insertRommChat(roomChat.getCreateAt(),roomChat.getCreator(), roomChat.getRoomName());
     }
 
+    public RoomChat addRoomChat (RoomChat roomChat){
+        return roomChatRepository.save(roomChat);
+    }
 }

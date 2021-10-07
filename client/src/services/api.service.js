@@ -41,4 +41,11 @@ export default {
       listMessages: (roomId) => axios.get(url + roomId + "/messages"),
     };
   },
+
+  message(url = baseApi + "messages/chat") {
+    return {
+      //listMessages: (roomId) => axios.get(url + roomId + "/messages"),
+      addMessage: (message) => axios.post(url, message),
+    };
+  },
 };
