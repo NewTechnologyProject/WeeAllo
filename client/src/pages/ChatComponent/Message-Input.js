@@ -2,7 +2,7 @@ import React, { PureComponent, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import InputBase from "@material-ui/core/InputBase"
 import { useState } from 'react'
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 import * as actions from "src/actions/create-new-message.action"
@@ -24,7 +24,7 @@ export const MessageInput = () => {
     const [message, setMessage] = useState('');
     //const [messageText, setMessageText] = useState(null)
     console.log(message);
-
+    const user = useSelector(state => state.customer.userAuth);
     // setMessageText = messageText => {
     //     this.setState(
     //         { message: messageText },
@@ -54,11 +54,12 @@ export const MessageInput = () => {
         if (event.key === 'Enter') {
             ///this.handleMessageSendEvent(event)
             //window.alert(message);
-            const messageText={
+            const messageText = {
                 status: "seen",
                 content: message,
-                roomChatId: 3,
-                userId: 1
+                file: null,
+                roomChatId: 1,
+                userId: user
             }
             console.log(messageText);
             dispatch(actions.addMessage(messageText))
@@ -74,7 +75,7 @@ export const MessageInput = () => {
             fullWidth
             autoFocus={true}
             //value={this.state.message}
-            onChange={(e) => { setMessage(e.target.value)}}
+            onChange={(e) => { setMessage(e.target.value) }}
             //onChange={this.handleMessageChangeEvent}
             onKeyPress={(e) => handleMessageKeyPressEvent(e)}
         />
