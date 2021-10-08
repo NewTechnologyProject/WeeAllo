@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // components
 import Page from "../components/Page";
+import ChangePassWordForm from "./UserComponent/ChangePasswordForm";
+import UserDetailForm from "./UserComponent/UserDetailForm";
 
 // ----------------------------------------------------------------------
 
@@ -81,8 +83,12 @@ export default function User() {
                 <Tab label="Đổi mật khẩu" value="2" />
               </TabList>
             </Box>
-            <TabPanel value="1"></TabPanel>
-            <TabPanel value="2"></TabPanel>
+            <TabPanel value="1">
+              <UserDetailForm />
+            </TabPanel>
+            <TabPanel value="2">
+              <ChangePassWordForm />
+            </TabPanel>
           </TabContext>
         </Box>
       </Container>
