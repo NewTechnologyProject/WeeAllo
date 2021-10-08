@@ -91,13 +91,12 @@ public class UserController {
         userService.userRegister(userChat);
         return userChat;
     }
-<<<<<<< HEAD
+
     @PostMapping("/forgotpass")
     public UserChat userForgot(@RequestBody UserChat userChat){
         userService.userForgot(userChat);
         return userChat;
-=======
-
+    }
     //get list friends
     public List<UserChat> getFriends(Long userId, List<Contact> listContacts){
         List<UserChat> users = new ArrayList<UserChat>();
@@ -119,6 +118,5 @@ public class UserController {
         return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(),
                 userChat.getEmail(), userChat.getPhone(), userChat.getPassword(),userChat.getIsActive(),
                 userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(), userChat.getStatus());
->>>>>>> a25e3798da0154590c5d3d1be11a2c7838164225
     }
 }
