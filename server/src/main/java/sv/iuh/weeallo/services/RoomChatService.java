@@ -34,6 +34,7 @@ public class RoomChatService {
         return roomChat;
     }
 
+    //Get lít message
     public List<Message> getAllMessages(Long roomId){
         RoomChat roomChat =null;
         Optional<RoomChat> roomObj = roomChatRepository.findById(roomId);
@@ -50,6 +51,7 @@ public class RoomChatService {
         return null;
     }
 
+    //Get all user
     public List<RoomChat> getAllByUser(Long userId) {
         List<UserGroup> listUserGroup = userGroupRepository.getAllByUser(userId);
         List<RoomChat> listRoomChat = null;
@@ -64,4 +66,15 @@ public class RoomChatService {
         }
         return listRoomChat;
     }
+
+    //Add room chat
+    public void addRoom(RoomChat roomChat){
+        roomChatRepository.insertRommChat(roomChat.getCreateAt(),roomChat.getCreator(), roomChat.getRoomName());
+    }
+
+    public RoomChat addRoomChat (RoomChat roomChat){
+        return roomChatRepository.save(roomChat);
+    }
+
+
 }

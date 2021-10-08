@@ -39,6 +39,11 @@ export const contactReducer = (state = initialState, action) => {
                 ...state,
                 detailContact: action.payload
             }
+        case ACTION_TYPES.FIND_USER_BY_PHONE:
+            return {
+                ...state,
+                detailContact: action.payload
+            }
         case ACTION_TYPES.DELETE_ALL_CONTACT:
             return {
                 ...state,

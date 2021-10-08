@@ -2,11 +2,12 @@ import { Icon } from "@iconify/react";
 import { useRef, useState } from "react";
 import homeFill from "@iconify/icons-eva/home-fill";
 import personFill from "@iconify/icons-eva/person-fill";
+import PersonIcon from "@material-ui/icons/Person";
 import settings2Fill from "@iconify/icons-eva/settings-2-fill";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as actions from "src/actions/customer.action";
-import UserDetail from "./../../pages/UserDetail";
+
 // material
 import { alpha } from "@material-ui/core/styles";
 import {
@@ -34,7 +35,7 @@ const MENU_OPTIONS = [
   {
     label: "Thông tin cá nhân",
     icon: personFill,
-    linkTo: "userdetail",
+    linkTo: "/dashboard/user",
   },
   {
     label: "Settings",
@@ -64,11 +65,7 @@ export default function AccountPopover() {
     navigate("/login", { replace: true });
   };
   const openPopup = () => {
-    if (openPop === false) {
-      setOpenPop(true);
-    } else {
-      setOpenPop(false);
-    }
+    setOpenPop(true);
   };
 
   return (
@@ -130,19 +127,10 @@ export default function AccountPopover() {
                 height: 24,
               }}
             />
-
             {option.label}
           </MenuItem>
         ))}
-        {/* <Box
-          sx={{
-            p: 2,
-            pt: 1.5,
-          }}
-          icon={personFill}
-        >
-          <Button onClick={openPopup}>Thông tin cá nhân</Button>
-        </Box> */}
+
         <Box sx={{ p: 2, pt: 1.5 }}>
           <Button fullWidth color="inherit" variant="outlined" onClick={logout}>
             Đăng xuất

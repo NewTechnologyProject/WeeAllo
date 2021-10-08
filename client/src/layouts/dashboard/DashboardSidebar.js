@@ -32,16 +32,6 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-const AccountStyle = styled("div")(({ theme }) => ({
-  display: "block",
-  alignItems: "center",
-  padding: theme.spacing(1),
-  width: 100,
-  margin: "auto",
-  borderRadius: theme.shape.borderRadiusSm,
-  backgroundColor: theme.palette.grey[200],
-}));
-
 // ----------------------------------------------------------------------
 
 DashboardSidebar.propTypes = {
@@ -70,7 +60,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       }}
     >
       <Box sx={{ px: 2.5, py: 3 }}>
-        <Box component={RouterLink} to="/" sx={{ display: "inline-flex" }}>
+        <Box component={RouterLink} to="/" sx={{ display: "inline-flex" }} style={{ paddingLeft: 10 }}>
           <Logo />
         </Box>
       </Box>

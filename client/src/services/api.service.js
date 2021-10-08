@@ -11,6 +11,7 @@ export default {
       findByIdUser: (id) => axios.get(url + "get-user/" + id),
       addUser: (userChat) => axios.post(url + "register", userChat),
       listRoom: (userId) => axios.get(url + userId + "/rooms"),
+      listFriend: (userId) => axios.get(url + userId + "/friends"),
     };
   },
   contact(url = baseApi + "contact/") {
@@ -31,11 +32,20 @@ export default {
         axios.put(url + "accept-contact/" + id1 + "&" + id2),
       addContact: (id1, id2) =>
         axios.post(url + "add-contact/" + id1 + "&" + id2),
+      searchbyphone: (phone, id) =>
+        axios.get(url + "search-by-phone/" + phone + "&" + id),
     };
   },
   roomchat(url = baseApi + "rooms/") {
     return {
       listMessages: (roomId) => axios.get(url + roomId + "/messages"),
+    };
+  },
+
+  message(url = baseApi + "messages/chat") {
+    return {
+      //listMessages: (roomId) => axios.get(url + roomId + "/messages"),
+      addMessage: (message) => axios.post(url, message),
     };
   },
 };

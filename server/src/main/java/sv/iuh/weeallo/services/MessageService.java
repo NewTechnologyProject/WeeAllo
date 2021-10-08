@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import sv.iuh.weeallo.models.Message;
 import sv.iuh.weeallo.repository.MessageRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MessageService {
@@ -22,5 +24,17 @@ public class MessageService {
 
     public Message sendMessage(Message message) {
         return messageRepository.save(message);
+    }
+
+    public void remove(Message message){
+        messageRepository.delete(message);
+    }
+
+    public Optional <Message> findById(Long id){
+        return  messageRepository.findById(id);
+    }
+
+    public List<Message> findMessagesByUser(Long id){
+        return messageRepository.findMessagesByUser(id);
     }
 }

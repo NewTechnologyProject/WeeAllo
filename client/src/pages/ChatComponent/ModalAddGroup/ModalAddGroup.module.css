@@ -1,0 +1,96 @@
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paper {
+  background-color: white;
+  padding: 17px;
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.5);
+  width: 600px;
+  height: 700px;
+  position: relative;
+}
+
+.paper h3 {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.form-control hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+.form-control {
+  margin-top: 20px;
+}
+
+/* textfiled */
+.title-input {
+  padding: 10px;
+}
+
+.group-name {
+  font-size: 14px;
+  border-radius: 0px;
+}
+
+/* group's avatar */
+.avatar {
+  margin-top: 30px;
+  margin-bottom: 5px;
+  text-align: center;
+  align-items: center;
+}
+
+.avatar p {
+  font-family: sans-serif;
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* buttons */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.actions button {
+  font: inherit;
+  color: black;
+  cursor: pointer;
+  background-color: #ccc transparent;
+  border: none;
+  border-radius: 25px;
+  padding: 0.5rem 2rem;
+  transition: 0.3s;
+}
+
+.actions button:hover,
+.actions button:active {
+  background-color: #c8c8c8;
+}
+
+.actions .submit {
+  background-color: #4caf50;
+  color: white;
+}
+
+.actions .submit:hover,
+.actions .submit:active {
+  background-color: #4ad14f;
+}
+
+.cancel {
+  display: inline-flexbox;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}

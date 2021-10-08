@@ -12,7 +12,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { Paper } from "@material-ui/core";
 import IconButton from '@material-ui/core/IconButton';
-import { display, height } from '@material-ui/system';
+import { display, flexbox, height } from '@material-ui/system';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as actions from "../../actions/contact.action";
@@ -84,6 +84,7 @@ export default function SearchContact() {
         setOpen3(false);
     };
     const handleClickOpen4 = () => {
+        dispatch(actions.findUserByPhone("null", user))
         setOpen4(true);
     };
     const handleClose4 = () => {
@@ -113,7 +114,8 @@ export default function SearchContact() {
         if (userQRCode !== null) {
             const generateQrCode = async () => {
                 try {
-                    const response = await QRCode.toDataURL("0987654321");
+                    const response = await QRCode.toDataURL(userQRCode.phone);
+                    console.log("id" + userQRCode.id)
                     setImageUrl(response);
                 } catch (error) {
                     console.log(error);
@@ -130,9 +132,8 @@ export default function SearchContact() {
     }
     const handleScanFile = (result) => {
         if (result) {
-            dispatch(actions.searchContact(result))
+            dispatch(actions.findUserByPhone(result, user))
         }
-        console.log(result)
     }
     const renderRelationShip = () => {
         if (detailContact == null) {
@@ -250,6 +251,7 @@ export default function SearchContact() {
                             dispatch(actions.addContact(user, detailContact.id))
                             setMessageToast('Lời mời kết bạn đã được gửi')
                             handleClick()
+                            setOpen4(false);
                             handleClose();
                         }}
                         fullWidth
@@ -348,7 +350,7 @@ export default function SearchContact() {
                         justifyContent="center"
                         style={{ paddingTop: 20 }}
                     >
-                        <h3>{detailContact ? detailContact.firstname + " " + detailContact.lastname : 'Not Found'}</h3>
+                        <h3>{detailContact ? detailContact.firstname + " " + detailContact.lastname : 'Không tìm thấy'}</h3>
                     </Box>
                     <Box display="flex"
                         justifyContent="center"
@@ -360,7 +362,7 @@ export default function SearchContact() {
                         justifyContent="center"
                         style={{ paddingTop: 20 }}
                     >
-                        Số điện thoại : {detailContact ? detailContact.phone : 'Not Found'}
+                        Số điện thoại : {detailContact ? detailContact.phone : 'Không tìm thấy'}
                     </Box>
                     <Box display="flex"
                         justifyContent="center"
@@ -493,12 +495,13 @@ export default function SearchContact() {
                             handleClose1()
                             handleClick()
                             handleClose()
+                            setOpen4(false);
                             dispatch(actions.deleteAllContact(user, idDelete))
                         }}
                         color="primary">
                         Xóa kết bạn
                     </Button>
-                    <Button style={{ fontSize: 10, backgroundColor: '#C67732 ', color: 'white' }} onClick={handleClose} color="primary" autoFocus>
+                    <Button style={{ fontSize: 10, backgroundColor: '#C67732 ', color: 'white' }} onClick={handleClose1} color="primary" autoFocus>
                         Hủy
                     </Button>
                 </DialogActions>
@@ -525,11 +528,12 @@ export default function SearchContact() {
                             handleClick()
                             handleClose()
                             handleClose2()
+                            setOpen4(false);
                         }}
                     >
                         Từ chối
                     </Button>
-                    <Button style={{ fontSize: 10, backgroundColor: '#C67732 ', color: 'white' }} onClick={handleClose} color="primary" autoFocus>
+                    <Button style={{ fontSize: 10, backgroundColor: '#C67732 ', color: 'white' }} onClick={handleClose2} color="primary" autoFocus>
                         Hủy
                     </Button>
                 </DialogActions>
@@ -555,11 +559,12 @@ export default function SearchContact() {
                             handleClick()
                             handleClose()
                             handleClose3();
+                            setOpen4(false);
                         }}
                         color="primary">
                         Xóa lời mời
                     </Button>
-                    <Button style={{ fontSize: 10, backgroundColor: '#C67732 ', color: 'white' }} onClick={handleClose} color="primary" autoFocus>
+                    <Button style={{ fontSize: 10, backgroundColor: '#C67732 ', color: 'white' }} onClick={handleClose3} color="primary" autoFocus>
                         Hủy
                     </Button>
                 </DialogActions>
@@ -580,7 +585,7 @@ export default function SearchContact() {
                         indicatorColor="secondary"
                         textColor="secondary"
                         variant="scrollable"
-                        scrollButtons="off"
+                        scrollButtons="auto"
                     >
                         <Tab
                             classes={{
@@ -610,6 +615,10 @@ export default function SearchContact() {
                                         legacyMode
                                     />
                                 </Grid>
+                                <Grid item xs={6}>
+                                    {renderQR()}
+                                </Grid>
+
                             </Grid>
                         </div>
                     )}
@@ -617,7 +626,13 @@ export default function SearchContact() {
                         <div>
                             <Grid container component="span" spacing={1} style={{ paddingTop: 39, width: '100%', alignItems: 'center', textAlign: 'center' }}>
                                 {imageUrl ? (
-                                    <a href={imageUrl} download style={{ width: '100%' }}>
+                                    <a href={imageUrl} download
+                                        style={{
+                                            width: '100%',
+                                            alignItems: "center",
+                                            display: "flex",
+                                            flexDirection: "column"
+                                        }}>
                                         <img src={imageUrl} alt="img" style={{ width: '50%' }} />
                                     </a>) : null}
                             </Grid>

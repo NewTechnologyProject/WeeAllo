@@ -31,6 +31,8 @@ public class Message implements Serializable {
     private Long id;
     @Column(name = "status")
     private String status;
+    @Column(name="file")
+    private String file;
     @Column(name="content")
     private String content;
     @JoinColumn(name = "roomChatId", referencedColumnName = "id")
@@ -93,6 +95,14 @@ public class Message implements Serializable {
 
     public void setUserId(UserChat userId) {
         this.userId = userId;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 
     @Override

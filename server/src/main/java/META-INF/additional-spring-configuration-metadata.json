@@ -1,0 +1,15 @@
+{"amazonProperties": [
+    {
+    "name": "amazon.s3.default-bucket",
+    "type": "java.lang.String",
+    "description": "File upload storage location"
+  },{
+    "name": "amazon.aws.access-key-id",
+    "type": "java.lang.String",
+    "description": "File upload storage location"
+  },{
+    "name": "amazon.aws.access-key-secret",
+    "type": "java.lang.String",
+    "description": "File upload storage location"
+  }
+]}

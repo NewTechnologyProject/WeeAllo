@@ -1,9 +1,11 @@
 import { Link as RouterLink } from "react-router-dom";
 // material
+import React, { useEffect } from "react";
 import { styled } from "@material-ui/core/styles";
 import { Card, Stack, Link, Container, Typography } from "@material-ui/core";
 // layouts
 import AuthLayout from "../layouts/AuthLayout";
+import { useNavigate } from "react-router-dom";
 // components
 import Page from "../components/Page";
 import { MHidden } from "../components/@material-extend";
@@ -40,6 +42,14 @@ const ContentStyle = styled("div")(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
+  const navigate = useNavigate();
+  const SET_USER_AUTHENTICATE = "user_authenticated";
+  useEffect(() => {
+    // dispatch(actions.fetchAll());
+    if (localStorage.getItem(SET_USER_AUTHENTICATE) !== "undefined") {
+      navigate("/dashboard", { replace: true });
+    }
+  }, []);
   return (
     <RootStyle title="Login | Minimal-UI">
       <AuthLayout>
