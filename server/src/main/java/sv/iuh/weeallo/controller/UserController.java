@@ -82,4 +82,9 @@ public class UserController {
         userService.userRegister(userChat);
         return userChat;
     }
+    @PostMapping("/forgotpass")
+    public UserChat userForgot(@RequestBody UserChat userChat){
+        userService.userForgot(userChat);
+        return userChat;
+    }
 }
