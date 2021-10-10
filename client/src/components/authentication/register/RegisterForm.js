@@ -59,7 +59,7 @@ export default function RegisterForm() {
     if ("password" in fieldValues)
       temp.password = fieldValues.password
         ? ""
-        : "Mật khẩu không được để trống";
+        : "Mật khẩu không được để trống và phải từ 6 kí tự trở lên";
 
     setErrors({
       ...temp,
@@ -114,7 +114,6 @@ export default function RegisterForm() {
             })}
           />
         </Stack>
-
         <TextField
           fullWidth
           label="Số điện thoại"

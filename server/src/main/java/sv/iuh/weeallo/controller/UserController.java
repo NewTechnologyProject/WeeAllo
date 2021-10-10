@@ -1,6 +1,8 @@
 package sv.iuh.weeallo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sv.iuh.weeallo.models.Contact;
 import sv.iuh.weeallo.models.RoomChat;
@@ -20,21 +22,44 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoomChatService roomChatService;
+    
 
     @GetMapping("/get-all-users")
     public List<UserChat> getAllUser() {
         return userService.getAllUser();
     }
 
-    @PostMapping("/login/{phone}&{pass}")
-    public UserChat getAllUser(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
-        UserChat userChat=userService.getLogin(phone, pass);
-        if(userChat != null){
-            return sliceUser(userChat);
-        }
-        return null;
+    @GetMapping("/phone/{dt}")
+    public UserChat getUserByPhone(@PathVariable("dt") String dt){
+        return userService.getUserChatByPhone(dt);
     }
+//    @PostMapping("/login/{phone}&{pass}")
+//    public UserChat getAllUser(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
+//        UserChat userChat=userService.getLogin(phone, pass);
+//        if(userChat != null){
+//            return sliceUser(userChat);
+//        }
+//        return null;
+//    }
 
+    @PostMapping("/login/{phone}&{pass}")
+    public UserChat userLogin(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
+//        UserChat user1=userService.getUserChatByPhone(phone);
+//        if(BCrypt.checkpw(pass,user1.getPassword())==true){
+//            return sliceUser(user1);
+//        }
+//        return null;
+        if(userService.getUserChatByPhone(phone)==null){
+            return null;
+        }else{
+            UserChat userChat = userService.getUserChatByPhone(phone);
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            if(bCryptPasswordEncoder.matches(pass,userChat.getPassword())==true){
+                return userService.getUserChatByPhone(phone);
+            }else
+                return null;
+        }
+    }
     @GetMapping("/{userId}/rooms")
     public List<RoomChat> getAllRoomByUser(@PathVariable("userId") Long userId){
         UserChat user = userService.getUserById(userId);
@@ -88,6 +113,7 @@ public class UserController {
 
     @PostMapping("/register")
     public UserChat userRegister(@RequestBody UserChat userChat) {
+        userChat.setPassword(new BCryptPasswordEncoder().encode(userChat.getPassword()));
         userService.userRegister(userChat);
         return userChat;
     }
@@ -113,5 +139,32 @@ public class UserController {
         return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(),
                 userChat.getEmail(), userChat.getPhone(), userChat.getPassword(),userChat.getIsActive(),
                 userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(), userChat.getStatus());
+    }
+
+    @GetMapping("/detail/{id}")
+    public UserChat findUserDetailById(@PathVariable("id") Long id ){
+        return userService.getUserDetailById(id);
+    }
+
+    @PutMapping("/detail/{id}")
+    public UserChat updateUserChat(@RequestBody UserChat userChatDetail, @PathVariable("id") Long id){
+        UserChat userChat = userService.getUserDetailById(id);
+        if(userChatDetail.getFirstname() != null){
+            userChat.setFirstname(userChatDetail.getFirstname());
+        }
+        if(userChatDetail.getLastname() != null){
+            userChat.setLastname(userChatDetail.getLastname());
+        }
+        if(userChatDetail.getAvartar() != null){
+            userChat.setAvartar(userChatDetail.getAvartar());
+        }
+        if(userChatDetail.getPassword() != null){
+            userChat.setPassword(new BCryptPasswordEncoder().encode(userChatDetail.getPassword()));
+        }
+        if(userChatDetail.getCoverImage() != null){
+            userChat.setCoverImage(userChatDetail.getCoverImage());
+        }
+        userService.saveUserChat(userChat);
+        return userChat;
     }
 }
