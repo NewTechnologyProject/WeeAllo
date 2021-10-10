@@ -35,6 +35,22 @@ export default function MessageChat(props) {
   // const inputMessageRef = useRef();
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const [chosenEmoji, setChosenEmoji] = React.useState(null);
+  const [emojiStatus, setEmojiStatus] = React.useState(false);
+
+  const iconClick = () => {
+    setEmojiStatus(!emojiStatus);
+  }
+
+  const onEmojiClick = (event, emojiObject) => {
+    setChosenEmoji(emojiObject);
+  }
+
+  // const EmojiData = ({ chosenEmoji }) => (
+  //   <div style={{ textAlign: 'center', marginRight: '810px' }}>
+  //     {chosenEmoji.emoji}<br />
+  //   </div>
+  // );
 
   MessageChat.propTypes = {
     props: PropTypes.bool.isRequired,
@@ -79,13 +95,20 @@ export default function MessageChat(props) {
             xs={12}
             sm={12}
             md={12}
-            style={{ height: "75%", borderBottom: "1px solid #e9e7e5" }}
           >
             {listMessages.length > 0 ? (
               <MessageContent listMessages={listMessages} />
             ) : (
               <p>Let's say something</p>
             )}
+          </Grid>
+
+          <Grid
+            style={{ height: "60%", paddingTop: 100}}>
+            {emojiStatus === true ? (
+              <Picker onEmojiClick={onEmojiClick} skinTone={SKIN_TONE_MEDIUM_DARK} />
+
+            ) : (<span></span>)}
           </Grid>
 
           {/* Typing message */}
@@ -100,9 +123,16 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
-                <IconButton aria-label="search" style={{ width: 50 }}>
-                  <ChildCareIcon />
+
+
+                <IconButton
+                  type="submit"
+                  aria-label="search"
+                  style={{ width: 50 }}
+                >
+                  <ChildCareIcon onClick={iconClick} />
                 </IconButton>
+
 
                 <Divider orientation="vertical" />
                 <IconButton aria-label="directions" style={{ width: 50 }}>
@@ -121,51 +151,12 @@ export default function MessageChat(props) {
               </Grid>
 
               <Grid
-                item
-                xs={12}
-                style={{ height: "60%" }}
-                style={{ paddingLeft: 10, paddingRight: 10, display: "flex" }}
+                style={{ height: 60}}
+                // style={{ paddingLeft: 10, paddingRight: 10, display: "flex" }}
               >
-                {/* <InputBase
-                  placeholder="Nhập tin nhắn của bạn"
-                  inputProps={{ "aria-label": "search google maps" }}
-                  fullWidth
-                /> */}
-                <MessageInput />
 
-                {/* Sending Icon */}
-                {/* <IconButton
-                  type="submit"
-                  aria-label="search"
-                  style={{ width: 50 }}
-                >
-                  <EmojiEmotionsIcon onClick={handleClick} />
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    style={{
-                      transform: "translateX(0) translateY(-11%)",
-                    }}
-                    onClose={handleClose}
-                  >
-                    <div style={{ textAlign: "center" }}>
-                      <Picker skinTone={SKIN_TONE_MEDIUM_DARK} />
-                    </div>
-                  </Menu>
-                </IconButton> */}
+                <MessageInput dataEmoji={chosenEmoji} activeRoom = {props.activeRoom.id} />
 
-                <Divider orientation="vertical" />
-
-                {/* Seding button */}
-                <IconButton
-                  color="primary"
-                  aria-label="directions"
-                  style={{ width: 50 }}
-                >
-                  <SendIcon />
-                </IconButton>
               </Grid>
             </Grid>
           </Grid>

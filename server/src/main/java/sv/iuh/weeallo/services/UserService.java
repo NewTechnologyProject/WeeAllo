@@ -29,6 +29,9 @@ public class UserService {
     public UserChat userRegister(UserChat userChat) {
         return userRepository.save(userChat);
     }
+    public UserChat userForgot(UserChat userChat){
+        return userRepository.save(userChat);
+    }
 
     public UserChat getUserById(Long userId){
         Optional<UserChat> userObj = userRepository.findById(userId);

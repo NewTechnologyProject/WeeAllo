@@ -3,8 +3,12 @@ package sv.iuh.weeallo.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sv.iuh.weeallo.models.Contact;
+import sv.iuh.weeallo.models.RoomChat;
 import sv.iuh.weeallo.models.UserChat;
+import sv.iuh.weeallo.models.UserGroup;
 import sv.iuh.weeallo.repository.ContactRepository;
+import sv.iuh.weeallo.repository.RoomChatRepository;
+import sv.iuh.weeallo.repository.UserGroupRepository;
 import sv.iuh.weeallo.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -16,6 +20,10 @@ public class ContactService {
     private ContactRepository contactRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoomChatRepository roomChatRepository;
+    @Autowired
+    private UserGroupRepository userGroupRepository;
     //Get all contact of user
     public List<UserChat> getAllContact(Long id){
         List<Contact> list= contactRepository.getAllContact(id);
@@ -117,6 +125,14 @@ public class ContactService {
         Contact contact=contactRepository.getContact(id1,id2);
         contact.setStatus("friend");
         contactRepository.save(contact);
+        RoomChat roomChat=new RoomChat();
+        roomChatRepository.save(roomChat);
+        UserChat userChat= userRepository.findById(id1).get();
+        UserChat userChat2= userRepository.findById(id2).get();
+        UserGroup userGroup= new UserGroup(roomChat,userChat);
+        UserGroup userGroup2= new UserGroup(roomChat,userChat2);
+        userGroupRepository.save(userGroup);
+        userGroupRepository.save(userGroup2);
         List<UserChat> list=getAllReceive(id2);
         return list;
     }

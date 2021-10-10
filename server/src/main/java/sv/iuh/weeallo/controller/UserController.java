@@ -118,6 +118,11 @@ public class UserController {
         return userChat;
     }
 
+    @PostMapping("/forgotpass")
+    public UserChat userForgot(@RequestBody UserChat userChat){
+        userService.userForgot(userChat);
+        return userChat;
+    }
     //get list friends
     public List<UserChat> getFriends(Long userId, List<Contact> listContacts){
         List<UserChat> users = new ArrayList<UserChat>();

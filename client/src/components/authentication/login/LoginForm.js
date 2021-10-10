@@ -96,7 +96,14 @@ export default function LoginForm() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+  // const handleForgot = (e) => {
+  //   e.preventDefault();
+  //   if (validate()) {
+  //     dispatch(actions.register(values));
 
+  //     navigate("/forgotpass",{ replace: true });
+  //   }
+  // };
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit(onLogin)}>
