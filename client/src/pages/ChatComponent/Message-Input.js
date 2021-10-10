@@ -2,11 +2,11 @@ import React, { PureComponent, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import InputBase from "@material-ui/core/InputBase"
 import { useState } from 'react'
-import { useDispatch } from "react-redux";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import SendIcon from "@material-ui/icons/Send";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
+import { useDispatch, useSelector } from "react-redux";
 
 
 import * as actions from "src/actions/create-new-message.action"
@@ -24,10 +24,9 @@ export const MessageInput = (props) => {
     //const user = useSelector(state => state.customer.userAuth);
     
     console.log(message);
+    const user = useSelector(state => state.customer.userAuth);
+ 
     const dispatch = useDispatch();
-  
-    //const chosenEmoji = props.dataEmoji;
-    // const [chosenEmoji, setChosenEmoji] = useState(null);
 
     useEffect(() =>{
         if(props.dataEmoji){
@@ -52,6 +51,7 @@ export const MessageInput = (props) => {
             ///this.handleMessageSendEvent(event)
             //window.alert(message);
             const messageText = {
+
                 status: "send",
                 content: message,
                 file: null,
@@ -67,6 +67,7 @@ export const MessageInput = (props) => {
 
 
     return (
+
         <div>
             <InputBase
                 placeholder="Nhập tin nhắn của bạn"
@@ -86,8 +87,6 @@ export const MessageInput = (props) => {
                 <SendIcon />
             </IconButton>
         </div>
-
-
     )
 
 }

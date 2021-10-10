@@ -114,12 +114,12 @@ export default function ChatInfomation(props) {
                                         <img className={classes.imgFile} src="https://halotravel.vn/wp-content/uploads/2020/07/thach_trangg_79484888_172754317141414_3036467530455897785_n.jpg" />
                                     </ListItem>
                                 </Grid>
-                                <Grid xs={4}>
+                                <Grid xs={4} className={classes.imgFile}>
                                     <ListItem button className={classes.nested}>
-                                        <img src="https://halotravel.vn/wp-content/uploads/2020/07/thach_trangg_103512340_187758299273938_8335419467587726993_n.jpg" />
+                                        <img className={classes.imgFile} src="https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1633608170833-FB_IMG_1621397369344.jpg" />
                                     </ListItem>
                                 </Grid>
-                                <Grid xs={4}>
+                                <Grid xs={4} className={classes.imgFile}>
                                     <ListItem button className={classes.nested}>
                                         <img src="https://halotravel.vn/wp-content/uploads/2020/07/thach_trangg_103512340_187758299273938_8335419467587726993_n.jpg" />
                                     </ListItem>

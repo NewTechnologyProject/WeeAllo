@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import React from "react";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import eyeFill from "@iconify/icons-eva/eye-fill";
@@ -7,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as actions from "src/actions/customer.action";
 import useForm from "./useForm";
+// import firebase from "./firebase";
+
 // material
 import {
   Stack,
@@ -15,7 +18,8 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
-
+import { isAfter } from "date-fns";
+import firebase from "./firebase";
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
@@ -49,17 +53,24 @@ export default function RegisterForm() {
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
     if ("firstname" in fieldValues)
-      temp.firstname = fieldValues.firstname ? "" : "Họ không được để rỗng."; //toán tử 3 ngôi
+      temp.firstname = /^[A-Z]{1}[a-z]*/.test(fieldValues.firstname)
+        ? ""
+        : "Họ không được để rỗng và bắt đầu là chữ in hoa."; //toán tử 3 ngôi
     if ("lastname" in fieldValues)
-      temp.lastname = fieldValues.lastname ? "" : "Tên không được để rỗng.";
+      temp.lastname = /^[A-Z]{1}[a-z]*/.test(fieldValues.lastname)
+        ? ""
+        : "Tên không được để rỗng và bắt đầu là chữ in hoa.";
     if ("phone" in fieldValues)
-      temp.phone = fieldValues.phone
+      temp.phone = /^[0]{1}\d{9}$/.test(fieldValues.phone)
         ? ""
         : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
+    setErrors({
+      ...temp,
+    });
     if ("password" in fieldValues)
-      temp.password = fieldValues.password
+      temp.password = /^\w{10,16}$/.test(fieldValues.password)
         ? ""
-        : "Mật khẩu không được để trống";
+        : "Mật khẩu không được để trống, ít nhất 10 kí tự và tối đa 16 kí tự ";
 
     setErrors({
       ...temp,
@@ -75,19 +86,52 @@ export default function RegisterForm() {
     e.preventDefault();
     if (validate()) {
       dispatch(actions.register(values));
+
       navigate("/registerotp", { replace: true });
     }
   };
 
-  const register = () => {
-    //e.preventDefault();
-    //console.log(firstName + lastName + phone + password);
-    dispatch(actions.register(phone, password, firstName, lastName));
-    navigate("/login", { replace: true });
+  const configureCaptcha = () => {
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+      "sign-in-button",
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          onSignInSubmit();
+          console.log("Recaptca varified");
+        },
+        defaultCountry: "IN",
+      }
+    );
   };
-
+  const onSignInSubmit = (e) => {
+    e.preventDefault();
+    configureCaptcha();
+    const phoneNumber = "+84" + values.phone;
+    console.log(phoneNumber);
+    const appVerifier = window.recaptchaVerifier;
+    firebase
+      .auth()
+      .signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+        console.log("OTP has been sent");
+        // ...
+      })
+      .catch((error) => {
+        // Error; SMS not sent
+        // ...
+        console.log("SMS not sent");
+      });
+  };
   return (
-    <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+    <form id="otp" autoComplete="off" noValidate onSubmit={() => {
+      handleSubmit()
+  }}>
+      <div id="sign-in-button"></div>
       <Stack spacing={3}>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           <TextField

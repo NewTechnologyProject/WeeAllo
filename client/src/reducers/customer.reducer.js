@@ -13,6 +13,7 @@ const initialState = {
   userAuth: userAuth,
   list: [],
   listRooms: [],
+  listFriends: [],
   register: null,
 };
 
@@ -65,6 +66,7 @@ export const customerReducer = (state = initialState, action) => {
         userAuth: "undefined",
       };
     }
+
     //Get list rooms
     case "LIST ROOMS": {
       return {
@@ -72,6 +74,15 @@ export const customerReducer = (state = initialState, action) => {
         listRooms: [...action.payload],
       };
     }
+
+    //Get list friends
+    case "LIST FRIENDS": {
+      return {
+        ...state,
+        listFriends: [...action.payload],
+      };
+    }
+
     default:
       return state;
   }

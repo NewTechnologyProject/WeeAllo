@@ -16,19 +16,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/rooms")
 public class RoomChatController {
     @Autowired
     private RoomChatService roomChatService;
     @Autowired
     private MessageService messageService;
 
-    @GetMapping("/rooms/{roomId}")
+    @GetMapping("/{roomId}")
     public RoomChat getRoomById(@PathVariable("roomId") Long roomId){
         return roomChatService.getById(roomId);
     }
 
-    @GetMapping("/rooms/{roomId}/messages")
+    @GetMapping("/{roomId}/messages")
     public List<Message> getMessagesInRoom(@PathVariable("roomId") Long roomId){
         List<Message> listMessages = roomChatService.getAllMessages(roomId);
         List<Message> newListMessages = new ArrayList<Message>();
@@ -49,6 +49,12 @@ public class RoomChatController {
         }
 
         return newListMessages;
+    }
+
+    @PostMapping ("/")
+    public void addRoomChat(@RequestBody RoomChat roomChat){
+        roomChatService.addRoom(roomChat);
+
     }
 
     @PostMapping(value="/room")

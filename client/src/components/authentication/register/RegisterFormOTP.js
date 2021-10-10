@@ -17,7 +17,17 @@ import {
 import { LoadingButton } from "@material-ui/lab";
 
 // ----------------------------------------------------------------------
-
+    const onSubmitOTP = (e) =>{
+        e.preventDefault()     
+        const code = this.useState.otp
+        console.log(code)
+        window.confirmationResult.confirm(code).then((result) => {       
+          const user = result.user;
+          console.log(JSON.stringify(user))
+          alert("User is verified")
+        }).catch((error) => {     
+        });     
+    }
 export default function RegisterFormOTP() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,7 +49,7 @@ export default function RegisterFormOTP() {
            // })}
           />
         </Stack>
-        <LoadingButton fullWidth size="large" type="submit" variant="contained">
+        <LoadingButton name="otp" fullWidth size="large" type="submit" variant="contained">
           Xác nhận
         </LoadingButton>
       </Stack>
