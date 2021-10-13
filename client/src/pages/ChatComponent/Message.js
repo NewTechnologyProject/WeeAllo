@@ -17,9 +17,10 @@ import ChildCareIcon from "@material-ui/icons/ChildCare";
 import ImageIcon from "@material-ui/icons/Image";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import { MessageInput } from "./Message-Input";
+import React from "react"
 // import InputBase from "@material-ui/core/InputBase";
 //import MessageInput from "./Message-Input";
-// import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
+import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 // import Menu from "@material-ui/core/Menu";
 
 // const SORT_OPTIONS = [
@@ -104,7 +105,7 @@ export default function MessageChat(props) {
           </Grid>
 
           <Grid
-            style={{ height: "60%", paddingTop: 100}}>
+            style={{ height: "60%", paddingTop: 100 }}>
             {emojiStatus === true ? (
               <Picker onEmojiClick={onEmojiClick} skinTone={SKIN_TONE_MEDIUM_DARK} />
 
@@ -151,11 +152,11 @@ export default function MessageChat(props) {
               </Grid>
 
               <Grid
-                style={{ height: 60}}
-                // style={{ paddingLeft: 10, paddingRight: 10, display: "flex" }}
+                style={{ height: 60 }}
+              // style={{ paddingLeft: 10, paddingRight: 10, display: "flex" }}
               >
 
-                <MessageInput dataEmoji={chosenEmoji} activeRoom = {props.activeRoom.id} />
+                <MessageInput dataEmoji={chosenEmoji} activeRoom={props.activeRoom.id} />
 
               </Grid>
             </Grid>

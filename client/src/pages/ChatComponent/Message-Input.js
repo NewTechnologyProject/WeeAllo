@@ -18,33 +18,33 @@ import * as actions from "src/actions/create-new-message.action"
 export const MessageInput = (props) => {
 
     const [message, setMessage] = useState(null);
-    const [message1, setMessage1] = useState(null); 
+    const [message1, setMessage1] = useState(null);
     const SET_USER_AUTHENTICATE = "user_authenticated";
     const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
     //const user = useSelector(state => state.customer.userAuth);
-    
+
     console.log(message);
     const user = useSelector(state => state.customer.userAuth);
- 
+
     const dispatch = useDispatch();
 
-    useEffect(() =>{
-        if(props.dataEmoji){
-           setMessage(message + props.dataEmoji.emoji);
-           console.log(message + props.dataEmoji.emoji);
-        }         
-    },[props.dataEmoji]);
+    useEffect(() => {
+        if (props.dataEmoji) {
+            setMessage(message + props.dataEmoji.emoji);
+            console.log(message + props.dataEmoji.emoji);
+        }
+    }, [props.dataEmoji]);
 
     // if(chosenEmoji != null){
     //     setMessage(message + chosenEmoji.emoji)
     //     //console.log(message + chosenEmoji.emoji);
     // }
-    
+
     const EmojiData = ({ chosenEmoji }) => (
         <div style={{ textAlign: 'center', marginRight: '810px' }}>
-          {chosenEmoji.emoji}<br />
+            {chosenEmoji.emoji}<br />
         </div>
-      );
+    );
 
     const handleMessageKeyPressEvent = (event) => {
         if (event.key === 'Enter') {
@@ -64,6 +64,20 @@ export const MessageInput = (props) => {
         }
     }
 
+    const sentMessage = () => {
+        const messageText = {
+
+            status: "send",
+            content: message,
+            file: null,
+            roomChatId: props.activeRoom,
+            userId
+
+        }
+        dispatch(actions.addMessage(messageText))
+        setMessage('')
+    }
+
 
 
     return (
@@ -77,14 +91,14 @@ export const MessageInput = (props) => {
                 autoFocus={true}
                 onChange={(e) => { setMessage(e.target.value) }}
                 onKeyPress={(e) => handleMessageKeyPressEvent(e)}
-                style={{paddingLeft:10, width: 1120, paddingRight: 50}}
+                style={{ paddingLeft: 10, width: 1120, paddingRight: 50 }}
             />
             <IconButton
                 color="primary"
                 aria-label="directions"
-                style={{float: 'right'}}
+                style={{ float: 'right' }}
             >
-                <SendIcon />
+                <SendIcon onClick={sentMessage} />
             </IconButton>
         </div>
     )
