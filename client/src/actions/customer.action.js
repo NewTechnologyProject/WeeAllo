@@ -17,6 +17,9 @@ export const ACTION_TYPES = {
   LOGIN: "LOGIN",
   FETCH_ALL: "FETCH_ALL",
   REGISTER: "REGISTER",
+  FINDUSERBYID: "FINDUSERBYID",
+  FINDUSERBYPHONE: "FINDUSERBYPHONE",
+  UPDATEBYIDUSER: "UPDATEBYIDUSER",
 };
 export const login = (phone, pass) => (dispatch) => {
   apiService
@@ -37,6 +40,42 @@ export const register = (userChat) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: ACTION_TYPES.REGISTER,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const updateUserById = (userChat, id) => (dispatch) => {
+  apiService
+    .user()
+    .updateByIdUser(userChat, id)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.UPDATEBYIDUSER,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const findByIdUser = (id) => (dispatch) => {
+  apiService
+    .user()
+    .findByIdUser(id)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.FINDUSERBYID,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const findByPhoneUser = (phone) => (dispatch) => {
+  apiService
+    .user()
+    .findByPhoneUser(phone)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.FINDUSERBYPHONE,
         payload: response.data,
       });
     })

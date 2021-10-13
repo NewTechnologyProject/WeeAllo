@@ -15,6 +15,8 @@ const initialState = {
   listRooms: [],
   listFriends: [],
   register: null,
+  updateUser: null,
+  // login: null,
 };
 
 export const customerReducer = (state = initialState, action) => {
@@ -35,6 +37,24 @@ export const customerReducer = (state = initialState, action) => {
       return {
         ...state,
         register: action.payload,
+      };
+    }
+    case ACTION_TYPES.UPDATEBYIDUSER: {
+      return {
+        ...state,
+        updateUser: action.payload,
+      };
+    }
+    case ACTION_TYPES.FINDUSERBYID: {
+      return {
+        ...state,
+        userById: action.payload,
+      };
+    }
+    case ACTION_TYPES.FINDUSERBYPHONE: {
+      return {
+        ...state,
+        userByPhone: action.payload,
       };
     }
     case "AUTHENTICATE_SIGNAL": {

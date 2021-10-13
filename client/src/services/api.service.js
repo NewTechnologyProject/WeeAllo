@@ -8,7 +8,10 @@ export default {
     return {
       fetchAll: () => axios.get(url + "get-all-users"),
       login: (phone, pass) => axios.post(url + "login/" + phone + "&" + pass),
-      findByIdUser: (id) => axios.get(url + "get-user/" + id),
+      findByIdUser: (id) => axios.get(url + "detail/" + id),
+      updateByIdUser: (userChat, id) =>
+        axios.put(url + "detail/" + id, userChat),
+      findByPhoneUser: (dt) => axios.get(url + "phone/" + dt),
       addUser: (userChat) => axios.post(url + "register", userChat),
       listRoom: (userId) => axios.get(url + userId + "/rooms"),
       listFriend: (userId) => axios.get(url + userId + "/friends"),

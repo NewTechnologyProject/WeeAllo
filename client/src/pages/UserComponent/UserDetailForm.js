@@ -1,37 +1,62 @@
-import React, { useState } from "react";
-
-import {
-  Grid,
-  Button,
-  Container,
-  Stack,
-  Typography,
-  TextField,
-  Avatar,
-  IconButton,
-} from "@material-ui/core";
-import { LoadingButton } from "@material-ui/lab";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import { Avatar, Grid, IconButton, Stack, TextField } from "@material-ui/core";
 import Badge from "@material-ui/core/Badge";
-import CardMedia from "@material-ui/core/CardMedia";
-import Card from "@material-ui/core/Card";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import { LoadingButton } from "@material-ui/lab";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import * as actions from "src/actions/customer.action";
 
 export default function UserDetail() {
   var btnDisabled = true;
-  const [firstname, setFirstName] = useState("abc");
-  const [lastname, setLastName] = useState("bdf");
-  const [phone, setPhone] = useState("0936064271");
-  const [email, setEmail] = useState("hungnguyen");
-  function handleDisable() {
-    if (firstname !== "" && lastname !== "" && email !== "") {
-      return (btnDisabled = false);
-    } else {
-      return (btnDisabled = true);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [userProfile, setUserProfile] = useState([]);
+  const [image, setImage] = useState("");
+  const [userId, setUserId] = useState();
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const user = useSelector((state) => state.customer.userAuth);
+  const profile = useSelector((state) => state.customer.userById);
+  useEffect(() => {
+    dispatch(actions.findByIdUser(user));
+  }, []);
+  useEffect(() => {
+    if (profile !== undefined) {
+      setUserProfile(profile);
     }
-  }
+  }, [profile]);
+  useEffect(() => {
+    if (userProfile !== undefined) {
+      setUserId(userProfile.id);
+      setImage(userProfile.avartar);
+      setFirstName(userProfile.firstname);
+      setLastName(userProfile.lastname);
+      setPhone(userProfile.phone);
+    }
+  }, [userProfile]);
+  console.log(userProfile);
+  // console.log(firstname);
+  //console.log(lastname);
+  console.log(userId);
+
+  const initialFieldValues = {
+    firstname: firstname,
+    lastname: lastname,
+    phone: phone,
+    avartar: "access/UserImage/user.png",
+    coverImage: "",
+  };
+  console.log(initialFieldValues);
+
+  const handleSubmit = () => {
+    dispatch(actions.updateUserById(initialFieldValues, userId));
+    navigate("/dashboard", { replace: true });
+  };
   return (
     <Grid container direction="row" justifyContent="center" alignItems="center">
-      <form autoComplete="off">
+      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <div
           style={{
             alignSelf: "center",
@@ -64,7 +89,9 @@ export default function UserDetail() {
                 badgeContent={<PhotoCamera style={{ fontSize: "27px" }} />}
               >
                 <Avatar
-                  src="/static/mock-images/avatars/avatar_default.jpg"
+                  //src="/static/mock-images/avatars/avatar_default.jpg"
+                  alt={image}
+                  src={(e) => setImage(e.target.value)}
                   style={{
                     width: "150px",
                     height: "150px",
@@ -82,7 +109,7 @@ export default function UserDetail() {
               fullWidth
               label="Họ"
               name="firstname"
-              value={firstname}
+              value={userProfile ? firstname : "abc"}
               onChange={(e) => setFirstName(e.target.value)}
             />
 
@@ -101,20 +128,14 @@ export default function UserDetail() {
             name="phone"
             disabled={true}
             value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
-          <TextField
-            fullWidth
-            label="Email"
-            name="password"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+
           <LoadingButton
             fullWidth
             size="large"
             type="submit"
             variant="contained"
-            disabled={handleDisable()}
           >
             Cập nhật
           </LoadingButton>

@@ -1,6 +1,6 @@
 package sv.iuh.weeallo.repository;
 
-import org.hibernate.sql.Select;
+//import org.hibernate.sql.Select;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

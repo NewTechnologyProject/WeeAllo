@@ -81,11 +81,11 @@ public class UserChat implements Serializable {
         this.status = status;
     }
 
-    public UserChat(Long id, String firstname, String lastname, String email, String phone, String avartar, String coverImage) {
+    public UserChat(Long id, String firstname, String lastname, String password, String phone, String avartar, String coverImage) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.email = email;
+        this.password = password;
         this.phone = phone;
         this.avartar = avartar;
         this.coverImage = coverImage;
@@ -104,6 +104,21 @@ public class UserChat implements Serializable {
         this.avartar = avartar;
         this.coverImage = coverImage;
         this.status = status;
+    }
+
+//    public UserChat(Long id, String firstname, String lastname, String phone ,String avartar, String coverImage) {
+//        this.id = id;
+//        this.firstname = firstname;
+//        this.lastname = lastname;
+//        this.phone = phone;
+//        this.avartar = avartar;
+//        this.coverImage = coverImage;
+//
+//    }
+
+    public UserChat(Long id, String password) {
+        this.id = id;
+        this.password = password;
     }
 
     public UserChat(Long id) {

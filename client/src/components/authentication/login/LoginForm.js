@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { isAuthenticated } from "src/actions/customer.action";
 import { Button } from "@material-ui/core";
 import { useForm } from "react-hook-form";
+import { Alert, AlertTitle } from "@material-ui/lab";
 // material
 import {
   Link,
@@ -19,18 +20,32 @@ import {
   IconButton,
   InputAdornment,
   FormControlLabel,
+  Container,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
+import { styled } from "@material-ui/core/styles";
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
+  const ContentStyle = styled("div")(({ theme }) => ({
+    maxWidth: 480,
+    margin: "auto",
+    display: "flex",
+    minHeight: "100vh",
+    flexDirection: "column",
+    justifyContent: "center",
+    padding: theme.spacing(12, 0),
+  }));
   const navigate = useNavigate();
+  const [check, setCheck] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const [phone, setPhone] = useState("");
   const [pass, setPass] = useState("");
   const user = useSelector((state) => state.customer.login);
+
+  const SET_USER_AUTHENTICATE = "user_authenticated";
   const { handleSubmit } = useForm({});
 
   useEffect(() => {
@@ -40,6 +55,17 @@ export default function LoginForm() {
   const onLogin = () => {
     if (user === "" || user === "undefined") {
       window.alert("Fail");
+      // return (
+      //   <Container>
+      //     <ContentStyle>
+      //       <Alert severity="warning">
+      //         <AlertTitle>Cảnh báo</AlertTitle>
+      //         Tài khoản đã được đăng ký —{" "}
+      //         <strong>Vui lòng nhập mã xác thực!</strong>
+      //       </Alert>
+      //     </ContentStyle>
+      //   </Container>
+      // );
     } else {
       dispatch(isAuthenticated(user.id));
       navigate("/dashboard", { replace: true });
