@@ -62,7 +62,10 @@ export default function ListFriendChat(props) {
         );
         name = `${members[0].firstname}, ${members[1].firstname},...`;
       } else if (neededRoom && neededRoom.userGroupList.length === 2) {
-        //Chat one to one
+        name =
+          neededRoom.userGroupList[0].id === Number(userId)
+            ? neededRoom.userGroupList[1].firstname
+            : neededRoom.userGroupList[0].firstname;
       }
     }
     return name;

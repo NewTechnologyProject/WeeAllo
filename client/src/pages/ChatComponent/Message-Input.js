@@ -1,72 +1,100 @@
-import React, { PureComponent, useEffect } from "react";
+import React, { PureComponent, useEffect, Fragment } from "react";
 import PropTypes from "prop-types";
 import InputBase from "@material-ui/core/InputBase";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
+import SendIcon from "@material-ui/icons/Send";
+import IconButton from "@material-ui/core/IconButton";
+import Divider from "@material-ui/core/Divider";
+import { useDispatch, useSelector } from "react-redux";
 
 import * as actions from "src/actions/create-new-message.action";
 
 /**
  *  New Message Input
  */
-export const MessageInput = () => {
-  const [message, setMessage] = useState("");
-  //const [messageText, setMessageText] = useState(null)
+export const MessageInput = (props) => {
+  const [message, setMessage] = useState(null);
+  const [message1, setMessage1] = useState(null);
+  const SET_USER_AUTHENTICATE = "user_authenticated";
+  const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
+  //const user = useSelector(state => state.customer.userAuth);
+
   console.log(message);
-
-  // setMessageText = messageText => {
-  //     this.setState(
-  //         { message: messageText },
-  //         () => this.props.onType(this.state.message),
-  //     )
-  // }
-
-  // handleMessageChangeEvent = event => {
-  //     this.setMessageText(event.target.value)
-  // }
-
-  // handleMessageSendEvent = event => {
-  //     event.preventDefault()
-
-  //     this.props.onNewMessage(this.state.message)
-  //     this.setMessageText('')
-  // }
+  const user = useSelector((state) => state.customer.userAuth);
 
   const dispatch = useDispatch();
-  // useEffect(() => {
 
-  // },[
-  //     message
-  // ])
+  useEffect(() => {
+    if (props.dataEmoji) {
+      setMessage(message + props.dataEmoji.emoji);
+      console.log(message + props.dataEmoji.emoji);
+    }
+  }, [props.dataEmoji]);
+
+  // if(chosenEmoji != null){
+  //     setMessage(message + chosenEmoji.emoji)
+  //     //console.log(message + chosenEmoji.emoji);
+  // }
+
+  const EmojiData = ({ chosenEmoji }) => (
+    <div style={{ textAlign: "center", marginRight: "810px" }}>
+      {chosenEmoji.emoji}
+      <br />
+    </div>
+  );
 
   const handleMessageKeyPressEvent = (event) => {
     if (event.key === "Enter") {
       ///this.handleMessageSendEvent(event)
       //window.alert(message);
       const messageText = {
-        status: "seen",
+        status: "send",
         content: message,
-        roomChatId: 3,
-        userId: 1,
+        file: null,
+        roomChatId: props.activeRoom,
+        userId,
       };
       console.log(messageText);
       dispatch(actions.addMessage(messageText));
+      setMessage("");
     }
-    //setMessage('');
+  };
+
+  const sentMessage = () => {
+    const messageText = {
+      status: "send",
+      content: message,
+      file: null,
+      roomChatId: props.activeRoom,
+      userId,
+    };
+    dispatch(actions.addMessage(messageText));
+    setMessage("");
   };
 
   return (
-    <InputBase
-      placeholder="Nhập tin nhắn của bạn"
-      inputProps={{ "aria-label": "search google maps" }}
-      fullWidth
-      autoFocus={true}
-      //value={this.state.message}
-      onChange={(e) => {
-        setMessage(e.target.value);
-      }}
-      //onChange={this.handleMessageChangeEvent}
-      onKeyPress={(e) => handleMessageKeyPressEvent(e)}
-    />
+    <Fragment>
+      <InputBase
+        placeholder="Nhập tin nhắn của bạn"
+        inputProps={{ "aria-label": "search google maps" }}
+        fullWidth
+        // value={message}
+        autoFocus={true}
+        onChange={(e) => {
+          setMessage(e.target.value);
+        }}
+        onKeyPress={(e) => handleMessageKeyPressEvent(e)}
+        style={{ paddingLeft: 10, width: 1120, paddingRight: 50 }}
+      />
+      <Divider orientation="vertical" />
+      {/* <IconButton
+        color="primary"
+        aria-label="directions"
+        style={{ float: "right" }}
+      >
+        <SendIcon onClick={sentMessage} />
+      </IconButton> */}
+    </Fragment>
   );
 };

@@ -1,4 +1,4 @@
-import { Navigate, useRoutes } from "react-router-dom";
+import { Link, Navigate, useRoutes } from "react-router-dom";
 // layouts
 import DashboardLayout from "./layouts/dashboard";
 import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
@@ -21,7 +21,7 @@ export default function Router() {
       path: "/dashboard",
       element: <DashboardLayout />,
       children: [
-        { path: "/", element: <Navigate to="/dashboard/app" replace /> },
+        { path: "", element: <Navigate to="/dashboard/app" replace /> },
         { path: "app", element: <DashboardApp /> },
         { path: "user", element: <User /> },
         { path: "contact", element: <Contact /> },

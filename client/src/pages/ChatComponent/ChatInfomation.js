@@ -1,18 +1,3 @@
-// // material
-// import { Grid, Button, Container, Stack, Typography } from "@material-ui/core";
-// // components
-// import Page from "src/components/Page";
-// //ort POSTS from '../_mocks_/blog';
-// import MessageChat from "./Message";
-// import SearchFriend from "./Search";
-// import ListFriendChat from "./ListFriendChat";
-// import { alpha, styled } from "@material-ui/core/styles";
-// import { Card } from "@material-ui/core";
-// import * as actions from "src/actions/customer.action";
-// import { useState, useEffect } from "react";
-// import { useSelector, useDispatch } from "react-redux";
-// import classes from "./Chat.module.css";
-// import { useNavigate } from "react-router-dom";
 import Scrollbar from "src/components/Scrollbar";
 // ----------------------------------------------------------------------
 import React from "react";
@@ -110,6 +95,7 @@ export default function ChatInfomation(props) {
             </List>
           </Collapse>
         </List>
+
         <List
           component="nav"
           aria-labelledby="nested-list-subheader"
@@ -130,12 +116,15 @@ export default function ChatInfomation(props) {
                     />
                   </ListItem>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} className={classes.imgFile}>
                   <ListItem button className={classes.nested}>
-                    <img src="https://halotravel.vn/wp-content/uploads/2020/07/thach_trangg_103512340_187758299273938_8335419467587726993_n.jpg" />
+                    <img
+                      className={classes.imgFile}
+                      src="https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1633608170833-FB_IMG_1621397369344.jpg"
+                    />
                   </ListItem>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} className={classes.imgFile}>
                   <ListItem button className={classes.nested}>
                     <img src="https://halotravel.vn/wp-content/uploads/2020/07/thach_trangg_103512340_187758299273938_8335419467587726993_n.jpg" />
                   </ListItem>

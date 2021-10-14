@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import React from "react";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import eyeFill from "@iconify/icons-eva/eye-fill";
@@ -7,26 +8,29 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as actions from "src/actions/customer.action";
 import useForm from "./useForm";
+import { Alert, AlertTitle } from "@material-ui/lab";
+// import firebase from "./firebase";
+
 // material
 import {
   Stack,
   TextField,
   IconButton,
   InputAdornment,
+  Container,
 } from "@material-ui/core";
 import { LoadingButton } from "@material-ui/lab";
-
+import { isAfter } from "date-fns";
+import firebase from "./firebase";
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstname] = useState("");
-  const [lastName, setLastname] = useState("");
-
+  const [otp, setOTP] = useState("");
+  const [disable, setDisable] = React.useState(false);
+  const [registerComponent, setRegisterComponent] = useState(true);
   const initialFieldValues = {
     firstname: "",
     lastname: "",
@@ -49,17 +53,24 @@ export default function RegisterForm() {
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
     if ("firstname" in fieldValues)
-      temp.firstname = fieldValues.firstname ? "" : "Họ không được để rỗng."; //toán tử 3 ngôi
+      temp.firstname = /^[A-Z]{1}[a-z]*$/.test(fieldValues.firstname)
+        ? ""
+        : "Họ không được để rỗng và bắt đầu là chữ in hoa."; //toán tử 3 ngôi
     if ("lastname" in fieldValues)
-      temp.lastname = fieldValues.lastname ? "" : "Tên không được để rỗng.";
+      temp.lastname = /^[A-Z]{1}[a-z]*$/.test(fieldValues.lastname)
+        ? ""
+        : "Tên không được để rỗng và bắt đầu là chữ in hoa.";
     if ("phone" in fieldValues)
-      temp.phone = fieldValues.phone
+      temp.phone = /^[0]{1}\d{9}$/.test(fieldValues.phone)
         ? ""
         : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
+    setErrors({
+      ...temp,
+    });
     if ("password" in fieldValues)
-      temp.password = fieldValues.password
+      temp.password = /^\w{10,200}$/.test(fieldValues.password)
         ? ""
-        : "Mật khẩu không được để trống";
+        : "Mật khẩu không được để trống, ít nhất 10 kí tự";
 
     setErrors({
       ...temp,
@@ -74,20 +85,69 @@ export default function RegisterForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      dispatch(actions.register(values));
-      navigate("/registerotp", { replace: true });
+      onSignInSubmit(e);
+      setDisable(true);
+      setTimeout(() => {
+        setRegisterComponent(false);
+      }, 8000);
     }
   };
 
-  const register = () => {
-    //e.preventDefault();
-    //console.log(firstName + lastName + phone + password);
-    dispatch(actions.register(phone, password, firstName, lastName));
-    navigate("/login", { replace: true });
+  const configureCaptcha = () => {
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+      "sign-in-button",
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          onSignInSubmit();
+          console.log("Recaptca varified");
+        },
+        defaultCountry: "IN",
+      }
+    );
   };
-
-  return (
-    <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+  const onSignInSubmit = (e) => {
+    e.preventDefault();
+    configureCaptcha();
+    const phoneNumber = "+84" + values.phone;
+    console.log(phoneNumber);
+    const appVerifier = window.recaptchaVerifier;
+    firebase
+      .auth()
+      .signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+        console.log("OTP has been sent");
+      })
+      .catch((error) => {
+        // Error; SMS not sent
+        console.log("SMS not sent");
+      });
+  };
+  const onSubmitOTP = (e) => {
+    e.preventDefault();
+    const code = otp;
+    console.log(code);
+    window.confirmationResult
+      .confirm(code)
+      .then((result) => {
+        // User signed in successfully.
+        const user = result.user;
+        console.log(JSON.stringify(user));
+        dispatch(actions.register(values));
+        // ...
+      })
+      .catch((error) => {
+        // User couldn't sign in (bad verification code?)
+        // ...
+      });
+  };
+  return registerComponent ? (
+    <form id="otp" autoComplete="off" noValidate>
+      <div id="sign-in-button"></div>
       <Stack spacing={3}>
         <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
           <TextField
@@ -114,7 +174,6 @@ export default function RegisterForm() {
             })}
           />
         </Stack>
-
         <TextField
           fullWidth
           label="Số điện thoại"
@@ -152,10 +211,44 @@ export default function RegisterForm() {
           })}
         />
 
-        <LoadingButton fullWidth size="large" type="submit" variant="contained">
+        <LoadingButton
+          disabled={disable}
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          onClick={handleSubmit}
+        >
           Đăng kí
         </LoadingButton>
       </Stack>
     </form>
+  ) : (
+    <div>
+      <Alert severity="warning" style={{ marginBottom: 10 }}>
+        <AlertTitle>Cảnh báo</AlertTitle>
+        <strong>Vui lòng nhập mã xác thực!</strong>
+      </Alert>
+      <form autoComplete="off" noValidate onSubmit={onSubmitOTP}>
+        <Stack spacing={3}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            <TextField
+              fullWidth
+              label="OTP"
+              name="OTP"
+              onChange={(e) => setOTP(e.target.value)}
+            />
+          </Stack>
+          <LoadingButton
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+          >
+            Xác nhận
+          </LoadingButton>
+        </Stack>
+      </form>
+    </div>
   );
 }

@@ -50,7 +50,6 @@ export default function Chat() {
       newRoom = { ...room, roomName: name };
     }
     newRoom = { ...newRoom, userGroupList: [...members] };
-    console.log(members);
     setActiveRoom(newRoom);
   };
 

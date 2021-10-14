@@ -19,7 +19,7 @@ export default function DashboardApp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const SET_USER_AUTHENTICATE = "user_authenticated";
-  const user = useSelector(state => state.customer.userAuth);
+  const user = useSelector((state) => state.customer.userAuth);
 
   // useEffect(() => {
   //  dispatch(actions.)

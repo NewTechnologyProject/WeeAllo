@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import * as actions from "src/actions/roomchat.action";
@@ -20,7 +20,7 @@ import { MessageInput } from "./Message-Input";
 import InputBase from "@material-ui/core/InputBase";
 import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
-// import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
+import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 // import Menu from "@material-ui/core/Menu";
 
 // const SORT_OPTIONS = [
@@ -36,6 +36,22 @@ export default function MessageChat(props) {
   // const inputMessageRef = useRef();
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+  const [emojiStatus, setEmojiStatus] = useState(false);
+
+  const iconClick = () => {
+    setEmojiStatus(!emojiStatus);
+  };
+
+  const onEmojiClick = (event, emojiObject) => {
+    setChosenEmoji(emojiObject);
+  };
+
+  // const EmojiData = ({ chosenEmoji }) => (
+  //   <div style={{ textAlign: 'center', marginRight: '810px' }}>
+  //     {chosenEmoji.emoji}<br />
+  //   </div>
+  // );
 
   // MessageChat.propTypes = {
   //   props: PropTypes.bool.isRequired,
@@ -78,19 +94,24 @@ export default function MessageChat(props) {
           </Grid>
 
           {/* Message Area */}
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            style={{ height: "75%", borderBottom: "1px solid #e9e7e5" }}
-          >
+          <Grid item xs={12} sm={12} md={12}>
             {listMessages.length > 0 ? (
               <MessageContent listMessages={listMessages} />
             ) : (
               <div className={classes.contain}>
                 <p>"Let's say something"</p>
               </div>
+            )}
+          </Grid>
+
+          <Grid style={{ height: "60%", paddingTop: 100 }}>
+            {emojiStatus === true ? (
+              <Picker
+                onEmojiClick={onEmojiClick}
+                skinTone={SKIN_TONE_MEDIUM_DARK}
+              />
+            ) : (
+              <span></span>
             )}
           </Grid>
 
@@ -106,9 +127,13 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
-                <IconButton aria-label="search" style={{ width: 50 }}>
-                  <ChildCareIcon />
-                </IconButton>
+                {/* <IconButton
+                  type="submit"
+                  aria-label="search"
+                  style={{ width: 50 }}
+                >
+                  <ChildCareIcon onClick={iconClick} />
+                </IconButton> */}
 
                 <Divider orientation="vertical" />
                 <IconButton aria-label="directions" style={{ width: 50 }}>
@@ -132,46 +157,10 @@ export default function MessageChat(props) {
                 style={{ height: "60%" }}
                 style={{ paddingLeft: 10, paddingRight: 10, display: "flex" }}
               >
-                <InputBase
-                  placeholder="Nhập tin nhắn của bạn"
-                  inputProps={{ "aria-label": "search google maps" }}
-                  fullWidth
+                <MessageInput
+                  dataEmoji={chosenEmoji}
+                  activeRoom={props.activeRoom.id}
                 />
-                {/* <MessageInput /> */}
-
-                {/* Sending Icon */}
-                {/* <IconButton
-                  type="submit"
-                  aria-label="search"
-                  style={{ width: 50 }}
-                >
-                  <EmojiEmotionsIcon onClick={handleClick} />
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    style={{
-                      transform: "translateX(0) translateY(-11%)",
-                    }}
-                    onClose={handleClose}
-                  >
-                    <div style={{ textAlign: "center" }}>
-                      <Picker skinTone={SKIN_TONE_MEDIUM_DARK} />
-                    </div>
-                  </Menu>
-                </IconButton> */}
-
-                <Divider orientation="vertical" />
-
-                {/* Seding button */}
-                <IconButton
-                  color="primary"
-                  aria-label="directions"
-                  style={{ width: 50 }}
-                >
-                  <SendIcon />
-                </IconButton>
               </Grid>
             </Grid>
           </Grid>
