@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class ContactService {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    
+
     @Autowired
     private ContactRepository contactRepository;
     @Autowired
