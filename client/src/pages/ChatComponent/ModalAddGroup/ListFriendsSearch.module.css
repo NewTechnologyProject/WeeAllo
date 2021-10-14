@@ -6,7 +6,7 @@
 }
 
 /* list items  */
-.listItem:hover {
+.listItem {
   transition: 0.5s;
 }
 .listItem:hover {

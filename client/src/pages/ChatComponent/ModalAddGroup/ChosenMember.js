@@ -29,11 +29,18 @@ const ChosenMember = (props) => {
               return (
                 <ListItem key={member.id}>
                   <ListItemAvatar>
-                    <Avatar className={classes["avatar-size-small"]}>K</Avatar>
+                    <Avatar
+                      className={classes["avatar-size-small"]}
+                      alt={member.firstname}
+                      src={"dummy.js"}
+                    ></Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={member.firstname} />
                   <ListItemSecondaryAction>
-                    <IconButton aria-label="delete">
+                    <IconButton
+                      aria-label="delete"
+                      onClick={props.onDeleteMember.bind(null, member)}
+                    >
                       <CancelIcon fontSize="small" />
                     </IconButton>
                   </ListItemSecondaryAction>

@@ -58,7 +58,7 @@ export const fetchAll = () => (dispatch) => {
 };
 
 // Get all rooms
-export const fetchAllRoom = (userId) => (dispatch) => {
+export const fetchAllRoom = (userId) => async (dispatch) => {
   apiService
     .user()
     .listRoom(userId)

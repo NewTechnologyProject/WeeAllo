@@ -17,7 +17,8 @@ import ChildCareIcon from "@material-ui/icons/ChildCare";
 import ImageIcon from "@material-ui/icons/Image";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import { MessageInput } from "./Message-Input";
-// import InputBase from "@material-ui/core/InputBase";
+import InputBase from "@material-ui/core/InputBase";
+import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 // import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 // import Menu from "@material-ui/core/Menu";
@@ -36,9 +37,9 @@ export default function MessageChat(props) {
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
 
-  MessageChat.propTypes = {
-    props: PropTypes.bool.isRequired,
-  };
+  // MessageChat.propTypes = {
+  //   props: PropTypes.bool.isRequired,
+  // };
 
   useEffect(() => {
     dispatch(actions.fetchAllMessages(props.activeRoom.id));
@@ -64,7 +65,10 @@ export default function MessageChat(props) {
           >
             <ListItem style={{ height: "100%" }}>
               <ListItemAvatar>
-                <Avatar>N</Avatar>
+                <Avatar
+                  alt={props.activeRoom.roomName}
+                  src={"dummy.js"}
+                ></Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={props.activeRoom.roomName}
@@ -84,7 +88,9 @@ export default function MessageChat(props) {
             {listMessages.length > 0 ? (
               <MessageContent listMessages={listMessages} />
             ) : (
-              <p>Let's say something</p>
+              <div className={classes.contain}>
+                <p>"Let's say something"</p>
+              </div>
             )}
           </Grid>
 
@@ -126,12 +132,12 @@ export default function MessageChat(props) {
                 style={{ height: "60%" }}
                 style={{ paddingLeft: 10, paddingRight: 10, display: "flex" }}
               >
-                {/* <InputBase
+                <InputBase
                   placeholder="Nhập tin nhắn của bạn"
                   inputProps={{ "aria-label": "search google maps" }}
                   fullWidth
-                /> */}
-                <MessageInput />
+                />
+                {/* <MessageInput /> */}
 
                 {/* Sending Icon */}
                 {/* <IconButton

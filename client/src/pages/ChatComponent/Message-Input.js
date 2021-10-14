@@ -1,83 +1,72 @@
-import React, { PureComponent, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import InputBase from "@material-ui/core/InputBase"
-import { useState } from 'react'
+import React, { PureComponent, useEffect } from "react";
+import PropTypes from "prop-types";
+import InputBase from "@material-ui/core/InputBase";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-
-import * as actions from "src/actions/create-new-message.action"
-
+import * as actions from "src/actions/create-new-message.action";
 
 /**
  *  New Message Input
  */
 export const MessageInput = () => {
-    // static propTypes = {
-    //     onType: PropTypes.func.isRequired,
-    //     onNewMessage: PropTypes.func.isRequired,
-    // }
+  const [message, setMessage] = useState("");
+  //const [messageText, setMessageText] = useState(null)
+  console.log(message);
 
-    // state  = {
-    //     message: '',
-    // }
+  // setMessageText = messageText => {
+  //     this.setState(
+  //         { message: messageText },
+  //         () => this.props.onType(this.state.message),
+  //     )
+  // }
 
-    const [message, setMessage] = useState('');
-    //const [messageText, setMessageText] = useState(null)
-    console.log(message);
+  // handleMessageChangeEvent = event => {
+  //     this.setMessageText(event.target.value)
+  // }
 
-    // setMessageText = messageText => {
-    //     this.setState(
-    //         { message: messageText },
-    //         () => this.props.onType(this.state.message),
-    //     )
-    // }
+  // handleMessageSendEvent = event => {
+  //     event.preventDefault()
 
-    // handleMessageChangeEvent = event => {
-    //     this.setMessageText(event.target.value)
-    // }
+  //     this.props.onNewMessage(this.state.message)
+  //     this.setMessageText('')
+  // }
 
-    // handleMessageSendEvent = event => {
-    //     event.preventDefault()
+  const dispatch = useDispatch();
+  // useEffect(() => {
 
-    //     this.props.onNewMessage(this.state.message)
-    //     this.setMessageText('')
-    // }
+  // },[
+  //     message
+  // ])
 
-    const dispatch = useDispatch();
-    // useEffect(() => {
-
-    // },[
-    //     message
-    // ])
-
-    const handleMessageKeyPressEvent = (event) => {
-        if (event.key === 'Enter') {
-            ///this.handleMessageSendEvent(event)
-            //window.alert(message);
-            const messageText={
-                status: "seen",
-                content: message,
-                roomChatId: 3,
-                userId: 1
-            }
-            console.log(messageText);
-            dispatch(actions.addMessage(messageText))
-        }
-        //setMessage('');
+  const handleMessageKeyPressEvent = (event) => {
+    if (event.key === "Enter") {
+      ///this.handleMessageSendEvent(event)
+      //window.alert(message);
+      const messageText = {
+        status: "seen",
+        content: message,
+        roomChatId: 3,
+        userId: 1,
+      };
+      console.log(messageText);
+      dispatch(actions.addMessage(messageText));
     }
+    //setMessage('');
+  };
 
-
-    return (
-        <InputBase
-            placeholder="Nhập tin nhắn của bạn"
-            inputProps={{ "aria-label": "search google maps" }}
-            fullWidth
-            autoFocus={true}
-            //value={this.state.message}
-            onChange={(e) => { setMessage(e.target.value)}}
-            //onChange={this.handleMessageChangeEvent}
-            onKeyPress={(e) => handleMessageKeyPressEvent(e)}
-        />
-    )
-
-}
+  return (
+    <InputBase
+      placeholder="Nhập tin nhắn của bạn"
+      inputProps={{ "aria-label": "search google maps" }}
+      fullWidth
+      autoFocus={true}
+      //value={this.state.message}
+      onChange={(e) => {
+        setMessage(e.target.value);
+      }}
+      //onChange={this.handleMessageChangeEvent}
+      onKeyPress={(e) => handleMessageKeyPressEvent(e)}
+    />
+  );
+};
