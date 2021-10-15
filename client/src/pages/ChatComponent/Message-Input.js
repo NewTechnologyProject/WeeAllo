@@ -8,14 +8,14 @@ import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "src/actions/create-new-message.action"
-import { isToday } from 'date-fns';
+
 
 
 /**
  *  New Message Input
  */
 export const MessageInput = (props) => {
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState('');
   const [message1, setMessage1] = useState(null);
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
@@ -23,13 +23,7 @@ export const MessageInput = (props) => {
 
   console.log(message);
   const user = useSelector((state) => state.customer.userAuth);
-
-
-  useEffect(() => {
-    if (props.dataEmoji) {
-      setMessage(message + props.dataEmoji.emoji);
-    }
-  }, [props.dataEmoji]);
+  const today = new Date();
 
   const EmojiData = ({ chosenEmoji }) => (
     <div style={{ textAlign: 'center', marginRight: '810px' }}>
@@ -37,19 +31,27 @@ export const MessageInput = (props) => {
     </div>
   );
 
+  useEffect(() => {
+    if (props.dataEmoji) {
+      setMessage(message + props.dataEmoji.emoji);
+    }
+  }, [props.dataEmoji]);
+
   const handleMessageKeyPressEvent = (event) => {
     if (event.key === 'Enter') {
       ///this.handleMessageSendEvent(event)
       //window.alert(message);
+      //const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
       const messageText = {
 
         status: "send",
         content: message,
         file: null,
         roomChatId: props.activeRoom,
+        time: today,
         userId
       }
-      console.log(messageText);
+      console.log(messageText.time);
       dispatch(actions.addMessage(messageText))
       setMessage('')
     }
@@ -74,22 +76,22 @@ export const MessageInput = (props) => {
         placeholder="Nhập tin nhắn của bạn"
         inputProps={{ "aria-label": "search google maps" }}
         fullWidth
-        // value={message}
+        value={message}
         autoFocus={true}
         onChange={(e) => {
           setMessage(e.target.value);
         }}
         onKeyPress={(e) => handleMessageKeyPressEvent(e)}
-        style={{ paddingLeft: 10, width: 1120, paddingRight: 50 }}
+        style={{ paddingLeft: 10, width: 1100, paddingRight: 50 }}
       />
-      {/* <Divider orientation="vertical" /> */}
-      {/* <IconButton
+      <Divider orientation="vertical" style={{ paddingRight: 10 }} />
+      <IconButton
         color="primary"
         aria-label="directions"
         style={{ float: "right" }}
       >
         <SendIcon onClick={sentMessage} />
-      </IconButton> */}
+      </IconButton>
     </Fragment>
   );
 }
