@@ -1,7 +1,7 @@
 import { Grid } from '@material-ui/core';
 import React, { useEffect, useState } from "react";
 import * as actions from "../../actions/contact.action";
-import { Card, CardActions, CardContent, CardMedia, Button, Typography } from '@material-ui/core';
+import { Card, CardActions, CardContent, CardMedia, Button, Typography, TextField } from '@material-ui/core';
 import { useDispatch, useSelector } from "react-redux";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,7 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import userAvatar from 'src/access/UserImage/user.png';
 import { Search } from '@material-ui/icons';
 import Snackbar from '@material-ui/core/Snackbar';
-
+import InputAdornment from '@material-ui/core/InputAdornment';
 // ----------------------------------------------------------------------
 
 export default function AllReceive() {
@@ -23,6 +23,7 @@ export default function AllReceive() {
     const [idDelete, setIdDelete] = useState(0);
     const [openToast, setOpenToast] = React.useState(false);
     const [openToast1, setOpenToast1] = React.useState(false);
+    const [search, setSearch] = useState("")
     const handleClick = () => {
         setOpenToast(true);
     };
@@ -54,8 +55,14 @@ export default function AllReceive() {
         dispatch(actions.fetchReceiveContact(user))
     }, [])
     useEffect(() => {
-        setReceiveContact(allReceive)
-    }, [allReceive])
+        if (allReceive) {
+            setReceiveContact(
+                allReceive.filter((c) =>
+                    c.lastname.toLowerCase().includes(search.toLowerCase())
+                )
+            );
+        }
+    }, [search, allReceive]);
     const genderListReceiveContact = () => {
         if (!receiveContact.length) {
             return (
@@ -115,7 +122,26 @@ export default function AllReceive() {
         }
     }
     return (
-        <div style={{ height: '100%', padding: '20px', width: '100%', display: 'flex', position: 'inherit' }}>
+        <div style={{ height: '100%', padding: '20px', width: '100%', display: 'block', position: 'inherit' }}>
+            <Grid container>
+                <Grid item xs={12} sm={12} md={12} style={{ padding: 10, textAlign: 'right' }}>
+                    <TextField
+                        id="outlined-basic"
+                        label="Nhập tên cần tìm"
+                        name="search"
+                        variant="outlined"
+                        size="small"
+                        onChange={e => setSearch(e.target.value)}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Grid>
+            </Grid>
             {genderListReceiveContact()}
             <Dialog
                 open={open}
