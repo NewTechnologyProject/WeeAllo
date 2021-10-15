@@ -91,7 +91,7 @@ export default function Chat() {
                     sm={12}
                     md={8}
                     style={{
-                      height: "100%",
+                      height: "80vh",
                       borderLeft: "1px solid #e9e7e5",
                       borderRight: "1px solid #e9e7e5",
                     }}

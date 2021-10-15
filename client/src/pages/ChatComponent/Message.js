@@ -21,6 +21,7 @@ import InputBase from "@material-ui/core/InputBase";
 import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
+import Scrollbar from "src/components/Scrollbar";
 // import Menu from "@material-ui/core/Menu";
 
 // const SORT_OPTIONS = [
@@ -99,9 +100,16 @@ export default function MessageChat(props) {
           </Grid>
 
           {/* Message Area */}
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid item xs={12} sm={12} md={12} style={{ height: "75%" }}>
+
             {listMessages.length > 0 ? (
-              <MessageContent listMessages={listMessages} />
+              <Scrollbar
+                sx={{
+                  height: "100%",
+                }}
+              >
+                <MessageContent listMessages={listMessages} />
+              </Scrollbar>
             ) : (
               <div className={classes.contain}>
                 <p>"Let's say something"</p>
