@@ -6,6 +6,7 @@
 package sv.iuh.weeallo.models;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +34,8 @@ public class Message implements Serializable {
     private String status;
     @Column(name="file")
     private String file;
+    @Column(name = "time")
+    private Date time;
     @Column(name="content")
     private String content;
     @JoinColumn(name = "roomChatId", referencedColumnName = "id")
@@ -103,6 +106,14 @@ public class Message implements Serializable {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     @Override

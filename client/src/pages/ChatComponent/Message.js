@@ -127,13 +127,13 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
-                {/* <IconButton
+                <IconButton
                   type="submit"
                   aria-label="search"
                   style={{ width: 50 }}
                 >
                   <ChildCareIcon onClick={iconClick} />
-                </IconButton> */}
+                </IconButton>
 
                 <Divider orientation="vertical" />
                 <IconButton aria-label="directions" style={{ width: 50 }}>
