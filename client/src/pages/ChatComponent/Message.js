@@ -58,7 +58,12 @@ export default function MessageChat(props) {
   // };
 
   useEffect(() => {
-    dispatch(actions.fetchAllMessages(props.activeRoom.id));
+    let fetchchat;
+    if (props.activeRoom) {
+      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(props.activeRoom.id)), 1000);
+    }
+    return () => clearInterval(fetchchat);
+
   }, [props.activeRoom]);
 
   // const handleClick = (event) => {
