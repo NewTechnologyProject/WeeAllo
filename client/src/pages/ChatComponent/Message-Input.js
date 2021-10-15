@@ -7,8 +7,9 @@ import SendIcon from "@material-ui/icons/Send";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 import { useDispatch, useSelector } from "react-redux";
+import * as actions from "src/actions/create-new-message.action"
+import { isToday } from 'date-fns';
 
-import * as actions from "src/actions/create-new-message.action";
 
 /**
  *  New Message Input
@@ -23,43 +24,37 @@ export const MessageInput = (props) => {
   console.log(message);
   const user = useSelector((state) => state.customer.userAuth);
 
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (props.dataEmoji) {
       setMessage(message + props.dataEmoji.emoji);
-      console.log(message + props.dataEmoji.emoji);
     }
   }, [props.dataEmoji]);
 
-  // if(chosenEmoji != null){
-  //     setMessage(message + chosenEmoji.emoji)
-  //     //console.log(message + chosenEmoji.emoji);
-  // }
-
   const EmojiData = ({ chosenEmoji }) => (
-    <div style={{ textAlign: "center", marginRight: "810px" }}>
-      {chosenEmoji.emoji}
-      <br />
+    <div style={{ textAlign: 'center', marginRight: '810px' }}>
+      {chosenEmoji.emoji}<br />
     </div>
   );
 
   const handleMessageKeyPressEvent = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       ///this.handleMessageSendEvent(event)
       //window.alert(message);
       const messageText = {
+
         status: "send",
         content: message,
         file: null,
         roomChatId: props.activeRoom,
-        userId,
-      };
+        userId
+      }
       console.log(messageText);
-      dispatch(actions.addMessage(messageText));
-      setMessage("");
+      dispatch(actions.addMessage(messageText))
+      setMessage('')
     }
-  };
+  }
+  const dispatch = useDispatch();
 
   const sentMessage = () => {
     const messageText = {
@@ -87,7 +82,7 @@ export const MessageInput = (props) => {
         onKeyPress={(e) => handleMessageKeyPressEvent(e)}
         style={{ paddingLeft: 10, width: 1120, paddingRight: 50 }}
       />
-      <Divider orientation="vertical" />
+      {/* <Divider orientation="vertical" /> */}
       {/* <IconButton
         color="primary"
         aria-label="directions"
@@ -97,4 +92,4 @@ export const MessageInput = (props) => {
       </IconButton> */}
     </Fragment>
   );
-};
+}
