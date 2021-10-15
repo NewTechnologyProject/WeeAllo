@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 
 import * as actions from "src/actions/create-new-message.action"
+import { isToday } from 'date-fns';
 
 
 /**
@@ -31,7 +32,6 @@ export const MessageInput = (props) => {
     useEffect(() => {
         if (props.dataEmoji) {
             setMessage(message + props.dataEmoji.emoji);
-            console.log(message + props.dataEmoji.emoji);
         }
     }, [props.dataEmoji]);
 
@@ -56,7 +56,8 @@ export const MessageInput = (props) => {
                 content: message,
                 file: null,
                 roomChatId: props.activeRoom,
-                userId
+                userId,
+                time: isToday
             }
             console.log(messageText);
             dispatch(actions.addMessage(messageText))

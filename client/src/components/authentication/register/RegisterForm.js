@@ -70,11 +70,7 @@ export default function RegisterForm() {
     if ("password" in fieldValues)
       temp.password = /^\w{10,200}$/.test(fieldValues.password)
         ? ""
-<<<<<<< HEAD
         : "Mật khẩu không được để trống và phải từ 6 kí tự trở lên";
-=======
-        : "Mật khẩu không được để trống, ít nhất 10 kí tự";
->>>>>>> 50d5e1be5bf97d614fcdcea3ff351a47ef303cbb
 
     setErrors({
       ...temp,
