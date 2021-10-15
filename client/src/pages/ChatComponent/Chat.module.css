@@ -1,7 +1,25 @@
-.center {
-  position: absolute;
-  top: 50%;
-  width: 60%;
+.contain {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  border-left: 1px solid #e6e6e6;
+  gap: 20px;
+}
+
+.title {
+  font-family: sans-serif;
+  font-size: 30px;
+}
+
+.subtitle {
   text-align: center;
-  font-size: 18px;
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+.logo {
+  width: 160px;
+  height: auto;
 }

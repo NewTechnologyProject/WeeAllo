@@ -11,11 +11,15 @@ import sv.iuh.weeallo.repository.RoomChatRepository;
 import sv.iuh.weeallo.repository.UserGroupRepository;
 import sv.iuh.weeallo.repository.UserRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ContactService {
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
     @Autowired
     private ContactRepository contactRepository;
     @Autowired
@@ -122,10 +126,16 @@ public class ContactService {
     }
     //Accept
     public List<UserChat> AcceptContact(Long id1,Long id2){
+        LocalDateTime now = LocalDateTime.now();
+        String date = dtf.format(now);
+
         Contact contact=contactRepository.getContact(id1,id2);
         contact.setStatus("friend");
         contactRepository.save(contact);
+
+        //create room
         RoomChat roomChat=new RoomChat();
+        roomChat.setCreateAt(date);
         roomChatRepository.save(roomChat);
         UserChat userChat= userRepository.findById(id1).get();
         UserChat userChat2= userRepository.findById(id2).get();
@@ -133,6 +143,7 @@ public class ContactService {
         UserGroup userGroup2= new UserGroup(roomChat,userChat2);
         userGroupRepository.save(userGroup);
         userGroupRepository.save(userGroup2);
+
         List<UserChat> list=getAllReceive(id2);
         return list;
     }

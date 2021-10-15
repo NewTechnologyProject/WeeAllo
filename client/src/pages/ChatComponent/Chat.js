@@ -1,3 +1,7 @@
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect, useCallback, Fragment } from "react";
+
 // material
 import { Grid, Button, Container, Stack, Typography } from "@material-ui/core";
 // components
@@ -6,50 +10,47 @@ import Page from "src/components/Page";
 import MessageChat from "./Message";
 import SearchFriend from "./Search";
 import ListFriendChat from "./ListFriendChat";
-import { alpha, styled } from "@material-ui/core/styles";
 import { Card } from "@material-ui/core";
 import * as actions from "src/actions/customer.action";
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import classes from "./Chat.module.css";
-import { useNavigate } from "react-router-dom";
 import ChatInfomation from "./ChatInfomation";
-
-
-const SORT_OPTIONS = [
-  { value: "latest", label: "Latest" },
-  { value: "popular", label: "Popular" },
-  { value: "oldest", label: "Oldest" },
-];
-
-// ----------------------------------------------------------------------
-const RootStyle = styled(Card)(({ theme }) => ({
-  boxShadow: "none",
-  textAlign: "center",
-  padding: theme.spacing(5, 0),
-  color: theme.palette.primary.darker,
-  backgroundColor: theme.palette.primary.lighter,
-}));
+// import { alpha, styled } from "@material-ui/core/styles";
 
 export default function Chat() {
-
   const [activeRoom, setActiveRoom] = useState(null);
-  const SET_USER_AUTHENTICATE = "user_authenticated";
+  const [needLoad, setNeedLoad] = useState({ name: "new" });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
   const userId = localStorage.getItem("user_authenticated");
 
-  // Get list roomChat
-  useEffect(() => {
+  const loadRoomsHandler = useCallback(() => {
     dispatch(actions.fetchAllRoom(userId));
-    if (localStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
+  }, [userId, actions.fetchAllRoom]);
+
+  const needLoadHandler = (group) => {
+    setNeedLoad(group);
+  };
+
+  useEffect(() => {
+    console.log("Loading");
+
+    if (needLoad) {
+      loadRoomsHandler();
+    }
+
+    if (userId === "undefined") {
       navigate("/login", { replace: true });
     }
-  }, []);
+  }, [loadRoomsHandler, needLoad]);
 
-  const getActiveRoom = (room) => {
-    setActiveRoom(room);
+  const getActiveRoom = (room, name, members) => {
+    let newRoom = room;
+    if (!room.roomName) {
+      newRoom = { ...room, roomName: name };
+    }
+    newRoom = { ...newRoom, userGroupList: [...members] };
+    setActiveRoom(newRoom);
   };
 
   return (
@@ -69,40 +70,57 @@ export default function Chat() {
                   }}
                 >
                   <Grid item xs={12} sm={12} md={12} style={{ height: "25%" }}>
-                    <SearchFriend />
+                    <SearchFriend onNeedLoad={needLoadHandler} />
                   </Grid>
                   <Grid item xs={12} sm={12} md={12} style={{ height: "75%" }}>
                     <ListFriendChat
                       listRooms={listRooms}
                       getActiveRoom={getActiveRoom}
+                      activeRoom={activeRoom}
                     />
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                md={8}
-                style={{
-                  height: "100%",
-                  borderLeft: "1px solid #e9e7e5",
-                  borderRight: "1px solid #e9e7e5",
-                }}
-              >
-                {activeRoom && <MessageChat activeRoom={activeRoom} />}
-                {!activeRoom && (
-                  <p className={classes.center}>Welcome To WeeAllo</p>
-                )}
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                md={2}
-              >
-                <ChatInfomation />
-              </Grid>
+
+              {/* When activeRoom has value */}
+              {activeRoom && (
+                <Fragment>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={8}
+                    style={{
+                      height: "100%",
+                      borderLeft: "1px solid #e9e7e5",
+                      borderRight: "1px solid #e9e7e5",
+                    }}
+                  >
+                    <MessageChat activeRoom={activeRoom} />
+                  </Grid>
+
+                  <Grid item xs={12} sm={12} md={2}>
+                    <ChatInfomation activeRoom={activeRoom} />
+                  </Grid>
+                </Fragment>
+              )}
+
+              {/* When activeRoom undefined */}
+              {!activeRoom && (
+                <Grid item xs={12} sm={12} md={10} style={{ height: "100%" }}>
+                  <div className={classes.contain}>
+                    <p className={classes.title}>
+                      Chào Mừng Đến Với <strong> WEEALLO </strong>
+                    </p>
+                    <p className={classes.subtitle}>
+                      Khám phá những tiện ích hỗ trợ làm việc, trò chuyện
+                      <br /> cùng người thân và bạn bè
+                    </p>
+
+                    <img src="/logo.png" className={classes.logo} />
+                  </div>
+                </Grid>
+              )}
             </Grid>
           </Grid>
         </Card>

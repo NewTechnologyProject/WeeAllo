@@ -14,10 +14,10 @@ import java.util.List;
 @Repository
 public interface RoomChatRepository extends JpaRepository<RoomChat, Long> {
 
-    @Modifying
-    @Transactional
-    @Query(value = "insert into room_chat (create_at, creator, room_name) value (:createAt, :creator, :roomName) ", nativeQuery = true)
-    void insertRommChat(@Param("createAt") String createAt, @Param("creator") Long creator,
-                            @Param("roomName") String roomName);
+//    @Modifying
+//    @Transactional
+//    @Query(value = "insert into room_chat (create_at, creator, room_name) value (:createAt, :creator, :roomName) ", nativeQuery = true)
+//    void insertRommChat(@Param("createAt") String createAt, @Param("creator") Long creator,
+//                            @Param("roomName") String roomName);
 
 }

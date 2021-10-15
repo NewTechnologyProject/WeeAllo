@@ -60,8 +60,6 @@ public class UserChat implements Serializable {
     @OneToMany(mappedBy = "receiveId")
     private List<Contact> contactList1;
     @OneToMany(mappedBy = "userId")
-    private List<ToDoUser> toDoUserList;
-    @OneToMany(mappedBy = "userId")
     private List<Message> messageList;
     @OneToMany(mappedBy = "userId")
     private List<UserGroup> userGroupList;
@@ -225,14 +223,6 @@ public class UserChat implements Serializable {
 
     public void setContactList1(List<Contact> contactList1) {
         this.contactList1 = contactList1;
-    }
-
-    public List<ToDoUser> getToDoUserList() {
-        return toDoUserList;
-    }
-
-    public void setToDoUserList(List<ToDoUser> toDoUserList) {
-        this.toDoUserList = toDoUserList;
     }
 
     public List<Message> getMessageList() {

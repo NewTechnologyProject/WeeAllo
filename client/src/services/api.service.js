@@ -1,6 +1,6 @@
-import { Feedback } from "@material-ui/icons";
 import axios from "axios";
-import { phone } from "faker";
+// import { Feedback } from "@material-ui/icons";
+// import { phone } from "faker";
 
 const baseApi = "http://localhost:4000/api/";
 export default {
@@ -42,12 +42,18 @@ export default {
   roomchat(url = baseApi + "rooms/") {
     return {
       listMessages: (roomId) => axios.get(url + roomId + "/messages"),
+      newGroupChat: (groupChat) => axios.post(url, groupChat),
+      listMembers: (roomId) => axios.get(url + roomId + "/users"),
+    };
+  },
+  usergroup(url = baseApi + "usergroups/") {
+    return {
+      addUserGroup: (userGroup) => axios.post(url, userGroup),
     };
   },
 
   message(url = baseApi + "messages/chat") {
     return {
-      //listMessages: (roomId) => axios.get(url + roomId + "/messages"),
       addMessage: (message) => axios.post(url, message),
     };
   },

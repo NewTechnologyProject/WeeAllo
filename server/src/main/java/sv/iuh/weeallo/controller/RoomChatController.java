@@ -1,10 +1,12 @@
 package sv.iuh.weeallo.controller;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sv.iuh.weeallo.models.Message;
 import sv.iuh.weeallo.models.RoomChat;
 import sv.iuh.weeallo.models.UserChat;
+import sv.iuh.weeallo.models.UserGroup;
 import sv.iuh.weeallo.services.MessageService;
 import sv.iuh.weeallo.services.RoomChatService;
 
@@ -38,11 +40,7 @@ public class RoomChatController {
                 RoomChat roomChat = new RoomChat(message.getRoomChatId().getId(), message.getRoomChatId().getCreator(),
                         message.getRoomChatId().getRoomName(), message.getRoomChatId().getCreateAt());
 
-                UserChat user = new UserChat(message.getUserId().getId(), message.getUserId().getFirstname(),
-                        message.getUserId().getLastname(), message.getUserId().getEmail(), message.getUserId().getPhone(),
-                        message.getUserId().getPassword(),message.getUserId().getIsActive(),
-                        message.getUserId().getCreateAt(), message.getUserId().getUpdateAt(), message.getUserId().getAvartar(),
-                        message.getUserId().getCoverImage(), message.getUserId().getStatus());
+                UserChat user = sliceUser(message.getUserId());
 
                 newListMessages.add(new Message(message.getId(), message.getStatus(), message.getContent(), roomChat, user));
             }
@@ -52,16 +50,37 @@ public class RoomChatController {
     }
 
     @PostMapping ("/")
-    public void addRoomChat(@RequestBody RoomChat roomChat){
-        roomChatService.addRoom(roomChat);
+    public RoomChat addRoomChat(@RequestBody RoomChat roomChat){
+        return roomChatService.addRoom(roomChat);
+    }
 
+    @GetMapping("/{roomId}/users")
+    public  List<UserChat> getListMembers (@PathVariable("roomId") Long roomId){
+        List<UserChat> members = new ArrayList<UserChat>();
+        List<UserGroup> userGroups = roomChatService.getAllMembers(roomId);
+
+        if(userGroups.size() > 0){
+            for (UserGroup ug : userGroups){
+                UserChat user = sliceUser(ug.getUserId());
+                members.add(user);
+            }
+        }
+        return members;
     }
 
     @PostMapping(value="/room")
     public RoomChat creaRoomChat(@RequestBody RoomChat roomChat) {
         //TODO: process POST request
         
-        return roomChatService.addRoomChat(roomChat);
+        return roomChatService.addRoom(roomChat);
     }
-    
+
+    //Slice user
+    public UserChat sliceUser(UserChat userChat){
+        return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(),
+                userChat.getEmail(), userChat.getPhone(), userChat.getPassword(),userChat.getIsActive(),
+                userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(),
+                userChat.getStatus());
+    }
+
 }

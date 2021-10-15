@@ -2,7 +2,6 @@ import React from "react";
 import { useState, Fragment } from "react";
 
 import { Grid, TextField } from "@material-ui/core";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import FormControl from "@material-ui/core/FormControl";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -21,7 +20,7 @@ import ModalAddGroup from "./ModalAddGroup/ModalAddGroup";
 
 // ----------------------------------------------------------------------
 
-export default function SearchFriend() {
+export default function SearchFriend(props) {
   const [openModal, setOpenModal] = useState(false);
 
   const openModalHandler = () => {
@@ -34,7 +33,11 @@ export default function SearchFriend() {
 
   return (
     <Fragment>
-      <ModalAddGroup openModal={openModal} onCloseModal={closeModalHandler} />
+      <ModalAddGroup
+        openModal={openModal}
+        onCloseModal={closeModalHandler}
+        onNeedLoad={props.onNeedLoad}
+      />
       <div
         style={{
           height: "100%",

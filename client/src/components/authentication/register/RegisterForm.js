@@ -70,8 +70,7 @@ export default function RegisterForm() {
     if ("password" in fieldValues)
       temp.password = /^\w{10,200}$/.test(fieldValues.password)
         ? ""
-        : "Mật khẩu không được để trống và phải từ 6 kí tự trở lên";
-
+        : "Mật khẩu không được để trống và phải từ 10 kí tự trở lên";
     setErrors({
       ...temp,
     });
@@ -138,6 +137,7 @@ export default function RegisterForm() {
         const user = result.user;
         console.log(JSON.stringify(user));
         dispatch(actions.register(values));
+        navigate("/login", { replace: true });
         // ...
       })
       .catch((error) => {
