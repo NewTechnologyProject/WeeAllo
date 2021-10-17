@@ -20,12 +20,11 @@ export default function App(props) {
     <div className={classes.container}>
       {props.listMessages.map((message) => {
         if (Number(userId) === message.userId.id) {
-          console.log(message.time);
           return (
             <MessageRight
               key={message.id}
               message={message.content}
-              timestamp="MM/DD 00:00"
+              timestamp={message.time}
               photoURL="Chao cc"
               displayName={`${message.userId.firstname} ${message.userId.lastname}`}
               avatarDisp={true}

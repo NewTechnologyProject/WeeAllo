@@ -21,9 +21,11 @@ export const MessageInput = (props) => {
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
   //const user = useSelector(state => state.customer.userAuth);
 
-  console.log(message);
+  // console.log(message);
   const user = useSelector((state) => state.customer.userAuth);
   const today = new Date();
+  const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes();
+  const dispatch = useDispatch();
 
   const EmojiData = ({ chosenEmoji }) => (
     <div style={{ textAlign: 'center', marginRight: '810px' }}>
@@ -41,22 +43,21 @@ export const MessageInput = (props) => {
     if (event.key === 'Enter') {
       ///this.handleMessageSendEvent(event)
       //window.alert(message);
-      //const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
       const messageText = {
 
         status: "send",
         content: message,
         file: null,
         roomChatId: props.activeRoom,
-        time: today,
+        time,
         userId
       }
-      console.log(messageText.time);
+      console.log(messageText);
       dispatch(actions.addMessage(messageText))
       setMessage('')
     }
   }
-  const dispatch = useDispatch();
+
 
   const sentMessage = () => {
     const messageText = {
@@ -64,7 +65,8 @@ export const MessageInput = (props) => {
       content: message,
       file: null,
       roomChatId: props.activeRoom,
-      userId,
+      time,
+      userId
     };
     dispatch(actions.addMessage(messageText));
     setMessage("");

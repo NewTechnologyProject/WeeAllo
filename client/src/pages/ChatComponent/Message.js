@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import * as actions from "src/actions/roomchat.action";
@@ -22,6 +22,12 @@ import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Scrollbar from "src/components/Scrollbar";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 // import Menu from "@material-ui/core/Menu";
 
 // const SORT_OPTIONS = [
@@ -39,6 +45,10 @@ export default function MessageChat(props) {
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+
+  const file = useRef(null);
 
   const iconClick = () => {
     setEmojiStatus(!emojiStatus);
@@ -47,6 +57,37 @@ export default function MessageChat(props) {
   const onEmojiClick = (event, emojiObject) => {
     setChosenEmoji(emojiObject);
   };
+
+  const changeHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+    setIsFilePicked(true);
+  };
+
+  const chooseFile = () => {
+    file.current.click();
+  }
+
+  const handleSubmission = () => {
+    const formData = new FormData();
+
+    formData.append('File', selectedFile);
+
+    fetch(
+      'http://localhost:4000/api/',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log('Success:', result);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
 
   // const EmojiData = ({ chosenEmoji }) => (
   //   <div style={{ textAlign: 'center', marginRight: '810px' }}>
@@ -140,21 +181,44 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
+                {/* Emoji */}
                 <IconButton
                   type="submit"
                   aria-label="search"
                   style={{ width: 50 }}
+                  onClick={iconClick}
                 >
-                  <ChildCareIcon onClick={iconClick} />
+                  <ChildCareIcon />
                 </IconButton>
 
+                {/* Image */}
                 <Divider orientation="vertical" />
-                <IconButton aria-label="directions" style={{ width: 50 }}>
+                <input type="file" accept=".jpg, .jpeg, .png, .gif" multiple hidden ref={file} onChange={changeHandler} />
+                <IconButton
+                  aria-label="directions" style={{ width: 50 }}
+                  onClick={chooseFile}
+                >
                   <ImageIcon />
                 </IconButton>
 
+                {/* File */}
                 <Divider orientation="vertical" />
-                <IconButton aria-label="directions" style={{ width: 50 }}>
+                {/* <input type="file" hidden ref={file} onChange={changeHandler} /> */}
+                {/* {
+                  isFilePicked ? (
+                    console.log("Filename: ", selectedFile.name,
+                      "\nFiletype: ", selectedFile.type,
+                      "\nSize in bytes: ", selectedFile.size,
+                      "\nlastModifiedDate:", selectedFile.lastModifiedDate.toLocaleDateString()
+                    )
+                  ) : (
+                    console.log("Chưa có file")
+                  )
+                } */}
+                <IconButton
+                  aria-label="directions" style={{ width: 50 }}
+                  onClick={chooseFile}
+                >
                   <AttachFileIcon />
                 </IconButton>
 
