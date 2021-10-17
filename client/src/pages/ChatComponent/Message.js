@@ -22,28 +22,25 @@ import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Scrollbar from "src/components/Scrollbar";
-// import Menu from "@material-ui/core/Menu";
 
-// const SORT_OPTIONS = [
-//   { value: "latest", label: "Latest" },
-//   { value: "popular", label: "Popular" },
-//   { value: "oldest", label: "Oldest" },
-// ];
-
-// ----------------------------------------------------------------------
-
+const URL = 'ws://localhost:3030'
 export default function MessageChat(props) {
-  // const [anchorEl, setAnchorEl] = useState(null);
-  // const inputMessageRef = useRef();
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
-
+  //RealTime
+  const [name, setName] = useState('Ichlas');
+  const [messages, setMessage] = useState([])
+  const [ws, setWs] = useState(new WebSocket(URL))
+  //Scroll
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
+
   useEffect(scrollToBottom, [listMessages]);
   const iconClick = () => {
     setEmojiStatus(!emojiStatus);
@@ -64,21 +61,47 @@ export default function MessageChat(props) {
   // };
 
   useEffect(() => {
-    let fetchchat;
     if (props.activeRoom) {
-      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(props.activeRoom.id)), 1000);
+      dispatch(actions.fetchAllMessages(props.activeRoom.id));
     }
-    return () => clearInterval(fetchchat);
-
   }, [props.activeRoom]);
-
+  useEffect(() => {
+    if (listMessages) {
+      setMessage(listMessages)
+    }
+  }, [listMessages]);
   // const handleClick = (event) => {
   //   setAnchorEl(event.currentTarget);
   // };
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+  //Real time
+  useEffect(() => {
+    ws.onopen = () => {
+      console.log('connected')
+    }
 
+
+    ws.onmessage = (evt) => {
+      const message = JSON.parse(evt.data)
+      addMessage(message)
+    }
+
+    ws.onclose = () => {
+      console.log('disconnected')
+      setWs(
+        new WebSocket(URL)
+      )
+    }
+  }, [ws])
+  const addMessage = (message) => {
+    setMessage(prevArray => [...prevArray, message])
+  }
+  const submitMessage = (messageString) => {
+    ws.send(JSON.stringify(messageString))
+    addMessage(messageString)
+  }
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>
@@ -113,7 +136,8 @@ export default function MessageChat(props) {
                   height: "100%",
                 }}
               >
-                <MessageContent listMessages={listMessages} />
+
+                <MessageContent listMessages={messages} activeRoom={props.activeRoom.id} />
                 <div ref={messagesEndRef} />
               </Scrollbar>
             ) : (
@@ -179,6 +203,7 @@ export default function MessageChat(props) {
                 <MessageInput
                   dataEmoji={chosenEmoji}
                   activeRoom={props.activeRoom.id}
+                  onSubmitMessage={messageString => submitMessage(messageString)}
                 />
               </Grid>
             </Grid>

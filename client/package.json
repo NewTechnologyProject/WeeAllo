@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
+    "start_server": "node server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -80,6 +81,7 @@
     "simplebar": "^5.3.5",
     "simplebar-react": "^2.3.5",
     "web-vitals": "^2.1.0",
+    "ws": "^7.5.5",
     "yup": "^0.32.9"
   },
   "devDependencies": {
