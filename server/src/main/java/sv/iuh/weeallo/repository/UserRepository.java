@@ -32,7 +32,8 @@ public interface UserRepository extends JpaRepository<UserChat, Long> {
 
     UserChat findUserChatByPhone(String phone);
 
-    @Query("Select new UserChat(u.id,u.firstname,u.lastname,u.password,u.phone,u.avartar,u.coverImage) from UserChat u where u.id=:id")
+
+    @Query("Select new UserChat(u.id,u.firstname,u.lastname,u.gender,u.birthday,u.phone,u.password,u.avartar,u.coverImage) from UserChat u where u.id=:id")
     UserChat findUserDetailById(@Param("id") Long id);
 }
 

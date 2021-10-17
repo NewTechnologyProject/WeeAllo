@@ -44,6 +44,9 @@ export default {
       listMessages: (roomId) => axios.get(url + roomId + "/messages"),
     };
   },
+  uploadFile(url = baseApi + "storage/" + "uploadFile") {
+    return { upload: (file) => axios.post(url, file) };
+  },
 
   message(url = baseApi + "messages/chat") {
     return {
