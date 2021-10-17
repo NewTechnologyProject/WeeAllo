@@ -1,7 +1,8 @@
-import { types } from "react-alert";
 import apiService from "../services/api.service";
+// import { types } from "react-alert";
 //import * as types from "./ActionType"
 
+//Get list messages
 export const fetchAllMessages = (roomId) => (dispatch) => {
   apiService
     .roomchat()
@@ -15,6 +16,16 @@ export const fetchAllMessages = (roomId) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
+//Add new group chat
+export const addNewGroupChat = (newGroupChat) => {
+  return apiService.roomchat().newGroupChat(newGroupChat);
+};
+
+//Get list members
+export const fetchAllMembers = (roomId) => {
+  return apiService.roomchat().listMembers(roomId);
+};
+
 let nextMessageId = 0;
 const nextUserId = 0;
 
@@ -22,23 +33,23 @@ export const addMessage = (message, author) => ({
   type: "ADD_MESSAGE",
   id: nextMessageId++,
   message,
-  author
-})
+  author,
+});
 
-export const addUser = name => ({
+export const addUser = (name) => ({
   type: "ADD_USER",
   id: nextUserId,
-  name
-})
+  name,
+});
 
 export const messageReceived = (message, author) => ({
   type: "MESSAGE_RECEIVED",
   id: nextMessageId++,
   message,
-  author
-})
+  author,
+});
 
-export const populateUsersList = users => ({
-  type:"USERS_LIST",
-  users
-})
+export const populateUsersList = (users) => ({
+  type: "USERS_LIST",
+  users,
+});

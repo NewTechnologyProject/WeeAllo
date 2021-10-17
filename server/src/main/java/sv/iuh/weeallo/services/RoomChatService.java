@@ -34,7 +34,7 @@ public class RoomChatService {
         return roomChat;
     }
 
-    //Get lít message
+    //Get lít messages
     public List<Message> getAllMessages(Long roomId){
         RoomChat roomChat =null;
         Optional<RoomChat> roomObj = roomChatRepository.findById(roomId);
@@ -51,29 +51,21 @@ public class RoomChatService {
         return null;
     }
 
-    //Get all user
-    public List<RoomChat> getAllByUser(Long userId) {
-        List<UserGroup> listUserGroup = userGroupRepository.getAllByUser(userId);
-        List<RoomChat> listRoomChat = null;
-
-        if(listUserGroup.size() > 0){
-            for(UserGroup u: listUserGroup){
-                Optional<RoomChat> odj = roomChatRepository.findById(u.getUserId().getId());
-                if(odj.isPresent()){
-                    listRoomChat.add(odj.get());
-                }
-            }
-        }
-        return listRoomChat;
-    }
-
     //Add room chat
-    public void addRoom(RoomChat roomChat){
-        roomChatRepository.insertRommChat(roomChat.getCreateAt(),roomChat.getCreator(), roomChat.getRoomName());
+    public RoomChat addRoom(RoomChat roomChat){
+        return roomChatRepository.save(roomChat);
     }
 
-    public RoomChat addRoomChat (RoomChat roomChat){
-        return roomChatRepository.save(roomChat);
+    //Get all members in room
+    public List<UserGroup> getAllMembers (Long roomId){
+        List<UserGroup> userGroups = new ArrayList<UserGroup>();
+        RoomChat room = getById(roomId);
+
+        if(room != null){
+            userGroups = room.getUserGroupList();
+        }
+
+        return userGroups;
     }
 
 

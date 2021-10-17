@@ -59,7 +59,7 @@ public class UserController {
     @GetMapping("/{userId}/rooms")
     public List<RoomChat> getAllRoomByUser(@PathVariable("userId") Long userId){
         UserChat user = userService.getUserById(userId);
-        List<RoomChat> listRoom = new ArrayList<RoomChat>();
+        List<RoomChat> listRoom = new ArrayList<>();
 
         if(user != null){
             List<UserGroup> listUserGroup = user.getUserGroupList();

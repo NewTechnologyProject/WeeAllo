@@ -24,7 +24,11 @@ const ListFriendSearch = (props) => {
               return (
                 <ListItem className={classes.listItem} key={friend.id}>
                   <ListItemAvatar>
-                    <Avatar className={classes["avatar-size-small"]}>K</Avatar>
+                    <Avatar
+                      className={classes["avatar-size-small"]}
+                      alt={friend.firstname}
+                      src={"dummy.js"}
+                    ></Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={friend.firstname} />
                   <ListItemSecondaryAction>
@@ -32,6 +36,7 @@ const ListFriendSearch = (props) => {
                       edge="end"
                       onChange={props.onCheckMember}
                       value={friend.id}
+                      checked={friend.checked}
                     />
                   </ListItemSecondaryAction>
                 </ListItem>
