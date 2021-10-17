@@ -8,7 +8,6 @@ import sv.iuh.weeallo.services.AmazonClient;
 @RestController
 @CrossOrigin
 @RequestMapping("/api/storage/")
-@CrossOrigin
 public class BucketController {
 
     private AmazonClient amazonClient;

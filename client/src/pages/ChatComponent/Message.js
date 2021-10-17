@@ -37,11 +37,11 @@ export default function MessageChat(props) {
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  useEffect(scrollToBottom, [listMessages]);
+  useEffect(scrollToBottom, [messages]);
   const iconClick = () => {
     setEmojiStatus(!emojiStatus);
   };
@@ -136,7 +136,6 @@ export default function MessageChat(props) {
                   height: "100%",
                 }}
               >
-
                 <MessageContent listMessages={messages} activeRoom={props.activeRoom.id} />
                 <div ref={messagesEndRef} />
               </Scrollbar>
