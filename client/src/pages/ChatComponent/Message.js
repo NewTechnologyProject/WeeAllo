@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import * as actions from "src/actions/roomchat.action";
@@ -40,6 +40,11 @@ export default function MessageChat(props) {
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
 
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(scrollToBottom, [listMessages]);
   const iconClick = () => {
     setEmojiStatus(!emojiStatus);
   };
@@ -109,6 +114,7 @@ export default function MessageChat(props) {
                 }}
               >
                 <MessageContent listMessages={listMessages} />
+                <div ref={messagesEndRef} />
               </Scrollbar>
             ) : (
               <div className={classes.contain}>
@@ -140,13 +146,13 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
-                <IconButton
+                {/* <IconButton
                   type="submit"
                   aria-label="search"
                   style={{ width: 50 }}
                 >
                   <ChildCareIcon onClick={iconClick} />
-                </IconButton>
+                </IconButton> */}
 
                 <Divider orientation="vertical" />
                 <IconButton aria-label="directions" style={{ width: 50 }}>
