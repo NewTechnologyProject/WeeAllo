@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import userAvatar from 'src/access/UserImage/user.png';
 import { Search } from '@material-ui/icons';
 import Snackbar from '@material-ui/core/Snackbar';
-
+import InputAdornment from '@material-ui/core/InputAdornment';
 export default function AllContact() {
     const dispatch = useDispatch();
     const allContact = useSelector(state => state.contact.listcontact);
@@ -20,6 +20,7 @@ export default function AllContact() {
     const [open, setOpen] = React.useState(false);
     const [idDelete, setIdDelete] = useState(0);
     const [openToast, setOpenToast] = React.useState(false);
+    const [search, setSearch] = useState("")
     const handleClick = () => {
         setOpenToast(true);
     };
@@ -41,9 +42,20 @@ export default function AllContact() {
     useEffect(() => {
         dispatch(actions.fetchAllContact(user))
     }, [])
+
     useEffect(() => {
-        setContact(allContact)
-    }, [allContact])
+        if (allContact) {
+            setContact(
+                allContact.filter((c) =>
+                    c.lastname.toLowerCase().includes(search.toLowerCase())
+                )
+            );
+        }
+
+    }, [search, allContact]);
+    // useEffect(() => {
+    //     setContact(allContact)
+    // }, [allContact])
     console.log(contact)
     console.log(user)
     const genderListAllContact = () => {
@@ -61,6 +73,7 @@ export default function AllContact() {
             return (
 
                 <Grid container style={{ display: 'flex', position: 'inherit' }}>
+
                     {contact.map((record, index) =>
                         <Grid item xs={6} sm={12} md={3} style={{ padding: 10 }} key={index}>
                             <Card >
@@ -96,7 +109,26 @@ export default function AllContact() {
         }
     }
     return (
-        <div style={{ height: '100%', padding: '20px', width: '100%', display: 'flex', position: 'inherit' }}>
+        <div style={{ height: '100%', padding: '20px', width: '100%', display: 'block', position: 'inherit' }}>
+            <Grid container>
+                <Grid item xs={12} sm={12} md={12} style={{ padding: 10, textAlign: 'right' }}>
+                    <TextField
+                        id="outlined-basic"
+                        label="Nhập tên cần tìm"
+                        name="search"
+                        variant="outlined"
+                        size="small"
+                        onChange={e => setSearch(e.target.value)}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Grid>
+            </Grid>
             {genderListAllContact()}
             <Dialog
                 open={open}

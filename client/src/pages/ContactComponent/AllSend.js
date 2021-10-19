@@ -11,7 +11,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import userAvatar from 'src/access/UserImage/user.png';
 import { Search } from '@material-ui/icons';
 import Snackbar from '@material-ui/core/Snackbar';
-
+import InputAdornment from '@material-ui/core/InputAdornment';
 export default function AllSend() {
     const dispatch = useDispatch();
     const allSend = useSelector(state => state.contact.listSend);
@@ -20,6 +20,7 @@ export default function AllSend() {
     const [sendContact, setSendContact] = useState([])
     const [idDelete, setIdDelete] = useState(0);
     const [openToast, setOpenToast] = React.useState(false);
+    const [search, setSearch] = useState("")
     const handleClick = () => {
         setOpenToast(true);
     };
@@ -42,10 +43,14 @@ export default function AllSend() {
     useEffect(() => {
         dispatch(actions.fetchSendContact(user))
     }, [])
+
     useEffect(() => {
-        setSendContact(allSend)
-    }, [allSend])
-    console.log(sendContact)
+        setSendContact(
+            allSend.filter((c) =>
+                c.lastname.toLowerCase().includes(search.toLowerCase())
+            )
+        );
+    }, [search, allSend]);
     const genderListSendContact = () => {
         if (!sendContact.length) {
             return (
@@ -95,7 +100,26 @@ export default function AllSend() {
         }
     }
     return (
-        <div style={{ height: '100%', padding: '20px', width: '100%', display: 'flex', position: 'inherit' }}>
+        <div style={{ height: '100%', padding: '20px', width: '100%', display: 'block', position: 'inherit' }}>
+            <Grid container>
+                <Grid item xs={12} sm={12} md={12} style={{ padding: 10, textAlign: 'right' }}>
+                    <TextField
+                        id="outlined-basic"
+                        label="Nhập tên cần tìm"
+                        name="search"
+                        variant="outlined"
+                        size="small"
+                        onChange={e => setSearch(e.target.value)}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Grid>
+            </Grid>
             {genderListSendContact()}
             <Dialog
                 open={open}

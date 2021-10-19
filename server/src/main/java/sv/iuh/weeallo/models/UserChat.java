@@ -37,6 +37,10 @@ public class UserChat implements Serializable {
     private String lastname;
     @Column(name = "email")
     private String email;
+    @Column(name = "gender")
+    private String gender;
+    @Column(name="birthday")
+    private String birthday;
     @Column(name = "phone")
     private String phone;
     @Column(name = "password")
@@ -83,6 +87,18 @@ public class UserChat implements Serializable {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.password = password;
+        this.phone = phone;
+        this.avartar = avartar;
+        this.coverImage = coverImage;
+    }
+
+    public UserChat(Long id, String firstname, String lastname, String gender, String birthday, String phone, String password, String avartar, String coverImage) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.birthday = birthday;
+        this.gender = gender;
         this.password = password;
         this.phone = phone;
         this.avartar = avartar;
@@ -151,6 +167,22 @@ public class UserChat implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public String getEmail() {

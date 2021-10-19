@@ -7,59 +7,77 @@ import SendIcon from "@material-ui/icons/Send";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 import { useDispatch, useSelector } from "react-redux";
+import * as actions from "src/actions/create-new-message.action"
+import * as actionuser from "src/actions/customer.action";
 
-import * as actions from "src/actions/create-new-message.action";
 
 /**
  *  New Message Input
  */
 export const MessageInput = (props) => {
-  const [message, setMessage] = useState(null);
-  const [message1, setMessage1] = useState(null);
+  const [message, setMessage] = useState('');
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
   //const user = useSelector(state => state.customer.userAuth);
-
-  console.log(message);
   const user = useSelector((state) => state.customer.userAuth);
-
-  const dispatch = useDispatch();
+  const today = new Date();
+  const profile = useSelector((state) => state.customer.userById);
+  const [userProfile, setUserProfile] = useState([]);
+  
+  useEffect(() => {
+    dispatch(actionuser.findByIdUser(user));
+  }, []);
+  
+  useEffect(() => {
+    if (profile !== undefined) {
+      setUserProfile(profile);
+    }
+  }, [profile]);
+  
+  const EmojiData = ({ chosenEmoji }) => (
+    <div style={{ textAlign: 'center', marginRight: '810px' }}>
+      {chosenEmoji.emoji}<br />
+    </div>
+  );
 
   useEffect(() => {
     if (props.dataEmoji) {
       setMessage(message + props.dataEmoji.emoji);
-      console.log(message + props.dataEmoji.emoji);
     }
   }, [props.dataEmoji]);
 
-  // if(chosenEmoji != null){
-  //     setMessage(message + chosenEmoji.emoji)
-  //     //console.log(message + chosenEmoji.emoji);
-  // }
-
-  const EmojiData = ({ chosenEmoji }) => (
-    <div style={{ textAlign: "center", marginRight: "810px" }}>
-      {chosenEmoji.emoji}
-      <br />
-    </div>
-  );
-
   const handleMessageKeyPressEvent = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       ///this.handleMessageSendEvent(event)
       //window.alert(message);
+      //const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
       const messageText = {
         status: "send",
         content: message,
         file: null,
         roomChatId: props.activeRoom,
-        userId,
-      };
-      console.log(messageText);
-      dispatch(actions.addMessage(messageText));
-      setMessage("");
+        time: today,
+        userId
+      }
+      const messageTextRealTime = {
+        status: "send",
+        content: message,
+        file: null,
+        roomChatId: {
+          id: props.activeRoom
+        },
+        userId: {
+          id: Number(user),
+          firstname: userProfile.firstname,
+          lastname: userProfile.lastname,
+        }
+      }
+      props.onSubmitMessage(messageTextRealTime)
+      dispatch(actions.addMessage(messageText))
+      setMessage('')
     }
-  };
+  }
+  const dispatch = useDispatch();
 
   const sentMessage = () => {
     const messageText = {
@@ -69,6 +87,18 @@ export const MessageInput = (props) => {
       roomChatId: props.activeRoom,
       userId,
     };
+    const messageTextRealTime = {
+      status: "send",
+      content: message,
+      file: null,
+      roomChatId: props.activeRoom,
+      userId: {
+        id: Number(user),
+        firstname: userProfile.firstname,
+        lastname: userProfile.lastname,
+      }
+    }
+    props.onSubmitMessage(messageTextRealTime)
     dispatch(actions.addMessage(messageText));
     setMessage("");
   };
@@ -79,22 +109,22 @@ export const MessageInput = (props) => {
         placeholder="Nhập tin nhắn của bạn"
         inputProps={{ "aria-label": "search google maps" }}
         fullWidth
-        // value={message}
+        value={message}
         autoFocus={true}
         onChange={(e) => {
           setMessage(e.target.value);
         }}
         onKeyPress={(e) => handleMessageKeyPressEvent(e)}
-        style={{ paddingLeft: 10, width: 1120, paddingRight: 50 }}
+        style={{ paddingLeft: 10, width: 1100, paddingRight: 50 }}
       />
-      <Divider orientation="vertical" />
-      {/* <IconButton
+      <Divider orientation="vertical" style={{ paddingRight: 10 }} />
+      <IconButton
         color="primary"
         aria-label="directions"
         style={{ float: "right" }}
       >
         <SendIcon onClick={sentMessage} />
-      </IconButton> */}
+      </IconButton>
     </Fragment>
   );
-};
+}

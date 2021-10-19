@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import * as actions from "src/actions/roomchat.action";
@@ -21,24 +21,28 @@ import InputBase from "@material-ui/core/InputBase";
 import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
-// import Menu from "@material-ui/core/Menu";
+import Scrollbar from "src/components/Scrollbar";
 
-// const SORT_OPTIONS = [
-//   { value: "latest", label: "Latest" },
-//   { value: "popular", label: "Popular" },
-//   { value: "oldest", label: "Oldest" },
-// ];
-
-// ----------------------------------------------------------------------
-
+const URL = "ws://localhost:3030";
 export default function MessageChat(props) {
-  // const [anchorEl, setAnchorEl] = useState(null);
-  // const inputMessageRef = useRef();
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
+  //RealTime
+  const [name, setName] = useState("Ichlas");
+  const [messages, setMessage] = useState([]);
+  const [ws, setWs] = useState(new WebSocket(URL));
+  //Scroll
+  const messagesEndRef = useRef(null);
 
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(scrollToBottom, [messages]);
   const iconClick = () => {
     setEmojiStatus(!emojiStatus);
   };
@@ -58,8 +62,15 @@ export default function MessageChat(props) {
   // };
 
   useEffect(() => {
-    dispatch(actions.fetchAllMessages(props.activeRoom.id));
+    if (props.activeRoom) {
+      dispatch(actions.fetchAllMessages(props.activeRoom.id));
+    }
   }, [props.activeRoom]);
+  useEffect(() => {
+    if (listMessages) {
+      setMessage(listMessages);
+    }
+  }, [listMessages]);
 
   // const handleClick = (event) => {
   //   setAnchorEl(event.currentTarget);
@@ -67,6 +78,32 @@ export default function MessageChat(props) {
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+
+  //Real time
+  useEffect(() => {
+    ws.onopen = () => {
+      console.log("connected");
+    };
+
+    ws.onmessage = (evt) => {
+      const message = JSON.parse(evt.data);
+      addMessage(message);
+    };
+
+    ws.onclose = () => {
+      console.log("disconnected");
+      setWs(new WebSocket(URL));
+    };
+  }, [ws]);
+
+  const addMessage = (message) => {
+    setMessage((prevArray) => [...prevArray, message]);
+  };
+
+  const submitMessage = (messageString) => {
+    ws.send(JSON.stringify(messageString));
+    addMessage(messageString);
+  };
 
   return (
     <div style={{ height: "100%" }}>
@@ -101,9 +138,19 @@ export default function MessageChat(props) {
           </Grid>
 
           {/* Message Area */}
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid item xs={12} sm={12} md={12} style={{ height: "75%" }}>
             {listMessages.length > 0 ? (
-              <MessageContent listMessages={listMessages} />
+              <Scrollbar
+                sx={{
+                  height: "100%",
+                }}
+              >
+                <MessageContent
+                  listMessages={messages}
+                  activeRoom={props.activeRoom.id}
+                />
+                <div ref={messagesEndRef} />
+              </Scrollbar>
             ) : (
               <div className={classes.contain}>
                 <p>"Let's say something"</p>
@@ -167,6 +214,9 @@ export default function MessageChat(props) {
                 <MessageInput
                   dataEmoji={chosenEmoji}
                   activeRoom={props.activeRoom.id}
+                  onSubmitMessage={(messageString) =>
+                    submitMessage(messageString)
+                  }
                 />
               </Grid>
             </Grid>
