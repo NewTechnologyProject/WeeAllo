@@ -1,15 +1,13 @@
 package sv.iuh.weeallo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sv.iuh.weeallo.services.AmazonClient;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/api/storage/")
+@RequestMapping("/api/storage")
 public class BucketController {
 
     private AmazonClient amazonClient;

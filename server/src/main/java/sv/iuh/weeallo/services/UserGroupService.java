@@ -13,4 +13,8 @@ public class UserGroupService {
     public void addUserGroup(UserGroup userGroup){
         userGroupRepository.addUserGroup(userGroup.getRoomChatId().getId(),userGroup.getUserId().getId());
     }
+
+    public void deleteUserGroup(Long roomId, Long userId){
+        userGroupRepository.deleteUserGroup(roomId,userId);
+    }
 }

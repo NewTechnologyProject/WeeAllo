@@ -77,13 +77,20 @@ export default function MessageChat(props) {
             xs={12}
             sm={12}
             md={12}
-            style={{ height: "10%", borderBottom: "1px solid #e9e7e5" }}
+            style={{
+              height: "10%",
+              borderBottom: "1px solid #e9e7e5",
+            }}
           >
             <ListItem style={{ height: "100%" }}>
               <ListItemAvatar>
                 <Avatar
                   alt={props.activeRoom.roomName}
-                  src={"dummy.js"}
+                  src={
+                    props.activeRoom.avatar
+                      ? props.activeRoom.avatar
+                      : "dummy.js"
+                  }
                 ></Avatar>
               </ListItemAvatar>
               <ListItemText

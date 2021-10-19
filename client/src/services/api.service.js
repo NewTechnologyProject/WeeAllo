@@ -44,17 +44,32 @@ export default {
       listMessages: (roomId) => axios.get(url + roomId + "/messages"),
       newGroupChat: (groupChat) => axios.post(url, groupChat),
       listMembers: (roomId) => axios.get(url + roomId + "/users"),
+      deleteRoom: (roomId) => axios.delete(url + roomId),
+      updateCreator: (roomId, creator) =>
+        axios.put(url + roomId + "&" + creator),
     };
   },
   usergroup(url = baseApi + "usergroups/") {
     return {
       addUserGroup: (userGroup) => axios.post(url, userGroup),
+      deleteUserGroup: (roomId, userId) =>
+        axios.delete(url + roomId + "&" + userId),
     };
   },
 
   message(url = baseApi + "messages/chat") {
     return {
       addMessage: (message) => axios.post(url, message),
+    };
+  },
+  upload(url = baseApi + "storage/") {
+    return {
+      image: (formData) =>
+        axios.post(url + "uploadFile/", formData, {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        }),
     };
   },
 };

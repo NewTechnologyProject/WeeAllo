@@ -1,0 +1,21 @@
+.current-friends {
+  width: 60%;
+  height: 100%;
+  padding-right: 15px;
+  box-sizing: border-box;
+}
+
+/* list items  */
+.listItem {
+  transition: 0.5s;
+}
+.listItem:hover {
+  background-color: #ececec;
+  cursor: pointer;
+}
+
+/* avatar size */
+.avatar-size-small {
+  width: 30px;
+  height: 30px;
+}
