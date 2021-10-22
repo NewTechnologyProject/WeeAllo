@@ -56,7 +56,7 @@ export default function LoginForm() {
   useEffect(() => {
     dispatch(actions.login(phone, pass));
   }, [phone, pass]);
-
+  console.log(user)
   const onLogin = () => {
     if (user === "") {
       setNotify({
