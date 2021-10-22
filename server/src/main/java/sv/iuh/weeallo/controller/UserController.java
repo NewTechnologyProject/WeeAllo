@@ -66,7 +66,8 @@ public class UserController {
             if(listUserGroup.size() > 0){
                 for(UserGroup ug : listUserGroup){
                     listRoom.add(new RoomChat(ug.getRoomChatId().getId(), ug.getRoomChatId().getCreator(),
-                            ug.getRoomChatId().getRoomName(), ug.getRoomChatId().getCreateAt()));
+                            ug.getRoomChatId().getRoomName(), ug.getRoomChatId().getCreateAt(),
+                            ug.getRoomChatId().getAvatar()));
                 }
             }
         }

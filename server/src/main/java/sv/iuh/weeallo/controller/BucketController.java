@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sv.iuh.weeallo.services.AmazonClient;
 
-@RestController
 @CrossOrigin
-@RequestMapping("/api/storage/")
+@RestController
+@RequestMapping("/api/storage")
 public class BucketController {
 
     private AmazonClient amazonClient;

@@ -29,9 +29,11 @@ export const MessageInput = (props) => {
 
   const profile = useSelector((state) => state.customer.userById);
   const [userProfile, setUserProfile] = useState([]);
+
   useEffect(() => {
     dispatch(actionuser.findByIdUser(user));
   }, []);
+
   useEffect(() => {
     if (profile !== undefined) {
       setUserProfile(profile);

@@ -39,7 +39,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 // ----------------------------------------------------------------------
 
 
-const URL = 'ws://localhost:3030'
+const URL = "ws://localhost:3030";
 export default function MessageChat(props) {
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
@@ -53,11 +53,12 @@ export default function MessageChat(props) {
   const image = useRef(null);
 
   //RealTime
-  const [name, setName] = useState('Ichlas');
-  const [messages, setMessage] = useState([])
-  const [ws, setWs] = useState(new WebSocket(URL))
+  const [name, setName] = useState("Ichlas");
+  const [messages, setMessage] = useState([]);
+  const [ws, setWs] = useState(new WebSocket(URL));
   //Scroll
   const messagesEndRef = useRef(null);
+
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -125,41 +126,43 @@ export default function MessageChat(props) {
   }, [props.activeRoom]);
   useEffect(() => {
     if (listMessages) {
-      setMessage(listMessages)
+      setMessage(listMessages);
     }
   }, [listMessages]);
+
   // const handleClick = (event) => {
   //   setAnchorEl(event.currentTarget);
   // };
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+
   //Real time
   useEffect(() => {
     ws.onopen = () => {
-      console.log('connected')
-    }
-
+      console.log("connected");
+    };
 
     ws.onmessage = (evt) => {
-      const message = JSON.parse(evt.data)
-      addMessage(message)
-    }
+      const message = JSON.parse(evt.data);
+      addMessage(message);
+    };
 
     ws.onclose = () => {
-      console.log('disconnected')
-      setWs(
-        new WebSocket(URL)
-      )
-    }
-  }, [ws])
+      console.log("disconnected");
+      setWs(new WebSocket(URL));
+    };
+  }, [ws]);
+
   const addMessage = (message) => {
-    setMessage(prevArray => [...prevArray, message])
-  }
+    setMessage((prevArray) => [...prevArray, message]);
+  };
+
   const submitMessage = (messageString) => {
-    ws.send(JSON.stringify(messageString))
-    addMessage(messageString)
-  }
+    ws.send(JSON.stringify(messageString));
+    addMessage(messageString);
+  };
+
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>
@@ -169,13 +172,20 @@ export default function MessageChat(props) {
             xs={12}
             sm={12}
             md={12}
-            style={{ height: "10%", borderBottom: "1px solid #e9e7e5" }}
+            style={{
+              height: "10%",
+              borderBottom: "1px solid #e9e7e5",
+            }}
           >
             <ListItem style={{ height: "100%" }}>
               <ListItemAvatar>
                 <Avatar
                   alt={props.activeRoom.roomName}
-                  src={"dummy.js"}
+                  src={
+                    props.activeRoom.avatar
+                      ? props.activeRoom.avatar
+                      : "dummy.js"
+                  }
                 ></Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -187,14 +197,16 @@ export default function MessageChat(props) {
 
           {/* Message Area */}
           <Grid item xs={12} sm={12} md={12} style={{ height: "75%" }}>
-
             {listMessages.length > 0 ? (
               <Scrollbar
                 sx={{
                   height: "100%",
                 }}
               >
-                <MessageContent listMessages={messages} activeRoom={props.activeRoom.id} />
+                <MessageContent
+                  listMessages={messages}
+                  activeRoom={props.activeRoom.id}
+                />
                 <div ref={messagesEndRef} />
               </Scrollbar>
             ) : (
@@ -284,7 +296,9 @@ export default function MessageChat(props) {
                 <MessageInput
                   dataEmoji={chosenEmoji}
                   activeRoom={props.activeRoom.id}
-                  onSubmitMessage={messageString => submitMessage(messageString)}
+                  onSubmitMessage={(messageString) =>
+                    submitMessage(messageString)
+                  }
                 />
               </Grid>
             </Grid>

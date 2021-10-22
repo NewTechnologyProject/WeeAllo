@@ -58,7 +58,7 @@ export default function LoginForm() {
   }, [phone, pass]);
 
   const onLogin = () => {
-    if (user === "" || user === "undefined") {
+    if (user === "") {
       setNotify({
         isOpen: true,
         message:

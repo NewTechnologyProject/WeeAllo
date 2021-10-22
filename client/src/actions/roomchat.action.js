@@ -26,6 +26,29 @@ export const fetchAllMembers = (roomId) => {
   return apiService.roomchat().listMembers(roomId);
 };
 
+//Upload image to aws s3
+export const uploadAvatar = (formData) => {
+  return apiService.upload().image(formData);
+};
+
+//Delete group chat
+export const deleteRoomChat = (roomId) => {
+  return apiService.roomchat().deleteRoom(roomId);
+};
+
+//Update creator
+export const updateCreator = (roomId, creator) => {
+  apiService
+    .roomchat()
+    .updateCreator(roomId, creator)
+    .then((response) => {
+      console.log("success");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 let nextMessageId = 0;
 const nextUserId = 0;
 
