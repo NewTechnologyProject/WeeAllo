@@ -1,0 +1,24 @@
+/* avatar size */
+.avatar-size-small {
+  width: 30px;
+  height: 30px;
+}
+
+.primary-text {
+  font-size: 14px;
+}
+
+.secondary-text {
+  font-size: 12px;
+}
+
+.button-add-member {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.button {
+  width: 100%;
+}

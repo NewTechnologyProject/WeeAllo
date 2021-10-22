@@ -22,29 +22,27 @@ import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Scrollbar from "src/components/Scrollbar";
-// import Menu from "@material-ui/core/Menu";
 
-// const SORT_OPTIONS = [
-//   { value: "latest", label: "Latest" },
-//   { value: "popular", label: "Popular" },
-//   { value: "oldest", label: "Oldest" },
-// ];
-
-// ----------------------------------------------------------------------
-
+const URL = "ws://localhost:3030";
 export default function MessageChat(props) {
-  // const [anchorEl, setAnchorEl] = useState(null);
-  // const inputMessageRef = useRef();
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
-
+  //RealTime
+  const [name, setName] = useState("Ichlas");
+  const [messages, setMessage] = useState([]);
+  const [ws, setWs] = useState(new WebSocket(URL));
+  //Scroll
   const messagesEndRef = useRef(null);
+
   const scrollToBottom = () => {
-    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
   };
-  useEffect(scrollToBottom, [listMessages]);
+
+  useEffect(scrollToBottom, [messages]);
   const iconClick = () => {
     setEmojiStatus(!emojiStatus);
   };
@@ -64,13 +62,15 @@ export default function MessageChat(props) {
   // };
 
   useEffect(() => {
-    let fetchchat;
     if (props.activeRoom) {
-      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(props.activeRoom.id)), 1000);
+      dispatch(actions.fetchAllMessages(props.activeRoom.id));
     }
-    return () => clearInterval(fetchchat);
-
   }, [props.activeRoom]);
+  useEffect(() => {
+    if (listMessages) {
+      setMessage(listMessages);
+    }
+  }, [listMessages]);
 
   // const handleClick = (event) => {
   //   setAnchorEl(event.currentTarget);
@@ -78,6 +78,32 @@ export default function MessageChat(props) {
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+
+  //Real time
+  useEffect(() => {
+    ws.onopen = () => {
+      console.log("connected");
+    };
+
+    ws.onmessage = (evt) => {
+      const message = JSON.parse(evt.data);
+      addMessage(message);
+    };
+
+    ws.onclose = () => {
+      console.log("disconnected");
+      setWs(new WebSocket(URL));
+    };
+  }, [ws]);
+
+  const addMessage = (message) => {
+    setMessage((prevArray) => [...prevArray, message]);
+  };
+
+  const submitMessage = (messageString) => {
+    ws.send(JSON.stringify(messageString));
+    addMessage(messageString);
+  };
 
   return (
     <div style={{ height: "100%" }}>
@@ -88,13 +114,20 @@ export default function MessageChat(props) {
             xs={12}
             sm={12}
             md={12}
-            style={{ height: "10%", borderBottom: "1px solid #e9e7e5" }}
+            style={{
+              height: "10%",
+              borderBottom: "1px solid #e9e7e5",
+            }}
           >
             <ListItem style={{ height: "100%" }}>
               <ListItemAvatar>
                 <Avatar
                   alt={props.activeRoom.roomName}
-                  src={"dummy.js"}
+                  src={
+                    props.activeRoom.avatar
+                      ? props.activeRoom.avatar
+                      : "dummy.js"
+                  }
                 ></Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -106,14 +139,16 @@ export default function MessageChat(props) {
 
           {/* Message Area */}
           <Grid item xs={12} sm={12} md={12} style={{ height: "75%" }}>
-
             {listMessages.length > 0 ? (
               <Scrollbar
                 sx={{
                   height: "100%",
                 }}
               >
-                <MessageContent listMessages={listMessages} />
+                <MessageContent
+                  listMessages={messages}
+                  activeRoom={props.activeRoom.id}
+                />
                 <div ref={messagesEndRef} />
               </Scrollbar>
             ) : (
@@ -179,6 +214,9 @@ export default function MessageChat(props) {
                 <MessageInput
                   dataEmoji={chosenEmoji}
                   activeRoom={props.activeRoom.id}
+                  onSubmitMessage={(messageString) =>
+                    submitMessage(messageString)
+                  }
                 />
               </Grid>
             </Grid>

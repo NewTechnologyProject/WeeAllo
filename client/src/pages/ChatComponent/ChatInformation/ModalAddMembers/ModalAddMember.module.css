@@ -9,7 +9,7 @@
   /* padding: 17px; */
   box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.5);
   width: 600px;
-  height: 700px;
+  height: 500px;
   position: relative;
   transition: 0.5s;
 }
@@ -49,41 +49,9 @@
   border-radius: 0px;
 }
 
-/* group's avatar */
-.avatar {
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.avatar p {
-  font-family: sans-serif;
-  font-size: 13px;
-  color: #ccc;
-}
-
 .cancel {
   display: inline-flexbox;
   position: absolute;
   top: 2px;
   right: 2px;
-}
-
-.input {
-  display: none;
-}
-
-.button-upload {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.image {
-  height: 55px;
-  width: 55px;
 }

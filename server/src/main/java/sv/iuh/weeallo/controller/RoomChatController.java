@@ -38,7 +38,8 @@ public class RoomChatController {
         if(listMessages != null && listMessages.size() >0){
             for(Message message : listMessages){
                 RoomChat roomChat = new RoomChat(message.getRoomChatId().getId(), message.getRoomChatId().getCreator(),
-                        message.getRoomChatId().getRoomName(), message.getRoomChatId().getCreateAt());
+                        message.getRoomChatId().getRoomName(), message.getRoomChatId().getCreateAt(),
+                        message.getRoomChatId().getAvatar());
 
                 UserChat user = sliceUser(message.getUserId());
 
@@ -66,6 +67,16 @@ public class RoomChatController {
             }
         }
         return members;
+    }
+
+    @DeleteMapping("/{roomId}")
+    public void deleteRoomById(@PathVariable("roomId") Long roomId){
+        roomChatService.deleteRoomChatById(roomId);
+    }
+
+    @PutMapping("/{roomId}&{creator}")
+    public void updateRoomChatCreator(@PathVariable("roomId") Long roomId, @PathVariable("creator") Long creator){
+        roomChatService.updateRoomChatCreator(roomId, creator);
     }
 
     @PostMapping(value="/room")
