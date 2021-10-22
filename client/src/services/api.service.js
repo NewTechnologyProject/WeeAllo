@@ -51,6 +51,9 @@ export default {
       addUserGroup: (userGroup) => axios.post(url, userGroup),
     };
   },
+  uploadFile(url = baseApi + "storage/" + "uploadFile") {
+    return { upload: (file) => axios.post(url, file) };
+  },
 
   message(url = baseApi + "messages/chat") {
     return {

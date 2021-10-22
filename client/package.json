@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
+    "start_server": "node server.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -73,12 +74,14 @@
     "react-redux": "^7.2.5",
     "react-router-dom": "^6.0.0-beta.1",
     "react-scripts": "4.0.0",
+    "react-scroll-to-bottom": "^4.2.0",
     "react-toast-notifications": "^2.5.1",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
     "simplebar": "^5.3.5",
     "simplebar-react": "^2.3.5",
     "web-vitals": "^2.1.0",
+    "ws": "^7.5.5",
     "yup": "^0.32.9"
   },
   "devDependencies": {

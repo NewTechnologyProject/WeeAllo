@@ -38,18 +38,33 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 // ----------------------------------------------------------------------
 
+
+const URL = 'ws://localhost:3030'
 export default function MessageChat(props) {
-  // const [anchorEl, setAnchorEl] = useState(null);
-  // const inputMessageRef = useRef();
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
+
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
 
   const file = useRef(null);
+  const image = useRef(null);
 
+  //RealTime
+  const [name, setName] = useState('Ichlas');
+  const [messages, setMessage] = useState([])
+  const [ws, setWs] = useState(new WebSocket(URL))
+  //Scroll
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(scrollToBottom, [messages]);
   const iconClick = () => {
     setEmojiStatus(!emojiStatus);
   };
@@ -65,6 +80,10 @@ export default function MessageChat(props) {
 
   const chooseFile = () => {
     file.current.click();
+  }
+
+  const chooseImage = () => {
+    image.current.click();
   }
 
   const handleSubmission = () => {
@@ -100,21 +119,47 @@ export default function MessageChat(props) {
   // };
 
   useEffect(() => {
-    let fetchchat;
     if (props.activeRoom) {
-      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(props.activeRoom.id)), 1000);
+      dispatch(actions.fetchAllMessages(props.activeRoom.id));
     }
-    return () => clearInterval(fetchchat);
-
   }, [props.activeRoom]);
-
+  useEffect(() => {
+    if (listMessages) {
+      setMessage(listMessages)
+    }
+  }, [listMessages]);
   // const handleClick = (event) => {
   //   setAnchorEl(event.currentTarget);
   // };
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+  //Real time
+  useEffect(() => {
+    ws.onopen = () => {
+      console.log('connected')
+    }
 
+
+    ws.onmessage = (evt) => {
+      const message = JSON.parse(evt.data)
+      addMessage(message)
+    }
+
+    ws.onclose = () => {
+      console.log('disconnected')
+      setWs(
+        new WebSocket(URL)
+      )
+    }
+  }, [ws])
+  const addMessage = (message) => {
+    setMessage(prevArray => [...prevArray, message])
+  }
+  const submitMessage = (messageString) => {
+    ws.send(JSON.stringify(messageString))
+    addMessage(messageString)
+  }
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>
@@ -149,7 +194,8 @@ export default function MessageChat(props) {
                   height: "100%",
                 }}
               >
-                <MessageContent listMessages={listMessages} />
+                <MessageContent listMessages={messages} activeRoom={props.activeRoom.id} />
+                <div ref={messagesEndRef} />
               </Scrollbar>
             ) : (
               <div className={classes.contain}>
@@ -181,6 +227,7 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
+
                 {/* Emoji */}
                 <IconButton
                   type="submit"
@@ -193,17 +240,17 @@ export default function MessageChat(props) {
 
                 {/* Image */}
                 <Divider orientation="vertical" />
-                <input type="file" accept=".jpg, .jpeg, .png, .gif" multiple hidden ref={file} onChange={changeHandler} />
+                <input type="file" accept=".jpg, .jpeg, .png, .gif" multiple hidden ref={image} onChange={changeHandler} />
                 <IconButton
                   aria-label="directions" style={{ width: 50 }}
-                  onClick={chooseFile}
+                  onClick={chooseImage}
                 >
                   <ImageIcon />
                 </IconButton>
 
                 {/* File */}
                 <Divider orientation="vertical" />
-                {/* <input type="file" hidden ref={file} onChange={changeHandler} /> */}
+                <input type="file" hidden ref={file} onChange={changeHandler} />
                 {/* {
                   isFilePicked ? (
                     console.log("Filename: ", selectedFile.name,
@@ -237,6 +284,7 @@ export default function MessageChat(props) {
                 <MessageInput
                   dataEmoji={chosenEmoji}
                   activeRoom={props.activeRoom.id}
+                  onSubmitMessage={messageString => submitMessage(messageString)}
                 />
               </Grid>
             </Grid>

@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "src/actions/create-new-message.action"
-
+import * as actionuser from "src/actions/customer.action";
 
 
 /**
@@ -16,16 +16,27 @@ import * as actions from "src/actions/create-new-message.action"
  */
 export const MessageInput = (props) => {
   const [message, setMessage] = useState('');
-  const [message1, setMessage1] = useState(null);
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
   //const user = useSelector(state => state.customer.userAuth);
+
 
   // console.log(message);
   const user = useSelector((state) => state.customer.userAuth);
   const today = new Date();
   const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes();
   const dispatch = useDispatch();
+
+  const profile = useSelector((state) => state.customer.userById);
+  const [userProfile, setUserProfile] = useState([]);
+  useEffect(() => {
+    dispatch(actionuser.findByIdUser(user));
+  }, []);
+  useEffect(() => {
+    if (profile !== undefined) {
+      setUserProfile(profile);
+    }
+  }, [profile]);
 
   const EmojiData = ({ chosenEmoji }) => (
     <div style={{ textAlign: 'center', marginRight: '810px' }}>
@@ -44,7 +55,6 @@ export const MessageInput = (props) => {
       ///this.handleMessageSendEvent(event)
       //window.alert(message);
       const messageText = {
-
         status: "send",
         content: message,
         file: null,
@@ -52,7 +62,23 @@ export const MessageInput = (props) => {
         time,
         userId
       }
+
       console.log(messageText);
+
+      const messageTextRealTime = {
+        status: "send",
+        content: message,
+        file: null,
+        roomChatId: {
+          id: props.activeRoom
+        },
+        userId: {
+          id: Number(user),
+          firstname: userProfile.firstname,
+          lastname: userProfile.lastname,
+        }
+      }
+      props.onSubmitMessage(messageTextRealTime)
       dispatch(actions.addMessage(messageText))
       setMessage('')
     }
@@ -68,6 +94,18 @@ export const MessageInput = (props) => {
       time,
       userId
     };
+    const messageTextRealTime = {
+      status: "send",
+      content: message,
+      file: null,
+      roomChatId: props.activeRoom,
+      userId: {
+        id: Number(user),
+        firstname: userProfile.firstname,
+        lastname: userProfile.lastname,
+      }
+    }
+    props.onSubmitMessage(messageTextRealTime)
     dispatch(actions.addMessage(messageText));
     setMessage("");
   };
@@ -91,8 +129,9 @@ export const MessageInput = (props) => {
         color="primary"
         aria-label="directions"
         style={{ float: "right" }}
+        onClick={sentMessage}
       >
-        <SendIcon onClick={sentMessage} />
+        <SendIcon />
       </IconButton>
     </Fragment>
   );
