@@ -23,14 +23,17 @@ export const MessageInput = (props) => {
   const today = new Date();
   const profile = useSelector((state) => state.customer.userById);
   const [userProfile, setUserProfile] = useState([]);
+  
   useEffect(() => {
     dispatch(actionuser.findByIdUser(user));
   }, []);
+  
   useEffect(() => {
     if (profile !== undefined) {
       setUserProfile(profile);
     }
   }, [profile]);
+  
   const EmojiData = ({ chosenEmoji }) => (
     <div style={{ textAlign: 'center', marginRight: '810px' }}>
       {chosenEmoji.emoji}<br />

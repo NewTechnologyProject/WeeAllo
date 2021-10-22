@@ -22,4 +22,14 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
     @Modifying
     @Query(value = "insert into user_group (room_chat_id, user_id) values (:roomId, :userId) ", nativeQuery = true)
     void addUserGroup(@Param("roomId") Long roomId, @Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from user_group where room_chat_id=:roomId and user_id=:userId ", nativeQuery = true)
+    void deleteUserGroup(@Param("roomId") Long roomId, @Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from user_group where room_chat_id=:roomId ", nativeQuery = true)
+    void deleteUserGroupByRoomId(@Param("roomId") Long roomId);
 }

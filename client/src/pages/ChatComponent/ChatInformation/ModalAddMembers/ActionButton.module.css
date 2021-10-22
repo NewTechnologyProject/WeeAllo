@@ -1,0 +1,41 @@
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.actions button {
+  font: inherit;
+  color: black;
+  cursor: pointer;
+  background-color: #ccc transparent;
+  border: none;
+  border-radius: 25px;
+  padding: 0.5rem 2rem;
+  transition: 0.3s;
+}
+
+.actions button:hover,
+.actions button:active {
+  background-color: #c8c8c8;
+}
+
+.actions .submit {
+  background-color: #4caf50;
+  color: white;
+}
+
+.actions .submit:hover,
+.actions .submit:active {
+  background-color: #4ad14f;
+}
+
+.actions .disable {
+  background-color: #9efca1;
+  color: white;
+}
+
+.actions .disable:hover,
+.actions .disable:active {
+  background-color: #9efca1;
+}

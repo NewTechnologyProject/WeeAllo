@@ -21,4 +21,9 @@ public class UserGoupController {
             System.out.println(e.getMessage());
         }
     }
+
+    @DeleteMapping("/{roomId}&{userId}")
+    public void deleteUserGroup(@PathVariable("roomId") Long roomId, @PathVariable("userId") Long userId){
+        userGroupService.deleteUserGroup(roomId,userId);
+    }
 }
