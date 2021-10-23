@@ -68,10 +68,7 @@ public class RoomChatController {
         }
         return members;
     }
-
-<<<<<<< HEAD
-    @PostMapping(value = "/room")
-=======
+    
     @DeleteMapping("/{roomId}")
     public void deleteRoomById(@PathVariable("roomId") Long roomId){
         roomChatService.deleteRoomChatById(roomId);
@@ -83,7 +80,6 @@ public class RoomChatController {
     }
 
     @PostMapping(value="/room")
->>>>>>> c0beb86ff7a16354e25f31ec747661695dd5c56b
     public RoomChat creaRoomChat(@RequestBody RoomChat roomChat) {
         // TODO: process POST request
 
