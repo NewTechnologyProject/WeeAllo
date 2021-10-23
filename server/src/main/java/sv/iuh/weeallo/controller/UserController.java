@@ -22,7 +22,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoomChatService roomChatService;
-    
 
     @GetMapping("/get-all-users")
     public List<UserChat> getAllUser() {
@@ -44,11 +43,7 @@ public class UserController {
 
     @PostMapping("/login/{phone}&{pass}")
     public UserChat userLogin(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
-//        UserChat user1=userService.getUserChatByPhone(phone);
-//        if(BCrypt.checkpw(pass,user1.getPassword())==true){
-//            return sliceUser(user1);
-//        }
-//        return null;
+
         if(userService.getUserChatByPhone(phone)==null){
             return null;
         }else{
@@ -56,6 +51,7 @@ public class UserController {
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             if(bCryptPasswordEncoder.matches(pass,userChat.getPassword())==true){
                 return userService.getUserChatByPhone(phone);
+                //return userService.getLogin(phone,pass);
             }else
                 return null;
         }
@@ -70,7 +66,8 @@ public class UserController {
             if(listUserGroup.size() > 0){
                 for(UserGroup ug : listUserGroup){
                     listRoom.add(new RoomChat(ug.getRoomChatId().getId(), ug.getRoomChatId().getCreator(),
-                            ug.getRoomChatId().getRoomName(), ug.getRoomChatId().getCreateAt()));
+                            ug.getRoomChatId().getRoomName(), ug.getRoomChatId().getCreateAt(),
+                            ug.getRoomChatId().getAvatar()));
                 }
             }
         }
@@ -160,6 +157,13 @@ public class UserController {
         if(userChatDetail.getLastname() != null){
             userChat.setLastname(userChatDetail.getLastname());
         }
+        if(userChatDetail.getBirthday() != null){
+            userChat.setBirthday(userChatDetail.getBirthday());
+        }
+        if(userChatDetail.getGender()!=null){
+            userChat.setGender(userChatDetail.getGender());
+        }
+
         if(userChatDetail.getAvartar() != null){
             userChat.setAvartar(userChatDetail.getAvartar());
         }

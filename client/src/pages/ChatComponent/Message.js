@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 import * as actions from "src/actions/roomchat.action";
@@ -21,6 +21,13 @@ import InputBase from "@material-ui/core/InputBase";
 import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
+import Scrollbar from "src/components/Scrollbar";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 // import Menu from "@material-ui/core/Menu";
 
 // const SORT_OPTIONS = [
@@ -31,14 +38,34 @@ import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 
 // ----------------------------------------------------------------------
 
+
+const URL = "ws://localhost:3030";
 export default function MessageChat(props) {
-  // const [anchorEl, setAnchorEl] = useState(null);
-  // const inputMessageRef = useRef();
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
 
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+
+  const file = useRef(null);
+  const image = useRef(null);
+
+  //RealTime
+  const [name, setName] = useState("Ichlas");
+  const [messages, setMessage] = useState([]);
+  const [ws, setWs] = useState(new WebSocket(URL));
+  //Scroll
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(scrollToBottom, [messages]);
   const iconClick = () => {
     setEmojiStatus(!emojiStatus);
   };
@@ -46,6 +73,41 @@ export default function MessageChat(props) {
   const onEmojiClick = (event, emojiObject) => {
     setChosenEmoji(emojiObject);
   };
+
+  const changeHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+    setIsFilePicked(true);
+  };
+
+  const chooseFile = () => {
+    file.current.click();
+  }
+
+  const chooseImage = () => {
+    image.current.click();
+  }
+
+  const handleSubmission = () => {
+    const formData = new FormData();
+
+    formData.append('File', selectedFile);
+
+    fetch(
+      'http://localhost:4000/api/',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log('Success:', result);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  };
+
 
   // const EmojiData = ({ chosenEmoji }) => (
   //   <div style={{ textAlign: 'center', marginRight: '810px' }}>
@@ -58,13 +120,15 @@ export default function MessageChat(props) {
   // };
 
   useEffect(() => {
-    let fetchchat;
     if (props.activeRoom) {
-      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(props.activeRoom.id)), 1000);
+      dispatch(actions.fetchAllMessages(props.activeRoom.id));
     }
-    return () => clearInterval(fetchchat);
-
   }, [props.activeRoom]);
+  useEffect(() => {
+    if (listMessages) {
+      setMessage(listMessages);
+    }
+  }, [listMessages]);
 
   // const handleClick = (event) => {
   //   setAnchorEl(event.currentTarget);
@@ -72,6 +136,32 @@ export default function MessageChat(props) {
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+
+  //Real time
+  useEffect(() => {
+    ws.onopen = () => {
+      console.log("connected");
+    };
+
+    ws.onmessage = (evt) => {
+      const message = JSON.parse(evt.data);
+      addMessage(message);
+    };
+
+    ws.onclose = () => {
+      console.log("disconnected");
+      setWs(new WebSocket(URL));
+    };
+  }, [ws]);
+
+  const addMessage = (message) => {
+    setMessage((prevArray) => [...prevArray, message]);
+  };
+
+  const submitMessage = (messageString) => {
+    ws.send(JSON.stringify(messageString));
+    addMessage(messageString);
+  };
 
   return (
     <div style={{ height: "100%" }}>
@@ -82,13 +172,20 @@ export default function MessageChat(props) {
             xs={12}
             sm={12}
             md={12}
-            style={{ height: "10%", borderBottom: "1px solid #e9e7e5" }}
+            style={{
+              height: "10%",
+              borderBottom: "1px solid #e9e7e5",
+            }}
           >
             <ListItem style={{ height: "100%" }}>
               <ListItemAvatar>
                 <Avatar
                   alt={props.activeRoom.roomName}
-                  src={"dummy.js"}
+                  src={
+                    props.activeRoom.avatar
+                      ? props.activeRoom.avatar
+                      : "dummy.js"
+                  }
                 ></Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -99,9 +196,19 @@ export default function MessageChat(props) {
           </Grid>
 
           {/* Message Area */}
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid item xs={12} sm={12} md={12} style={{ height: "75%" }}>
             {listMessages.length > 0 ? (
-              <MessageContent listMessages={listMessages} />
+              <Scrollbar
+                sx={{
+                  height: "100%",
+                }}
+              >
+                <MessageContent
+                  listMessages={messages}
+                  activeRoom={props.activeRoom.id}
+                />
+                <div ref={messagesEndRef} />
+              </Scrollbar>
             ) : (
               <div className={classes.contain}>
                 <p>"Let's say something"</p>
@@ -132,21 +239,45 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
+
+                {/* Emoji */}
                 <IconButton
                   type="submit"
                   aria-label="search"
                   style={{ width: 50 }}
+                  onClick={iconClick}
                 >
-                  <ChildCareIcon onClick={iconClick} />
+                  <ChildCareIcon />
                 </IconButton>
 
+                {/* Image */}
                 <Divider orientation="vertical" />
-                <IconButton aria-label="directions" style={{ width: 50 }}>
+                <input type="file" accept=".jpg, .jpeg, .png, .gif" multiple hidden ref={image} onChange={changeHandler} />
+                <IconButton
+                  aria-label="directions" style={{ width: 50 }}
+                  onClick={chooseImage}
+                >
                   <ImageIcon />
                 </IconButton>
 
+                {/* File */}
                 <Divider orientation="vertical" />
-                <IconButton aria-label="directions" style={{ width: 50 }}>
+                <input type="file" hidden ref={file} onChange={changeHandler} />
+                {/* {
+                  isFilePicked ? (
+                    console.log("Filename: ", selectedFile.name,
+                      "\nFiletype: ", selectedFile.type,
+                      "\nSize in bytes: ", selectedFile.size,
+                      "\nlastModifiedDate:", selectedFile.lastModifiedDate.toLocaleDateString()
+                    )
+                  ) : (
+                    console.log("Chưa có file")
+                  )
+                } */}
+                <IconButton
+                  aria-label="directions" style={{ width: 50 }}
+                  onClick={chooseFile}
+                >
                   <AttachFileIcon />
                 </IconButton>
 
@@ -165,6 +296,9 @@ export default function MessageChat(props) {
                 <MessageInput
                   dataEmoji={chosenEmoji}
                   activeRoom={props.activeRoom.id}
+                  onSubmitMessage={(messageString) =>
+                    submitMessage(messageString)
+                  }
                 />
               </Grid>
             </Grid>

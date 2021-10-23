@@ -1,0 +1,15 @@
+.contain {
+  height: 100%;
+}
+
+.parentsDiv {
+  border-bottom: 1px solid #e9e7e5;
+  height: 10%;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+.list {
+  height: 90%;
+}

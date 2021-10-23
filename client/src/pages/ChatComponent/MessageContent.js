@@ -19,30 +19,30 @@ export default function App(props) {
   return (
     <div className={classes.container}>
       {props.listMessages.map((message) => {
-        if (Number(userId) === message.userId.id) {
-          console.log(message.time);
+        if (Number(userId) === message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
           return (
             <MessageRight
               key={message.id}
               message={message.content}
-              timestamp="MM/DD 00:00"
+              timestamp={message.time}
               photoURL="Chao cc"
               displayName={`${message.userId.firstname} ${message.userId.lastname}`}
               avatarDisp={true}
             />
           );
         }
-
-        return (
-          <MessageLeft
-            key={message.id}
-            message={message.content}
-            timestamp={message.time}
-            photoURL=""
-            displayName={`${message.userId.firstname} ${message.userId.lastname}`}
-            avatarDisp={false}
-          />
-        );
+        else if (Number(userId) !== message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
+          return (
+            <MessageLeft
+              key={message.id}
+              message={message.content}
+              timestamp={message.time}
+              photoURL=""
+              displayName={`${message.userId.firstname} ${message.userId.lastname}`}
+              avatarDisp={false}
+            />
+          );
+        }
       })}
 
       {/* <MessageLeft

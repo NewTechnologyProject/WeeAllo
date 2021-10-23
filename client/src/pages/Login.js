@@ -60,7 +60,7 @@ export default function Login() {
           component={RouterLink}
           to="/register"
         >
-          Đăng kí tài đây
+          Đăng nhập tài đây
         </Link>
       </AuthLayout>
 

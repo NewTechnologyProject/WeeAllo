@@ -9,18 +9,6 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import { fetchAllMembers } from "src/actions/roomchat.action";
 import { set } from "lodash";
-// import { makeStyles } from "@material-ui/core/styles";
-// import ImageIcon from "@material-ui/icons/Image";
-// import WorkIcon from "@material-ui/icons/Work";
-// import BeachAccessIcon from "@material-ui/icons/BeachAccess";
-
-// const SORT_OPTIONS = [
-//   { value: "latest", label: "Latest" },
-//   { value: "popular", label: "Popular" },
-//   { value: "oldest", label: "Oldest" },
-// ];
-
-// ----------------------------------------------------------------------
 
 export default function ListFriendChat(props) {
   const userId = localStorage.getItem("user_authenticated");
@@ -64,21 +52,11 @@ export default function ListFriendChat(props) {
       } else if (neededRoom && neededRoom.userGroupList.length === 2) {
         name =
           neededRoom.userGroupList[0].id === Number(userId)
-            ? neededRoom.userGroupList[1].firstname
-            : neededRoom.userGroupList[0].firstname;
+            ? neededRoom.userGroupList[1].lastname
+            : neededRoom.userGroupList[0].lastname;
       }
     }
     return name;
-  };
-
-  const getMembersByRoomId = (roomId) => {
-    const neededRoom = listRooms.find((room) => room.id === roomId);
-    let members = [];
-    if (neededRoom && neededRoom.userGroupList.length > 0) {
-      members = neededRoom.userGroupList;
-    }
-
-    return members;
   };
 
   return (
@@ -98,16 +76,14 @@ export default function ListFriendChat(props) {
               <ListItem
                 button
                 key={room.id}
-                onClick={props.getActiveRoom.bind(
-                  null,
-                  room,
-                  name,
-                  getMembersByRoomId(room.id)
-                )}
+                onClick={props.getActiveRoom.bind(null, room, name)}
                 selected={props.activeRoom && room.id === props.activeRoom.id}
               >
                 <ListItemAvatar>
-                  <Avatar alt={name} src={"dummy.js"}></Avatar>
+                  <Avatar
+                    alt={name}
+                    src={room.avatar ? room.avatar : "dummy.js"}
+                  ></Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={name} secondary={room.createAt} />
               </ListItem>

@@ -68,5 +68,18 @@ public class RoomChatService {
         return userGroups;
     }
 
+    public void deleteRoomChatById (Long roomId){
+        try{
+            roomChatRepository.deleteById(roomId);
+            userGroupRepository.deleteUserGroupByRoomId(roomId);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateRoomChatCreator (Long roomId, Long creator){
+        roomChatRepository.updateRoomChatCreator(roomId, creator);
+    }
+
 
 }

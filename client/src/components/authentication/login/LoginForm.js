@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { isAuthenticated } from "src/actions/customer.action";
 import { Button } from "@material-ui/core";
 import { useForm } from "react-hook-form";
-import { Alert, AlertTitle } from "@material-ui/lab";
+import Notifycation from "src/pages/UserComponent/Notifycation";
 // material
 import {
   Link,
@@ -37,6 +37,11 @@ export default function LoginForm() {
     justifyContent: "center",
     padding: theme.spacing(12, 0),
   }));
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: "",
+    type: "",
+  });
   const navigate = useNavigate();
   const [check, setCheck] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -51,21 +56,15 @@ export default function LoginForm() {
   useEffect(() => {
     dispatch(actions.login(phone, pass));
   }, [phone, pass]);
-
+  console.log(user);
   const onLogin = () => {
-    if (user === "" || user === "undefined") {
-      window.alert("Fail");
-      // return (
-      //   <Container>
-      //     <ContentStyle>
-      //       <Alert severity="warning">
-      //         <AlertTitle>Cảnh báo</AlertTitle>
-      //         Tài khoản đã được đăng ký —{" "}
-      //         <strong>Vui lòng nhập mã xác thực!</strong>
-      //       </Alert>
-      //     </ContentStyle>
-      //   </Container>
-      // );
+    if (user === "") {
+      setNotify({
+        isOpen: true,
+        message:
+          "Tài khoản hoặc mật khẩu không chính xác - Vui lòng nhập lại !",
+        type: "error",
+      });
     } else {
       dispatch(isAuthenticated(user.id));
       navigate("/dashboard", { replace: true });
@@ -102,60 +101,61 @@ export default function LoginForm() {
     //  navigate("/forgot", { replace: true });
   };
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit(onLogin)}>
-        <Stack spacing={3}>
-          <TextField
-            fullWidth
-            autoComplete="username"
-            type="email"
-            label="Số điện thoại"
-            onChange={(event) => setPhone(event.target.value)}
-          />
+    <>
+      <FormikProvider value={formik}>
+        <Form autoComplete="off" noValidate onSubmit={handleSubmit(onLogin)}>
+          <Stack spacing={3}>
+            <TextField
+              fullWidth
+              autoComplete="username"
+              type="email"
+              label="Số điện thoại"
+              onChange={(event) => setPhone(event.target.value)}
+            />
 
-          <TextField
-            fullWidth
-            autoComplete="current-password"
-            type={showPassword ? "text" : "password"}
-            label="Mật khẩu"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword} edge="end">
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            onChange={(event) => setPass(event.target.value)}
-          />
-        </Stack>
+            <TextField
+              fullWidth
+              autoComplete="current-password"
+              type={showPassword ? "text" : "password"}
+              label="Mật khẩu"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleShowPassword} edge="end">
+                      <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              onChange={(event) => setPass(event.target.value)}
+            />
+          </Stack>
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ my: 2 }}
-        >
-          <FormControlLabel
-            control={
-              <Checkbox
-                {...getFieldProps("remember")}
-                checked={values.remember}
-              />
-            }
-            label="Remember me"
-          />
-
-          <Link component={RouterLink} variant="subtitle2" to="/forgot">
-            Quên mật khẩu?
-          </Link>
-        </Stack>
-
-        <Button fullWidth size="large" type="submit" variant="contained">
-          Đăng nhập
-        </Button>
-      </Form>
-    </FormikProvider>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ my: 2 }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...getFieldProps("remember")}
+                  checked={values.remember}
+                />
+              }
+              label="Remember me"
+            />
+            <Link component={RouterLink} variant="subtitle2" to="/forgot">
+              Quên mật khẩu?
+            </Link>
+          </Stack>
+          <Button fullWidth size="large" type="submit" variant="contained">
+            Đăng nhập
+          </Button>
+        </Form>
+      </FormikProvider>
+      <Notifycation notify={notify} setNotify={setNotify} />
+    </>
   );
 }

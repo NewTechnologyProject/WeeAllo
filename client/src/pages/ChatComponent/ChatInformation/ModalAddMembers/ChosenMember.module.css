@@ -1,0 +1,27 @@
+.choose-member {
+  width: 40%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  position: relative;
+  border: 1px solid #81f185;
+}
+
+.amount {
+  position: absolute;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-color: #4ad14f;
+  top: -15px;
+  left: 10px;
+}
+
+.avatar-size-small {
+  width: 30px;
+  height: 30px;
+}

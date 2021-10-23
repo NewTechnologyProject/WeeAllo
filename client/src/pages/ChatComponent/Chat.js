@@ -13,12 +13,12 @@ import ListFriendChat from "./ListFriendChat";
 import { Card } from "@material-ui/core";
 import * as actions from "src/actions/customer.action";
 import classes from "./Chat.module.css";
-import ChatInfomation from "./ChatInfomation";
+import ChatInfomation from "./ChatInformation/ChatInfomation";
 // import { alpha, styled } from "@material-ui/core/styles";
 
 export default function Chat() {
   const [activeRoom, setActiveRoom] = useState(null);
-  const [needLoad, setNeedLoad] = useState({ name: "new" });
+  const [needLoad, setNeedLoad] = useState({ data: "new" });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
@@ -28,8 +28,12 @@ export default function Chat() {
     dispatch(actions.fetchAllRoom(userId));
   }, [userId, actions.fetchAllRoom]);
 
-  const needLoadHandler = (group) => {
-    setNeedLoad(group);
+  const needLoadHandler = (data) => {
+    setNeedLoad(data);
+  };
+
+  const setActiveRoomNullHandler = () => {
+    setActiveRoom(null);
   };
 
   useEffect(() => {
@@ -44,12 +48,11 @@ export default function Chat() {
     }
   }, [loadRoomsHandler, needLoad]);
 
-  const getActiveRoom = (room, name, members) => {
+  const getActiveRoom = (room, name) => {
     let newRoom = room;
     if (!room.roomName) {
       newRoom = { ...room, roomName: name };
     }
-    newRoom = { ...newRoom, userGroupList: [...members] };
     setActiveRoom(newRoom);
   };
 
@@ -58,8 +61,8 @@ export default function Chat() {
       <Container maxWidth="100%" style={{ paddingTop: 10 }}>
         <Card>
           <Grid container spacing={1}>
-            <Grid container spacing={0}>
-              <Grid item xs={12} sm={12} md={2} style={{ height: "80vh" }}>
+            <Grid container spacing={0} style={{ height: "80vh" }}>
+              <Grid item xs={12} sm={12} md={2} style={{ height: "100%" }}>
                 <Grid
                   container
                   style={{
@@ -91,7 +94,7 @@ export default function Chat() {
                     sm={12}
                     md={8}
                     style={{
-                      height: "100%",
+                      height: "80vh",
                       borderLeft: "1px solid #e9e7e5",
                       borderRight: "1px solid #e9e7e5",
                     }}
@@ -99,8 +102,12 @@ export default function Chat() {
                     <MessageChat activeRoom={activeRoom} />
                   </Grid>
 
-                  <Grid item xs={12} sm={12} md={2}>
-                    <ChatInfomation activeRoom={activeRoom} />
+                  <Grid item xs={12} sm={12} md={2} style={{ height: "100%" }}>
+                    <ChatInfomation
+                      activeRoom={activeRoom}
+                      onNeedLoad={needLoadHandler}
+                      onSetActiveRoomNull={setActiveRoomNullHandler}
+                    />
                   </Grid>
                 </Fragment>
               )}
