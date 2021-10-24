@@ -37,6 +37,7 @@ export default {
         axios.post(url + "add-contact/" + id1 + "&" + id2),
       searchbyphone: (phone, id) =>
         axios.get(url + "search-by-phone/" + phone + "&" + id),
+      countFriend: (id) => axios.get(url + "friends/" + id),
     };
   },
   roomchat(url = baseApi + "rooms/") {

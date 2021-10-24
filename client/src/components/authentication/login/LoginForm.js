@@ -66,6 +66,8 @@ export default function LoginForm() {
         type: "error",
       });
     } else {
+      //console.log("user", user);
+
       dispatch(isAuthenticated(user.id));
       navigate("/dashboard", { replace: true });
     }

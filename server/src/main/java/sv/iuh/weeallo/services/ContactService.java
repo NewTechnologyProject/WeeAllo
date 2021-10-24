@@ -175,4 +175,9 @@ public class ContactService {
 
         return userChat;
     }
+    public int countFriend(Long id){
+        List<Contact> list= contactRepository.getAllContact(id);
+        int friends = list.size();
+        return friends;
+    }
 }

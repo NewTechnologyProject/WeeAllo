@@ -28,4 +28,5 @@ public interface ContactRepository extends JpaRepository<Contact,Long> {
 
     @Query("select c from Contact c where (c.sendId.id=:id1 and c.receiveId.id=:id2) or (c.sendId.id=:id2 and c.receiveId.id=:id1)")
     Contact getContactToDelete(@Param("id1") Long id1,@Param("id2") Long id2);
+
 }
