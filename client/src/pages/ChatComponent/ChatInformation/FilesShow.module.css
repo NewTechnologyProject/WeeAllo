@@ -1,0 +1,31 @@
+.item {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  align-items: center;
+  column-gap: 10px;
+  background: #fff;
+}
+
+.item:hover {
+  background-color: #f1f3f5;
+}
+
+.icon {
+  width: 32px;
+  cursor: pointer;
+}
+
+.text {
+  text-decoration: none;
+  color: #343a40;
+  font-size: 13px;
+}
+
+.nothing {
+  width: 100%;
+  text-align: center;
+  padding: 20px;
+  color: #adb5bd;
+  font-weight: 500;
+  font-size: 14px;
+}

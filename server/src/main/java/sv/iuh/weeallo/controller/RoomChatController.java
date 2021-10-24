@@ -43,7 +43,10 @@ public class RoomChatController {
 
                 UserChat user = sliceUser(message.getUserId());
 
-                newListMessages.add(new Message(message.getId(), message.getStatus(), message.getContent(), roomChat, user));
+                message.setUserId(user);
+                message.setRoomChatId(roomChat);
+
+                newListMessages.add(message);
             }
         }
 

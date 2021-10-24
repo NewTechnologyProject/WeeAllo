@@ -66,6 +66,7 @@ export default function MessageChat(props) {
       dispatch(actions.fetchAllMessages(props.activeRoom.id));
     }
   }, [props.activeRoom]);
+
   useEffect(() => {
     if (listMessages) {
       setMessage(listMessages);

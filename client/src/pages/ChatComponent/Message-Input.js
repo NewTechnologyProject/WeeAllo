@@ -7,15 +7,14 @@ import SendIcon from "@material-ui/icons/Send";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "src/actions/create-new-message.action"
+import * as actions from "src/actions/create-new-message.action";
 import * as actionuser from "src/actions/customer.action";
-
 
 /**
  *  New Message Input
  */
 export const MessageInput = (props) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
   //const user = useSelector(state => state.customer.userAuth);
@@ -23,20 +22,21 @@ export const MessageInput = (props) => {
   const today = new Date();
   const profile = useSelector((state) => state.customer.userById);
   const [userProfile, setUserProfile] = useState([]);
-  
+
   useEffect(() => {
     dispatch(actionuser.findByIdUser(user));
   }, []);
-  
+
   useEffect(() => {
     if (profile !== undefined) {
       setUserProfile(profile);
     }
   }, [profile]);
-  
+
   const EmojiData = ({ chosenEmoji }) => (
-    <div style={{ textAlign: 'center', marginRight: '810px' }}>
-      {chosenEmoji.emoji}<br />
+    <div style={{ textAlign: "center", marginRight: "810px" }}>
+      {chosenEmoji.emoji}
+      <br />
     </div>
   );
 
@@ -47,7 +47,7 @@ export const MessageInput = (props) => {
   }, [props.dataEmoji]);
 
   const handleMessageKeyPressEvent = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       ///this.handleMessageSendEvent(event)
       //window.alert(message);
       //const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -57,26 +57,26 @@ export const MessageInput = (props) => {
         file: null,
         roomChatId: props.activeRoom,
         time: today,
-        userId
-      }
+        userId,
+      };
       const messageTextRealTime = {
         status: "send",
         content: message,
         file: null,
         roomChatId: {
-          id: props.activeRoom
+          id: props.activeRoom,
         },
         userId: {
           id: Number(user),
           firstname: userProfile.firstname,
           lastname: userProfile.lastname,
-        }
-      }
-      props.onSubmitMessage(messageTextRealTime)
-      dispatch(actions.addMessage(messageText))
-      setMessage('')
+        },
+      };
+      props.onSubmitMessage(messageTextRealTime);
+      dispatch(actions.addMessage(messageText));
+      setMessage("");
     }
-  }
+  };
   const dispatch = useDispatch();
 
   const sentMessage = () => {
@@ -96,9 +96,9 @@ export const MessageInput = (props) => {
         id: Number(user),
         firstname: userProfile.firstname,
         lastname: userProfile.lastname,
-      }
-    }
-    props.onSubmitMessage(messageTextRealTime)
+      },
+    };
+    props.onSubmitMessage(messageTextRealTime);
     dispatch(actions.addMessage(messageText));
     setMessage("");
   };
@@ -127,4 +127,4 @@ export const MessageInput = (props) => {
       </IconButton>
     </Fragment>
   );
-}
+};

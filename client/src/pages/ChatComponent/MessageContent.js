@@ -19,7 +19,11 @@ export default function App(props) {
   return (
     <div className={classes.container}>
       {props.listMessages.map((message) => {
-        if (Number(userId) === message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
+        if (
+          Number(userId) === message.userId.id &&
+          Number(message.roomChatId.id) === props.activeRoom &&
+          message.content
+        ) {
           return (
             <MessageRight
               key={message.id}
@@ -30,8 +34,11 @@ export default function App(props) {
               avatarDisp={true}
             />
           );
-        }
-        else if (Number(userId) !== message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
+        } else if (
+          Number(userId) !== message.userId.id &&
+          Number(message.roomChatId.id) === props.activeRoom &&
+          message.content
+        ) {
           return (
             <MessageLeft
               key={message.id}
