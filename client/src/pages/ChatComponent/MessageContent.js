@@ -18,14 +18,15 @@ export default function App(props) {
 
   return (
     <div className={classes.container}>
-      {props.listMessages.map((message) => {
+      {props.listMessages.map((message, i) => {
         if (Number(userId) === message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
           return (
             <MessageRight
-              key={message.id}
+              key={i}
               message={message.content}
-              timestamp="MM/DD 00:00"
-              photoURL="Chao cc"
+              timestamp={message.time}
+              img={message.image}
+              file={message.file}
               displayName={`${message.userId.firstname} ${message.userId.lastname}`}
               avatarDisp={true}
             />
@@ -34,31 +35,18 @@ export default function App(props) {
         else if (Number(userId) !== message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
           return (
             <MessageLeft
-              key={message.id}
+              key={i}
               message={message.content}
               timestamp={message.time}
-              photoURL=""
+              file={message.file}
+              img={message.image}
+              photoURL={message.userId.avartar}
               displayName={`${message.userId.firstname} ${message.userId.lastname}`}
-              avatarDisp={false}
+              avatarDisp={true}
             />
           );
         }
       })}
-
-      {/* <MessageLeft
-                message="Chào cc"
-                timestamp="MM/DD 00:00"
-                photoURL=""
-                displayName="Hoài"
-                avatarDisp={false}
-            />
-            <MessageRight
-                message="Chào cc"
-                timestamp="MM/DD 00:00"
-                photoURL="Chào cc"
-                displayName="Huy"
-                avatarDisp={true}
-            /> */}
     </div>
   );
 }

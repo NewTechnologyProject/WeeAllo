@@ -34,6 +34,7 @@ public class AmazonClient {
         AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
         this.s3client = new AmazonS3Client(credentials);
     }
+
     private File convertMultiPartToFile(MultipartFile file) throws IOException, FileNotFoundException {
         File convFile = new File(file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);
@@ -41,13 +42,16 @@ public class AmazonClient {
         fos.close();
         return convFile;
     }
+
     private String generateFileName(MultipartFile multiPart) {
         return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
     }
+
     private void uploadFileTos3bucket(String fileName, File file) {
-        s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
-                .withCannedAcl(CannedAccessControlList.PublicRead));
+        s3client.putObject(
+                new PutObjectRequest(bucketName, fileName, file).withCannedAcl(CannedAccessControlList.PublicRead));
     }
+
     public String uploadFile(MultipartFile multipartFile) {
 
         String fileUrl = "";

@@ -53,11 +53,6 @@ export default function AllContact() {
         }
 
     }, [search, allContact]);
-    // useEffect(() => {
-    //     setContact(allContact)
-    // }, [allContact])
-    console.log(contact)
-    console.log(user)
     const genderListAllContact = () => {
         if (!contact.length) {
             return (
@@ -81,7 +76,7 @@ export default function AllContact() {
                                     component="img"
                                     alt="green iguana"
                                     height="250"
-                                    image={userAvatar}
+                                    image={record.avartar}
                                 />
                                 <CardContent>
                                     <Typography gutterBottom variant="h6" component="div">

@@ -22,6 +22,23 @@ import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Scrollbar from "src/components/Scrollbar";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import axios from "axios";
+
+// import Menu from "@material-ui/core/Menu";
+
+// const SORT_OPTIONS = [
+//   { value: "latest", label: "Latest" },
+//   { value: "popular", label: "Popular" },
+//   { value: "oldest", label: "Oldest" },
+// ];
+
+// ----------------------------------------------------------------------
+
 
 const URL = "ws://localhost:3030";
 export default function MessageChat(props) {
@@ -29,6 +46,16 @@ export default function MessageChat(props) {
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
+
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFilePicked, setIsFilePicked] = useState(false);
+
+  const file = useRef(null);
+  const image = useRef(null);
+  const [img, setImg] = useState();
+  const [sFile, setSFile] = useState();
+
+
   //RealTime
   const [name, setName] = useState("Ichlas");
   const [messages, setMessage] = useState([]);
@@ -51,15 +78,40 @@ export default function MessageChat(props) {
     setChosenEmoji(emojiObject);
   };
 
-  // const EmojiData = ({ chosenEmoji }) => (
-  //   <div style={{ textAlign: 'center', marginRight: '810px' }}>
-  //     {chosenEmoji.emoji}<br />
-  //   </div>
-  // );
+  const changeHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+    setIsFilePicked(true);
+  };
 
-  // MessageChat.propTypes = {
-  //   props: PropTypes.bool.isRequired,
-  // };
+  const chooseFile = () => {
+    file.current.click();
+  }
+
+  const chooseImage = () => {
+    image.current.click();
+  }
+
+  const handleImage = (e) => {
+    const imageA = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", imageA);
+    axios
+      .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
+      .then((response) => {
+        setImg(response.data);
+      });
+  };
+
+  const handleFile = (e) => {
+    const imageA = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", imageA);
+    axios
+      .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
+      .then((response) => {
+        setSFile(response.data);
+      });
+  };
 
   useEffect(() => {
     if (props.activeRoom) {
@@ -103,8 +155,10 @@ export default function MessageChat(props) {
   const submitMessage = (messageString) => {
     ws.send(JSON.stringify(messageString));
     addMessage(messageString);
+    setImg();
+    setSFile();
   };
-
+  console.log(messages)
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>
@@ -181,21 +235,34 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
-                {/* <IconButton
+
+                {/* Emoji */}
+                <IconButton
                   type="submit"
                   aria-label="search"
                   style={{ width: 50 }}
+                  onClick={iconClick}
                 >
-                  <ChildCareIcon onClick={iconClick} />
-                </IconButton> */}
+                  <ChildCareIcon />
+                </IconButton>
 
+                {/* Image */}
                 <Divider orientation="vertical" />
-                <IconButton aria-label="directions" style={{ width: 50 }}>
+                <input type="file" accept=".jpg, .jpeg, .png, .gif" multiple hidden ref={image} onChange={handleImage} />
+                <IconButton
+                  aria-label="directions" style={{ width: 50 }}
+                  onClick={chooseImage}
+                >
                   <ImageIcon />
                 </IconButton>
 
+                {/* File */}
                 <Divider orientation="vertical" />
-                <IconButton aria-label="directions" style={{ width: 50 }}>
+                <input type="file" hidden ref={file} onChange={handleFile} />
+                <IconButton
+                  aria-label="directions" style={{ width: 50 }}
+                  onClick={chooseFile}
+                >
                   <AttachFileIcon />
                 </IconButton>
 
@@ -205,6 +272,7 @@ export default function MessageChat(props) {
                 </IconButton>
               </Grid>
 
+              {/* Message input */}
               <Grid
                 item
                 xs={12}
@@ -213,6 +281,8 @@ export default function MessageChat(props) {
               >
                 <MessageInput
                   dataEmoji={chosenEmoji}
+                  image={img}
+                  file={sFile}
                   activeRoom={props.activeRoom.id}
                   onSubmitMessage={(messageString) =>
                     submitMessage(messageString)

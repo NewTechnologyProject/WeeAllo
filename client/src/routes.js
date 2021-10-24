@@ -12,6 +12,7 @@ import NotFound from "./pages/Page404";
 import Chat from "./pages/ChatComponent/Chat";
 import Contact from "./pages/ContactComponent/Contact";
 import RegisterOTP from "./pages/RegisterOTP";
+import ForgotPhone from "./pages/ForgotPhone";
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,7 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: "login", element: <Login /> },
+        { path: "forgot", element: <ForgotPhone /> },
         { path: "register", element: <Register /> },
         { path: "404", element: <NotFound /> },
         { path: "/", element: <Navigate to="/login" /> },

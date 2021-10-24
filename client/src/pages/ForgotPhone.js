@@ -7,8 +7,9 @@ import AuthLayout from "../layouts/AuthLayout";
 // components
 import Page from "../components/Page";
 import { MHidden } from "../components/@material-extend";
-import { RegisterForm } from "../components/authentication/register";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import AuthSocial from "../components/authentication/AuthSocial";
+import Forgot from "src/components/authentication/login/Forgot";
 
 // ----------------------------------------------------------------------
 
@@ -39,54 +40,28 @@ const ContentStyle = styled("div")(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Register() {
+export default function RegisterOTP() {
   return (
-    <RootStyle title="Đăng ký | Weallo">
+    <RootStyle title="ForgotPassWord | Minimal-UI">
       <AuthLayout>
-        Đã có tài khoản? &nbsp;
+        Đã có tài khoản ? &nbsp;
         <Link
           underline="none"
           variant="subtitle2"
           component={RouterLink}
           to="/login"
         >
-          Đăng nhập
+          Đăng nhập Ngay !
         </Link>
       </AuthLayout>
-
-      <MHidden width="mdDown">
-        <SectionStyle>
-          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Nhắn tin cùng bạn bè với Weeallo
-          </Typography>
-          <img
-            alt="register"
-            src="https://themarqhongkongland.com.vn/wp-content/uploads/2016/12/dang-ky-ngay-2.png"
-          />
-        </SectionStyle>
-      </MHidden>
-
       <Container>
         <ContentStyle>
-          <Box sx={{ mb: 5 }}>
-            <Typography variant="h4" gutterBottom>
-              Bắt đầu với Weeallo.
-            </Typography>
-            <Typography sx={{ color: "text.secondary" }}>
-              Đăng kí thông tin bên dưới
-            </Typography>
-          </Box>
-
-          <RegisterForm />
-
-          <MHidden width="smUp">
-            <Typography variant="subtitle2" sx={{ mt: 3, textAlign: "center" }}>
-              Already have an account?&nbsp;
-              <Link to="/login" component={RouterLink}>
-                Login
-              </Link>
-            </Typography>
-          </MHidden>
+          <Alert severity="warning">
+            <AlertTitle>Cảnh báo</AlertTitle>
+            Tài khoản đã được đăng ký —{" "}
+            <strong>Vui lòng nhập mã xác thực!</strong>
+          </Alert>
+          <Forgot />
         </ContentStyle>
       </Container>
     </RootStyle>

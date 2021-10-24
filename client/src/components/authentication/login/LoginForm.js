@@ -56,7 +56,7 @@ export default function LoginForm() {
   useEffect(() => {
     dispatch(actions.login(phone, pass));
   }, [phone, pass]);
-
+  console.log(user);
   const onLogin = () => {
     if (user === "") {
       setNotify({
@@ -97,14 +97,11 @@ export default function LoginForm() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
-  // const handleForgot = (e) => {
-  //   e.preventDefault();
-  //   if (validate()) {
-  //     dispatch(actions.register(values));
+  const handleForgot = (e) => {
+    e.preventDefault();
 
-  //     navigate("/forgotpass",{ replace: true });
-  //   }
-  // };
+    //  navigate("/forgot", { replace: true });
+  };
   return (
     <>
       <FormikProvider value={formik}>
@@ -151,12 +148,10 @@ export default function LoginForm() {
               }
               label="Remember me"
             />
-
-            <Link component={RouterLink} variant="subtitle2" to="#">
+            <Link component={RouterLink} variant="subtitle2" to="/forgot">
               Quên mật khẩu?
             </Link>
           </Stack>
-
           <Button fullWidth size="large" type="submit" variant="contained">
             Đăng nhập
           </Button>
