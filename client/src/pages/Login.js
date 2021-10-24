@@ -60,7 +60,7 @@ export default function Login() {
           component={RouterLink}
           to="/register"
         >
-          Đăng nhập tại đây
+          Đăng kí tại đây
         </Link>
       </AuthLayout>
 
@@ -83,7 +83,7 @@ export default function Login() {
               nhập thông tin tài khoản bên dưới
             </Typography>
           </Stack>
-          <AuthSocial />
+          {/* <AuthSocial /> */}
 
           <LoginForm />
 

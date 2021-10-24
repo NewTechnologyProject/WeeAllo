@@ -1,6 +1,8 @@
 package sv.iuh.weeallo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sv.iuh.weeallo.models.Contact;
 import sv.iuh.weeallo.models.UserChat;
@@ -70,5 +72,10 @@ public class ContactController {
             return null;
         }
         return contactService.findByPhone(phone,id);
+    }
+    @GetMapping("/friends/{id}")
+    public ResponseEntity<Integer> countFriend(@PathVariable("id") Long id){
+        int friends = contactService.countFriend(id);
+        return new ResponseEntity<Integer>(friends,HttpStatus.OK) ;
     }
 }
