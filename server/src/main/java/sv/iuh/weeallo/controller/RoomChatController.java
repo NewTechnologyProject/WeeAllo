@@ -1,6 +1,5 @@
 package sv.iuh.weeallo.controller;
 
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sv.iuh.weeallo.models.Message;
@@ -11,6 +10,8 @@ import sv.iuh.weeallo.services.MessageService;
 import sv.iuh.weeallo.services.RoomChatService;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,10 +44,10 @@ public class RoomChatController {
                 UserChat user = sliceUser(message.getUserId());
 
                 newListMessages.add(new Message(message.getId(), message.getStatus(), message.getContent(),
-                        message.getTime(), message.getImage(), roomChat, user));
+                        message.getTime(), message.getImage(),message.getFile(), roomChat, user));
             }
         }
-
+        Collections.sort(newListMessages, Comparator.comparing(Message::getId));
         return newListMessages;
     }
 

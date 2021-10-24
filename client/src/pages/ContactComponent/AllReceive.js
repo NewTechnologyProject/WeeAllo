@@ -84,7 +84,7 @@ export default function AllReceive() {
                                     component="img"
                                     alt="green iguana"
                                     height="250"
-                                    image={userAvatar}
+                                    image={record.avartar}
                                 />
                                 <CardContent>
                                     <Typography gutterBottom variant="h6" component="div">

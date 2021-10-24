@@ -156,7 +156,7 @@ export default function MessageChat(props) {
     ws.send(JSON.stringify(messageString));
     addMessage(messageString);
   };
-
+  console.log(messages)
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>

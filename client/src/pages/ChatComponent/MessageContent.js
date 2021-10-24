@@ -18,61 +18,35 @@ export default function App(props) {
 
   return (
     <div className={classes.container}>
-      {props.listMessages.map((message) => {
+      {props.listMessages.map((message, i) => {
         if (Number(userId) === message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
           return (
-            <div>
-              {message.image != null ? (
-                <img src={message.image} alt="img" style={{ width: '30%', height: '30%', float: 'right' }} />
-              ) : (
-                <MessageRight
-                  key={message.id}
-                  message={message.content}
-                  timestamp={message.time}
-                  photoURL=""
-                  displayName={`${message.userId.firstname} ${message.userId.lastname}`}
-                  avatarDisp={true}
-                />
-              )}
-
-            </div>
+            <MessageRight
+              key={i}
+              message={message.content}
+              timestamp={message.time}
+              img={message.image}
+              file={message.file}
+              displayName={`${message.userId.firstname} ${message.userId.lastname}`}
+              avatarDisp={true}
+            />
           );
         }
         else if (Number(userId) !== message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
           return (
-            <div>
-
-              {message.image != null ? (
-                <img src={message.image} alt="img" style={{ width: '30%', height: '30%', float: 'left' }} />
-              ) : (
-                <MessageLeft
-                  key={message.id}
-                  message={message.content}
-                  timestamp={message.time}
-                  photoURL=""
-                  displayName={`${message.userId.firstname} ${message.userId.lastname}`}
-                  avatarDisp={false}
-                />
-              )}
-            </div>
+            <MessageLeft
+              key={i}
+              message={message.content}
+              timestamp={message.time}
+              file={message.file}
+              img={message.image}
+              photoURL={message.userId.avartar}
+              displayName={`${message.userId.firstname} ${message.userId.lastname}`}
+              avatarDisp={true}
+            />
           );
         }
       })}
-
-      {/* <MessageLeft
-                message="Chào cc"
-                timestamp="MM/DD 00:00"
-                photoURL=""
-                displayName="Hoài"
-                avatarDisp={false}
-            />
-            <MessageRight
-                message="Chào cc"
-                timestamp="MM/DD 00:00"
-                photoURL="Chào cc"
-                displayName="Huy"
-                avatarDisp={true}
-            /> */}
     </div>
   );
 }

@@ -18,10 +18,6 @@ export const MessageInput = (props) => {
   const [message, setMessage] = useState('');
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
-  //const user = useSelector(state => state.customer.userAuth);
-
-
-  // console.log(message);
   const user = useSelector((state) => state.customer.userAuth);
   const today = new Date();
   const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes();
@@ -66,8 +62,6 @@ export const MessageInput = (props) => {
 
   const handleMessageKeyPressEvent = (event) => {
     if (event.key === 'Enter') {
-      ///this.handleMessageSendEvent(event)
-      //window.alert(message);
       const messageText = {
         status: "send",
         content: message,
@@ -77,8 +71,6 @@ export const MessageInput = (props) => {
         time,
         userId
       }
-
-      console.log(messageText);
 
       const messageTextRealTime = {
         status: "send",
@@ -92,6 +84,7 @@ export const MessageInput = (props) => {
           id: Number(user),
           firstname: userProfile.firstname,
           lastname: userProfile.lastname,
+          avartar: userProfile.avartar
         }
       }
       props.onSubmitMessage(messageTextRealTime)
@@ -116,7 +109,9 @@ export const MessageInput = (props) => {
       content: message,
       image: props.image,
       file: props.file,
-      roomChatId: props.activeRoom,
+      roomChatId: {
+        id: props.activeRoom
+      },
       userId: {
         id: Number(user),
         firstname: userProfile.firstname,

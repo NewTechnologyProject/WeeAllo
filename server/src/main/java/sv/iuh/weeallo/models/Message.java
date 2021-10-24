@@ -49,7 +49,7 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(Long id, String status, String content, String time, String image, RoomChat roomChatId, UserChat userId) {
+    public Message(Long id, String status, String content, String time, String image,String file, RoomChat roomChatId, UserChat userId) {
         this.id = id;
         this.status = status;
         this.content = content;
@@ -57,6 +57,7 @@ public class Message implements Serializable {
         this.image = image;
         this.roomChatId = roomChatId;
         this.userId = userId;
+        this.file=file;
     }
 
     public String getContent() {

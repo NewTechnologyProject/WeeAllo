@@ -292,7 +292,9 @@ export default function SearchContact() {
                                                 <Grid item>
                                                     <ButtonBase>
                                                         <Avatar style={{ height: 70, width: 70 }}
-                                                        ></Avatar>
+                                                        >
+                                                            <img src={record.avartar} />
+                                                        </Avatar>
                                                     </ButtonBase>
                                                 </Grid>
                                                 <Grid item xs={12} sm container>
@@ -343,8 +345,10 @@ export default function SearchContact() {
                         justifyContent="center"
                         style={{ paddingTop: 10, height: 200 }}
                     >
+                        {console.log(detailContact)}
                         <Avatar style={{ height: 100, width: 100, marginTop: 50 }}
-                        ></Avatar>
+
+                        ><img src={detailContact ? detailContact.avartar : "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png"} /></Avatar>
                     </Box>
                     <Box display="flex"
                         justifyContent="center"
@@ -441,7 +445,7 @@ export default function SearchContact() {
                             style={{ paddingTop: 10, height: 200 }}
                         >
                             <Avatar style={{ height: 100, width: 100, marginTop: 50 }}
-                            ></Avatar>
+                            ><img src={detailContact ? detailContact.avartar : "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png"} /></Avatar>
                         </Box>
                         <Box display="flex"
                             justifyContent="center"
