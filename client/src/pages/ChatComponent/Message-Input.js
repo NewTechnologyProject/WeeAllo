@@ -77,6 +77,7 @@ export const MessageInput = (props) => {
         content: message,
         image: null,
         file: null,
+        time,
         roomChatId: {
           id: props.activeRoom
         },
@@ -109,6 +110,7 @@ export const MessageInput = (props) => {
       content: message,
       image: props.image,
       file: props.file,
+      time,
       roomChatId: {
         id: props.activeRoom
       },
