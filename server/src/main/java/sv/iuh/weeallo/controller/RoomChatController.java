@@ -43,7 +43,7 @@ public class RoomChatController {
                 UserChat user = sliceUser(message.getUserId());
 
                 newListMessages.add(new Message(message.getId(), message.getStatus(), message.getContent(),
-                        message.getTime(), roomChat, user));
+                        message.getTime(), message.getImage(), roomChat, user));
             }
         }
 
@@ -68,18 +68,18 @@ public class RoomChatController {
         }
         return members;
     }
-    
+
     @DeleteMapping("/{roomId}")
-    public void deleteRoomById(@PathVariable("roomId") Long roomId){
+    public void deleteRoomById(@PathVariable("roomId") Long roomId) {
         roomChatService.deleteRoomChatById(roomId);
     }
 
     @PutMapping("/{roomId}&{creator}")
-    public void updateRoomChatCreator(@PathVariable("roomId") Long roomId, @PathVariable("creator") Long creator){
+    public void updateRoomChatCreator(@PathVariable("roomId") Long roomId, @PathVariable("creator") Long creator) {
         roomChatService.updateRoomChatCreator(roomId, creator);
     }
 
-    @PostMapping(value="/room")
+    @PostMapping(value = "/room")
     public RoomChat creaRoomChat(@RequestBody RoomChat roomChat) {
         // TODO: process POST request
 

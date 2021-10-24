@@ -52,6 +52,18 @@ export const MessageInput = (props) => {
     }
   }, [props.dataEmoji]);
 
+  useEffect(() => {
+    if (props.image) {
+      sentMessage();
+    }
+  }, [props.image]);
+
+  useEffect(() => {
+    if (props.file) {
+      sentMessage();
+    }
+  }, [props.file]);
+
   const handleMessageKeyPressEvent = (event) => {
     if (event.key === 'Enter') {
       ///this.handleMessageSendEvent(event)
@@ -59,7 +71,8 @@ export const MessageInput = (props) => {
       const messageText = {
         status: "send",
         content: message,
-        file: null,
+        image: props.image,
+        file: props.file,
         roomChatId: props.activeRoom,
         time,
         userId
@@ -70,7 +83,8 @@ export const MessageInput = (props) => {
       const messageTextRealTime = {
         status: "send",
         content: message,
-        file: null,
+        image: props.image,
+        file: props.file,
         roomChatId: {
           id: props.activeRoom
         },
@@ -91,7 +105,8 @@ export const MessageInput = (props) => {
     const messageText = {
       status: "send",
       content: message,
-      file: null,
+      image: props.image,
+      file: props.file,
       roomChatId: props.activeRoom,
       time,
       userId
@@ -99,7 +114,8 @@ export const MessageInput = (props) => {
     const messageTextRealTime = {
       status: "send",
       content: message,
-      file: null,
+      image: props.image,
+      file: props.file,
       roomChatId: props.activeRoom,
       userId: {
         id: Number(user),

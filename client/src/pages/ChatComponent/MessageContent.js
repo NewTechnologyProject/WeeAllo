@@ -21,26 +21,40 @@ export default function App(props) {
       {props.listMessages.map((message) => {
         if (Number(userId) === message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
           return (
-            <MessageRight
-              key={message.id}
-              message={message.content}
-              timestamp={message.time}
-              photoURL="Chao cc"
-              displayName={`${message.userId.firstname} ${message.userId.lastname}`}
-              avatarDisp={true}
-            />
+            <div>
+              {message.image != null ? (
+                <img src={message.image} alt="img" style={{ width: '30%', height: '30%', float: 'right' }} />
+              ) : (
+                <MessageRight
+                  key={message.id}
+                  message={message.content}
+                  timestamp={message.time}
+                  photoURL=""
+                  displayName={`${message.userId.firstname} ${message.userId.lastname}`}
+                  avatarDisp={true}
+                />
+              )}
+
+            </div>
           );
         }
         else if (Number(userId) !== message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
           return (
-            <MessageLeft
-              key={message.id}
-              message={message.content}
-              timestamp={message.time}
-              photoURL=""
-              displayName={`${message.userId.firstname} ${message.userId.lastname}`}
-              avatarDisp={false}
-            />
+            <div>
+
+              {message.image != null ? (
+                <img src={message.image} alt="img" style={{ width: '30%', height: '30%', float: 'left' }} />
+              ) : (
+                <MessageLeft
+                  key={message.id}
+                  message={message.content}
+                  timestamp={message.time}
+                  photoURL=""
+                  displayName={`${message.userId.firstname} ${message.userId.lastname}`}
+                  avatarDisp={false}
+                />
+              )}
+            </div>
           );
         }
       })}
