@@ -155,6 +155,8 @@ export default function MessageChat(props) {
   const submitMessage = (messageString) => {
     ws.send(JSON.stringify(messageString));
     addMessage(messageString);
+    setImg();
+    setSFile();
   };
 
   return (

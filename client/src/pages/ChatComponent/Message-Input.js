@@ -71,8 +71,8 @@ export const MessageInput = (props) => {
       const messageText = {
         status: "send",
         content: message,
-        image: props.image,
-        file: props.file,
+        image: null,
+        file: null,
         roomChatId: props.activeRoom,
         time,
         userId
@@ -83,8 +83,8 @@ export const MessageInput = (props) => {
       const messageTextRealTime = {
         status: "send",
         content: message,
-        image: props.image,
-        file: props.file,
+        image: null,
+        file: null,
         roomChatId: {
           id: props.activeRoom
         },
@@ -125,7 +125,7 @@ export const MessageInput = (props) => {
     }
     props.onSubmitMessage(messageTextRealTime)
     dispatch(actions.addMessage(messageText));
-    setMessage("");
+    setMessage('');
   };
 
   return (
