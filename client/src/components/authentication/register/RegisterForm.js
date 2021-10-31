@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 import eyeFill from "@iconify/icons-eva/eye-fill";
 import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+//import { useDispatch } from "react-redux";
 import * as actions from "src/actions/customer.action";
 import useForm from "./useForm";
 import { Alert, AlertTitle } from "@material-ui/lab";
@@ -17,6 +17,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Button from "@material-ui/core/Button";
+import { useDispatch, useSelector } from "react-redux";
 
 // import firebase from "./firebase";
 
@@ -43,6 +44,7 @@ export default function RegisterForm() {
   const [registerComponent, setRegisterComponent] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [agree, setAgree] = React.useState(false);
+
   const initialFieldValues = {
     firstname: "",
     lastname: "",
@@ -64,36 +66,46 @@ export default function RegisterForm() {
 
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
-    if ("firstname" in fieldValues)
+    if ("firstname" in fieldValues) {
       temp.firstname =
         /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*\s*[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*$/.test(
           fieldValues.firstname
         )
           ? ""
           : "Họ không được để rỗng và bắt đầu là chữ in hoa."; //toán tử 3 ngôi
-    if ("lastname" in fieldValues)
+      setErrors({
+        ...temp,
+      });
+    }
+
+    if ("lastname" in fieldValues) {
       temp.lastname =
         /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*\s*[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*$/.test(
           fieldValues.lastname
         )
           ? ""
           : "Tên không được để rỗng và bắt đầu là chữ in hoa.";
-    if ("phone" in fieldValues)
+      setErrors({
+        ...temp,
+      });
+    }
+    if ("phone" in fieldValues) {
       temp.phone = /^[0]{1}\d{9}$/.test(fieldValues.phone)
         ? ""
         : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
-    setErrors({
-      ...temp,
-    });
-    //if("phone" in fieldValues ===)
-    if ("password" in fieldValues)
+      setErrors({
+        ...temp,
+      });
+    }
+
+    if ("password" in fieldValues) {
       temp.password = /^\w{6,200}$/.test(fieldValues.password)
         ? ""
         : "Mật khẩu không được để trống và phải từ 6 kí tự trở lên";
-
-    setErrors({
-      ...temp,
-    });
+      setErrors({
+        ...temp,
+      });
+    }
 
     if (fieldValues == values) return Object.values(temp).every((x) => x == "");
   };
@@ -101,14 +113,17 @@ export default function RegisterForm() {
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
     useForm(initialFieldValues, validate);
 
+  const duplicatePhone = () => {
+    const phone = values.phone;
+    // const dataPhone = actions.findByPhoneUser(phone);
+    const dataPhone = dispatch(actions.findByPhoneUser(phone));
+    if (phone === dataPhone) {
+      console.log("Đúng rồi ");
+    } else console.log("Sao m cứ sai vậy");
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      // if (actions.searchContact(true)) {
-      // if ((values.phone = actions.register(values.phone))) {
-      //   handleClickOpen();
-      //   console.log("Số điện thoại đã được đăng ký");
-      // } else {
       onSignInSubmit(e);
       setDisable(true);
       setTimeout(() => {
@@ -154,23 +169,20 @@ export default function RegisterForm() {
     e.preventDefault();
     const code = otp;
     console.log(code);
-    window.confirmationResult
-      .confirm(code)
-      .then((result) => {
-        // User signed in successfully.
+    if (code.length) {
+      // console.log("OTP k dc rong");
+      window.confirmationResult.confirm(code).then((result) => {
         const user = result.user;
         console.log(JSON.stringify(user));
         dispatch(actions.register(values));
         setTimeout(() => {
           navigate("/login", { replace: true });
         }, 2000);
-
-        // ...
-      })
-      .catch((error) => {
-        // User couldn't sign in (bad verification code?)
-        // ...
       });
+    } else {
+      //   console.log("hihi");
+      handleClickOpen();
+    }
   };
   const handleClick = () => {
     setOpen(true);
@@ -198,7 +210,6 @@ export default function RegisterForm() {
     setOpen(false);
     comeBack();
   };
-
   return registerComponent ? (
     <form id="otp" autoComplete="off" noValidate>
       <div id="sign-in-button"></div>
@@ -275,9 +286,9 @@ export default function RegisterForm() {
         >
           Đăng kí
         </LoadingButton>
+
         <Dialog
           open={open}
-          // TransitionComponent={Transition}
           keepMounted
           onClose={handleClickClose}
           aria-labelledby="alert-dialog-slide-title"
@@ -286,8 +297,7 @@ export default function RegisterForm() {
           <DialogTitle id="alert-dialog-slide-title">{"Cảnh báo"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Số điện thoại của bạn đã được sử dụng để đăng ký một tài khoản
-              trong web chat này
+              Lỗi
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -310,7 +320,7 @@ export default function RegisterForm() {
             <TextField
               fullWidth
               label="OTP"
-              name="OTP"
+              name="maOTP"
               onChange={(e) => setOTP(e.target.value)}
             />
           </Stack>
@@ -320,11 +330,31 @@ export default function RegisterForm() {
             size="large"
             type="submit"
             variant="contained"
-            onClick={handleClick}
           >
             Xác nhận
           </LoadingButton>
-          <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+          <Dialog
+            open={open}
+            keepMounted
+            onClose={handleClickClose}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle id="alert-dialog-slide-title">
+              {"Cảnh báo"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Mã xác thực không được để trống!
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClickClose} color="primary">
+                Đồng ý
+              </Button>
+            </DialogActions>
+          </Dialog>
+          {/* <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
             <Alert
               onClose={handleClose}
               severity="success"
@@ -332,7 +362,7 @@ export default function RegisterForm() {
             >
               Đăng ký thành công
             </Alert>
-          </Snackbar>
+          </Snackbar> */}
         </Stack>
       </form>
     </div>

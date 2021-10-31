@@ -29,42 +29,44 @@ public class UserController {
     }
 
     @GetMapping("/phone/{dt}")
-    public UserChat getUserByPhone(@PathVariable("dt") String dt){
+    public UserChat getUserByPhone(@PathVariable("dt") String dt) {
         return userService.getUserChatByPhone(dt);
     }
-//    @PostMapping("/login/{phone}&{pass}")
-//    public UserChat getAllUser(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
-//        UserChat userChat=userService.getLogin(phone, pass);
-//        if(userChat != null){
-//            return sliceUser(userChat);
-//        }
-//        return null;
-//    }
+    // @PostMapping("/login/{phone}&{pass}")
+    // public UserChat getAllUser(@PathVariable("phone") String phone,
+    // @PathVariable("pass") String pass) {
+    // UserChat userChat=userService.getLogin(phone, pass);
+    // if(userChat != null){
+    // return sliceUser(userChat);
+    // }
+    // return null;
+    // }
 
     @PostMapping("/login/{phone}&{pass}")
     public UserChat userLogin(@PathVariable("phone") String phone, @PathVariable("pass") String pass) {
 
-        if(userService.getUserChatByPhone(phone)==null){
+        if (userService.getUserChatByPhone(phone) == null) {
             return null;
-        }else{
+        } else {
             UserChat userChat = userService.getUserChatByPhone(phone);
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            if(bCryptPasswordEncoder.matches(pass,userChat.getPassword())==true){
+            if (bCryptPasswordEncoder.matches(pass, userChat.getPassword()) == true) {
                 return userService.getUserChatByPhone(phone);
-                //return userService.getLogin(phone,pass);
-            }else
+                // return userService.getLogin(phone,pass);
+            } else
                 return null;
         }
     }
+
     @GetMapping("/{userId}/rooms")
-    public List<RoomChat> getAllRoomByUser(@PathVariable("userId") Long userId){
+    public List<RoomChat> getAllRoomByUser(@PathVariable("userId") Long userId) {
         UserChat user = userService.getUserById(userId);
         List<RoomChat> listRoom = new ArrayList<>();
 
-        if(user != null){
+        if (user != null) {
             List<UserGroup> listUserGroup = user.getUserGroupList();
-            if(listUserGroup.size() > 0){
-                for(UserGroup ug : listUserGroup){
+            if (listUserGroup.size() > 0) {
+                for (UserGroup ug : listUserGroup) {
                     listRoom.add(new RoomChat(ug.getRoomChatId().getId(), ug.getRoomChatId().getCreator(),
                             ug.getRoomChatId().getRoomName(), ug.getRoomChatId().getCreateAt(),
                             ug.getRoomChatId().getAvatar()));
@@ -76,20 +78,20 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    public List<UserChat> getAllContatc(@PathVariable("userId") Long userId){
+    public List<UserChat> getAllContatc(@PathVariable("userId") Long userId) {
         UserChat user = userService.getUserById(userId);
         List<Contact> contacts = new ArrayList<Contact>();
         List<Contact> contacts1 = new ArrayList<Contact>();
         List<UserChat> friends = new ArrayList<UserChat>();
 
-        if(user !=null){
+        if (user != null) {
             contacts = user.getContactList();
             contacts1 = user.getContactList1();
 
-            if(contacts != null && contacts.size() > 0){
+            if (contacts != null && contacts.size() > 0) {
                 friends.addAll(getFriends(userId, contacts));
             }
-            if(contacts1 != null && contacts1.size() >0){
+            if (contacts1 != null && contacts1.size() > 0) {
                 friends.addAll(getFriends(userId, contacts1));
             }
         }
@@ -98,7 +100,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserChat getUserById(@PathVariable("userId") Long userId){
+    public UserChat getUserById(@PathVariable("userId") Long userId) {
         UserChat user = userService.getUserById(userId);
         return user;
     }
@@ -115,20 +117,20 @@ public class UserController {
         return userChat;
     }
 
-    @PostMapping("/forgotpass")
-    public UserChat userForgot(@RequestBody UserChat userChat){
-        userService.userForgot(userChat);
-        return userChat;
+    @PostMapping("/forgotpass/{phone}&&{newpass}")
+    public boolean userForgot(@PathVariable("phone") String phone, @PathVariable("newpass") String newPass) {
+        return userService.userForgot(phone, newPass);
     }
-    //get list friends
-    public List<UserChat> getFriends(Long userId, List<Contact> listContacts){
+
+    // get list friends
+    public List<UserChat> getFriends(Long userId, List<Contact> listContacts) {
         List<UserChat> users = new ArrayList<UserChat>();
-        for(Contact c : listContacts){
-            if (c.getStatus().equalsIgnoreCase("friend")){
-                if(c.getReceiveId().getId() == userId){
-                    users.add(sliceUser( c.getSendId()));
-                }else{
-                    users.add(sliceUser( c.getReceiveId()));
+        for (Contact c : listContacts) {
+            if (c.getStatus().equalsIgnoreCase("friend")) {
+                if (c.getReceiveId().getId() == userId) {
+                    users.add(sliceUser(c.getSendId()));
+                } else {
+                    users.add(sliceUser(c.getReceiveId()));
                 }
 
             }
@@ -136,41 +138,41 @@ public class UserController {
         return users;
     }
 
-    //Slice user
-    public UserChat sliceUser(UserChat userChat){
-        return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(),
-                userChat.getEmail(), userChat.getPhone(), userChat.getPassword(),userChat.getIsActive(),
-                userChat.getCreateAt(), userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(), userChat.getStatus());
+    // Slice user
+    public UserChat sliceUser(UserChat userChat) {
+        return new UserChat(userChat.getId(), userChat.getFirstname(), userChat.getLastname(), userChat.getEmail(),
+                userChat.getPhone(), userChat.getPassword(), userChat.getIsActive(), userChat.getCreateAt(),
+                userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(), userChat.getStatus());
     }
 
     @GetMapping("/detail/{id}")
-    public UserChat findUserDetailById(@PathVariable("id") Long id ){
+    public UserChat findUserDetailById(@PathVariable("id") Long id) {
         return userService.getUserDetailById(id);
     }
 
     @PutMapping("/detail/{id}")
-    public UserChat updateUserChat(@RequestBody UserChat userChatDetail, @PathVariable("id") Long id){
+    public UserChat updateUserChat(@RequestBody UserChat userChatDetail, @PathVariable("id") Long id) {
         UserChat userChat = userService.getUserDetailById(id);
-        if(userChatDetail.getFirstname() != null){
+        if (userChatDetail.getFirstname() != null) {
             userChat.setFirstname(userChatDetail.getFirstname());
         }
-        if(userChatDetail.getLastname() != null){
+        if (userChatDetail.getLastname() != null) {
             userChat.setLastname(userChatDetail.getLastname());
         }
-        if(userChatDetail.getBirthday() != null){
+        if (userChatDetail.getBirthday() != null) {
             userChat.setBirthday(userChatDetail.getBirthday());
         }
-        if(userChatDetail.getGender()!=null){
+        if (userChatDetail.getGender() != null) {
             userChat.setGender(userChatDetail.getGender());
         }
 
-        if(userChatDetail.getAvartar() != null){
+        if (userChatDetail.getAvartar() != null) {
             userChat.setAvartar(userChatDetail.getAvartar());
         }
-        if(userChatDetail.getPassword() != null){
+        if (userChatDetail.getPassword() != null) {
             userChat.setPassword(new BCryptPasswordEncoder().encode(userChatDetail.getPassword()));
         }
-        if(userChatDetail.getCoverImage() != null){
+        if (userChatDetail.getCoverImage() != null) {
             userChat.setCoverImage(userChatDetail.getCoverImage());
         }
         userService.saveUserChat(userChat);

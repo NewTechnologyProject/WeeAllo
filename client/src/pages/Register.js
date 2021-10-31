@@ -41,7 +41,7 @@ const ContentStyle = styled("div")(({ theme }) => ({
 
 export default function Register() {
   return (
-    <RootStyle title="Đăng ký | Weallo">
+    <RootStyle title="Đăng ký | WeeAllo">
       <AuthLayout>
         Đã có tài khoản? &nbsp;
         <Link

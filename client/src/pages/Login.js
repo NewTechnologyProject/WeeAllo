@@ -51,7 +51,7 @@ export default function Login() {
     }
   }, []);
   return (
-    <RootStyle title="Login | Minimal-UI">
+    <RootStyle title="Đăng nhập | WeeAllo">
       <AuthLayout>
         Bạn chưa có tài khoản? &nbsp;
         <Link
