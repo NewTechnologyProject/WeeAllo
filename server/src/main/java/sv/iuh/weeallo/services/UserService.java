@@ -49,9 +49,9 @@ public class UserService {
         UserChat userChat = userRepository.findUserChatByPhone(phone);
         return userChat;
     }
-    // public UserChat getUserDetailById(Long id){
-    //     return userRepository.findUserDetailById(id);
-    // }
+     public UserChat getUserDetailById(Long id){
+         return userRepository.findUserDetailById(id);
+     }
     public UserChat saveUserChat(UserChat userChat){
         return userRepository.save(userChat);
     }

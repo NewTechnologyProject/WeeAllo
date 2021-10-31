@@ -145,37 +145,37 @@ public class UserController {
                 userChat.getUpdateAt(), userChat.getAvartar(), userChat.getCoverImage(), userChat.getStatus());
     }
 
-    // @GetMapping("/detail/{id}")
-    // public UserChat findUserDetailById(@PathVariable("id") Long id) {
-    //     return userService.getUserDetailById(id);
-    // }
+     @GetMapping("/detail/{id}")
+     public UserChat findUserDetailById(@PathVariable("id") Long id) {
+         return userService.getUserDetailById(id);
+     }
 
-    // @PutMapping("/detail/{id}")
-    // public UserChat updateUserChat(@RequestBody UserChat userChatDetail, @PathVariable("id") Long id) {
-    //     UserChat userChat = userService.getUserDetailById(id);
-    //     if (userChatDetail.getFirstname() != null) {
-    //         userChat.setFirstname(userChatDetail.getFirstname());
-    //     }
-    //     if (userChatDetail.getLastname() != null) {
-    //         userChat.setLastname(userChatDetail.getLastname());
-    //     }
-    //     if (userChatDetail.getBirthday() != null) {
-    //         userChat.setBirthday(userChatDetail.getBirthday());
-    //     }
-    //     if (userChatDetail.getGender() != null) {
-    //         userChat.setGender(userChatDetail.getGender());
-    //     }
+     @PutMapping("/detail/{id}")
+     public UserChat updateUserChat(@RequestBody UserChat userChatDetail, @PathVariable("id") Long id) {
+         UserChat userChat = userService.getUserDetailById(id);
+         if (userChatDetail.getFirstname() != null) {
+             userChat.setFirstname(userChatDetail.getFirstname());
+         }
+         if (userChatDetail.getLastname() != null) {
+             userChat.setLastname(userChatDetail.getLastname());
+         }
+         if (userChatDetail.getBirthday() != null) {
+             userChat.setBirthday(userChatDetail.getBirthday());
+         }
+         if (userChatDetail.getGender() != null) {
+             userChat.setGender(userChatDetail.getGender());
+         }
 
-    //     if (userChatDetail.getAvartar() != null) {
-    //         userChat.setAvartar(userChatDetail.getAvartar());
-    //     }
-    //     if (userChatDetail.getPassword() != null) {
-    //         userChat.setPassword(new BCryptPasswordEncoder().encode(userChatDetail.getPassword()));
-    //     }
-    //     if (userChatDetail.getCoverImage() != null) {
-    //         userChat.setCoverImage(userChatDetail.getCoverImage());
-    //     }
-    //     userService.saveUserChat(userChat);
-    //     return userChat;
-    // }
+         if (userChatDetail.getAvartar() != null) {
+             userChat.setAvartar(userChatDetail.getAvartar());
+         }
+         if (userChatDetail.getPassword() != null) {
+             userChat.setPassword(new BCryptPasswordEncoder().encode(userChatDetail.getPassword()));
+         }
+         if (userChatDetail.getCoverImage() != null) {
+             userChat.setCoverImage(userChatDetail.getCoverImage());
+         }
+         userService.saveUserChat(userChat);
+         return userChat;
+     }
 }
