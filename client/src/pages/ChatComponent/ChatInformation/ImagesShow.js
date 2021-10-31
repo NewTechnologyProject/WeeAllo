@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import classes from "./ImagesShow.module.css";
 import List from "@material-ui/core/List";
@@ -10,6 +11,10 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { Grid } from "@material-ui/core";
 
 const ImagesShow = (props) => {
+  const { listMedia } = props;
+
+  console.log(listMedia);
+
   return (
     <List component="nav" aria-labelledby="nested-list-subheader">
       <ListItem button onClick={props.onClickImage}>
@@ -19,28 +24,31 @@ const ImagesShow = (props) => {
       <Collapse in={props.openImage} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           <Grid container>
-            <Grid item xs={4} className={classes.imgFile}>
-              <ListItem button>
-                <img
-                  className={classes.imgFile}
-                  src="https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1634205302114-b4a4c42481d37b8d22c2.jpg
-            "
-                />
-              </ListItem>
-            </Grid>
-            <Grid item xs={4} className={classes.imgFile}>
-              <ListItem button>
-                <img
-                  className={classes.imgFile}
-                  src="https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1633608170833-FB_IMG_1621397369344.jpg"
-                />
-              </ListItem>
-            </Grid>
-            <Grid item xs={4} className={classes.imgFile}>
-              <ListItem button>
-                <img src="https://halotravel.vn/wp-content/uploads/2020/07/thach_trangg_103512340_187758299273938_8335419467587726993_n.jpg" />
-              </ListItem>
-            </Grid>
+            {listMedia &&
+              listMedia.map((media) => (
+                <Grid
+                  item
+                  xs={4}
+                  padding={0.3}
+                  className={classes.item}
+                  key={media.key}
+                >
+                  <a
+                    href={media.url}
+                    target="_blank"
+                    className={classes.link}
+                  ></a>
+                  <img className={classes.imgFile} src={media.url} />
+                </Grid>
+              ))}
+
+            {listMedia.length === 0 && (
+              <Grid item xs={12} padding={0.3}>
+                <div className={classes.nothing}>
+                  <p>Chưa có hình ảnh, video</p>
+                </div>
+              </Grid>
+            )}
           </Grid>
         </List>
       </Collapse>

@@ -18,47 +18,41 @@ export default function App(props) {
 
   return (
     <div className={classes.container}>
-      {props.listMessages.map((message) => {
-        if (Number(userId) === message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
+      {props.listMessages.map((message, i) => {
+        if (
+          Number(userId) === message.userId.id &&
+          Number(message.roomChatId.id) === props.activeRoom
+        ) {
           return (
             <MessageRight
-              key={message.id}
+              key={i}
               message={message.content}
               timestamp={message.time}
-              photoURL="Chao cc"
+              img={message.image}
+              file={message.file}
+              displayName={`${message.userId.firstname} ${message.userId.lastname}`}
+              avatarDisp={true}
+            />
+          );
+        } else if (
+          Number(userId) !== message.userId.id &&
+          Number(message.roomChatId.id) === props.activeRoom &&
+          message.content
+        ) {
+          return (
+            <MessageLeft
+              key={i}
+              message={message.content}
+              timestamp={message.time}
+              file={message.file}
+              img={message.image}
+              photoURL={message.userId.avartar}
               displayName={`${message.userId.firstname} ${message.userId.lastname}`}
               avatarDisp={true}
             />
           );
         }
-        else if (Number(userId) !== message.userId.id && Number(message.roomChatId.id) === props.activeRoom) {
-          return (
-            <MessageLeft
-              key={message.id}
-              message={message.content}
-              timestamp={message.time}
-              photoURL=""
-              displayName={`${message.userId.firstname} ${message.userId.lastname}`}
-              avatarDisp={false}
-            />
-          );
-        }
       })}
-
-      {/* <MessageLeft
-                message="Chào cc"
-                timestamp="MM/DD 00:00"
-                photoURL=""
-                displayName="Hoài"
-                avatarDisp={false}
-            />
-            <MessageRight
-                message="Chào cc"
-                timestamp="MM/DD 00:00"
-                photoURL="Chào cc"
-                displayName="Huy"
-                avatarDisp={true}
-            /> */}
     </div>
   );
 }

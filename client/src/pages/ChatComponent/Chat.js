@@ -22,6 +22,9 @@ export default function Chat() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
+  const moveToActiveRoom = useSelector(
+    (state) => state.roomchat.moveToActiveRoom
+  );
   const userId = localStorage.getItem("user_authenticated");
 
   const loadRoomsHandler = useCallback(() => {
@@ -38,6 +41,9 @@ export default function Chat() {
 
   useEffect(() => {
     console.log("Loading");
+    if (!activeRoom) {
+      setActiveRoom(moveToActiveRoom);
+    }
 
     if (needLoad) {
       loadRoomsHandler();

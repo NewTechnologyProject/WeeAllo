@@ -3,11 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="7d9496a6-f8d9-48bd-a536-54568e402e65" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/authentication/register/RegisterForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/authentication/register/RegisterForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ChatComponent/Message-Input.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ChatComponent/Message-Input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ChatComponent/Message.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ChatComponent/Message.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/pages/ChatComponent/MessageContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ChatComponent/MessageContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/controller/RoomChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/controller/RoomChatController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/models/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/models/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/services/AmazonClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/services/AmazonClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +29,24 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -39,6 +58,7 @@
       <updated>1632704419733</updated>
       <workItem from="1632704423892" duration="33000" />
       <workItem from="1633315817474" duration="813000" />
+      <workItem from="1635047566275" duration="3183000" />
     </task>
     <servers />
   </component>

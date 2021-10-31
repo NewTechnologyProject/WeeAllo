@@ -1,0 +1,14 @@
+.item {
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.img {
+  border-radius: 50%;
+  width: 180px;
+  height: 180px;
+}

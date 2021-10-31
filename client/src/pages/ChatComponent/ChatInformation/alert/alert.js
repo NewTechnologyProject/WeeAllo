@@ -26,10 +26,10 @@ const Alert = (props) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={props.onClose} color="primary">
-          Disagree
+          Hủy
         </Button>
         <Button variant="contained" onClick={execute} color="primary" autoFocus>
-          Agree
+          Đồng ý
         </Button>
       </DialogActions>
     </Dialog>

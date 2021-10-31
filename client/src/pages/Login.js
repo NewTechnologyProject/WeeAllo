@@ -60,7 +60,7 @@ export default function Login() {
           component={RouterLink}
           to="/register"
         >
-          Đăng nhập tài đây
+          Đăng kí tại đây
         </Link>
       </AuthLayout>
 
@@ -77,13 +77,13 @@ export default function Login() {
         <ContentStyle>
           <Stack sx={{ mb: 5 }}>
             <Typography variant="h4" gutterBottom>
-              Đăng kí với Weeallo
+              Đăng nhập với Weeallo
             </Typography>
             <Typography sx={{ color: "text.secondary" }}>
               nhập thông tin tài khoản bên dưới
             </Typography>
           </Stack>
-          <AuthSocial />
+          {/* <AuthSocial /> */}
 
           <LoginForm />
 

@@ -7,24 +7,28 @@ import SendIcon from "@material-ui/icons/Send";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "src/actions/create-new-message.action"
+import * as actions from "src/actions/create-new-message.action";
 import * as actionuser from "src/actions/customer.action";
-
 
 /**
  *  New Message Input
  */
 export const MessageInput = (props) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
-  //const user = useSelector(state => state.customer.userAuth);
-
-
-  // console.log(message);
   const user = useSelector((state) => state.customer.userAuth);
   const today = new Date();
-  const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes();
+  const time =
+    today.getFullYear() +
+    "-" +
+    (today.getMonth() + 1) +
+    "-" +
+    today.getDate() +
+    " " +
+    today.getHours() +
+    ":" +
+    today.getMinutes();
   const dispatch = useDispatch();
 
   const profile = useSelector((state) => state.customer.userById);
@@ -41,8 +45,9 @@ export const MessageInput = (props) => {
   }, [profile]);
 
   const EmojiData = ({ chosenEmoji }) => (
-    <div style={{ textAlign: 'center', marginRight: '810px' }}>
-      {chosenEmoji.emoji}<br />
+    <div style={{ textAlign: "center", marginRight: "810px" }}>
+      {chosenEmoji.emoji}
+      <br />
     </div>
   );
 
@@ -52,62 +57,78 @@ export const MessageInput = (props) => {
     }
   }, [props.dataEmoji]);
 
+  useEffect(() => {
+    if (props.image) {
+      sentMessage();
+    }
+  }, [props.image]);
+
+  useEffect(() => {
+    if (props.file) {
+      sentMessage();
+    }
+  }, [props.file]);
+
   const handleMessageKeyPressEvent = (event) => {
-    if (event.key === 'Enter') {
-      ///this.handleMessageSendEvent(event)
-      //window.alert(message);
+    if (event.key === "Enter") {
       const messageText = {
         status: "send",
         content: message,
+        image: null,
         file: null,
         roomChatId: props.activeRoom,
         time,
-        userId
-      }
-
-      console.log(messageText);
+        userId,
+      };
 
       const messageTextRealTime = {
         status: "send",
         content: message,
+        image: null,
         file: null,
+        time,
         roomChatId: {
-          id: props.activeRoom
+          id: props.activeRoom,
         },
         userId: {
           id: Number(user),
           firstname: userProfile.firstname,
           lastname: userProfile.lastname,
-        }
-      }
-      props.onSubmitMessage(messageTextRealTime)
-      dispatch(actions.addMessage(messageText))
-      setMessage('')
+          avartar: userProfile.avartar,
+        },
+      };
+      props.onSubmitMessage(messageTextRealTime);
+      dispatch(actions.addMessage(messageText));
+      setMessage("");
     }
-  }
-
+  };
 
   const sentMessage = () => {
     const messageText = {
       status: "send",
       content: message,
-      file: null,
+      image: props.image,
+      file: props.file,
       roomChatId: props.activeRoom,
       time,
-      userId
+      userId,
     };
     const messageTextRealTime = {
       status: "send",
       content: message,
-      file: null,
-      roomChatId: props.activeRoom,
+      image: props.image,
+      file: props.file,
+      time,
+      roomChatId: {
+        id: props.activeRoom,
+      },
       userId: {
         id: Number(user),
         firstname: userProfile.firstname,
         lastname: userProfile.lastname,
-      }
-    }
-    props.onSubmitMessage(messageTextRealTime)
+      },
+    };
+    props.onSubmitMessage(messageTextRealTime);
     dispatch(actions.addMessage(messageText));
     setMessage("");
   };
@@ -137,4 +158,4 @@ export const MessageInput = (props) => {
       </IconButton>
     </Fragment>
   );
-}
+};

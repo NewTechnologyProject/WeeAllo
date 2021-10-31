@@ -33,6 +33,8 @@ public class Message implements Serializable {
     private String status;
     @Column(name = "file")
     private String file;
+    @Column(name = "image")
+    private String image;
     @Column(name = "time")
     private String time;
     @Column(name = "content")
@@ -47,13 +49,17 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(Long id, String status, String content, String time, RoomChat roomChatId, UserChat userId) {
+    public Message(Long id, String status, String content, String time, String image,String file, RoomChat roomChatId, UserChat userId) {
         this.id = id;
         this.status = status;
+        this.file = file;
+        this.time = time;
         this.content = content;
         this.time = time;
+        this.image = image;
         this.roomChatId = roomChatId;
         this.userId = userId;
+        this.file=file;
     }
 
     public String getContent() {
@@ -108,6 +114,14 @@ public class Message implements Serializable {
         this.file = file;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public String getTime() {
         return time;
     }
@@ -115,7 +129,7 @@ public class Message implements Serializable {
     public void setTime(String time) {
         this.time = time;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

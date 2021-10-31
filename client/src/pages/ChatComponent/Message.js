@@ -27,6 +27,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import axios from "axios";
 
 // import Menu from "@material-ui/core/Menu";
 
@@ -51,6 +52,9 @@ export default function MessageChat(props) {
 
   const file = useRef(null);
   const image = useRef(null);
+  const [img, setImg] = useState();
+  const [sFile, setSFile] = useState();
+
 
   //RealTime
   const [name, setName] = useState("Ichlas");
@@ -87,43 +91,34 @@ export default function MessageChat(props) {
     image.current.click();
   }
 
-  const handleSubmission = () => {
+  const handleImage = (e) => {
+    const imageA = e.target.files[0];
     const formData = new FormData();
-
-    formData.append('File', selectedFile);
-
-    fetch(
-      'http://localhost:4000/api/',
-      {
-        method: 'POST',
-        body: formData,
-      }
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log('Success:', result);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
+    formData.append("file", imageA);
+    axios
+      .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
+      .then((response) => {
+        setImg(response.data);
       });
   };
 
-
-  // const EmojiData = ({ chosenEmoji }) => (
-  //   <div style={{ textAlign: 'center', marginRight: '810px' }}>
-  //     {chosenEmoji.emoji}<br />
-  //   </div>
-  // );
-
-  // MessageChat.propTypes = {
-  //   props: PropTypes.bool.isRequired,
-  // };
+  const handleFile = (e) => {
+    const imageA = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", imageA);
+    axios
+      .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
+      .then((response) => {
+        setSFile(response.data);
+      });
+  };
 
   useEffect(() => {
     if (props.activeRoom) {
       dispatch(actions.fetchAllMessages(props.activeRoom.id));
     }
   }, [props.activeRoom]);
+
   useEffect(() => {
     if (listMessages) {
       setMessage(listMessages);
@@ -161,8 +156,10 @@ export default function MessageChat(props) {
   const submitMessage = (messageString) => {
     ws.send(JSON.stringify(messageString));
     addMessage(messageString);
+    setImg();
+    setSFile();
   };
-
+  console.log(messages)
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>
@@ -216,7 +213,7 @@ export default function MessageChat(props) {
             )}
           </Grid>
 
-          <Grid style={{ height: "60%", paddingTop: 100 }}>
+          <Grid style={{ marginTop: 300, position: "absolute" }}>
             {emojiStatus === true ? (
               <Picker
                 onEmojiClick={onEmojiClick}
@@ -252,7 +249,7 @@ export default function MessageChat(props) {
 
                 {/* Image */}
                 <Divider orientation="vertical" />
-                <input type="file" accept=".jpg, .jpeg, .png, .gif" multiple hidden ref={image} onChange={changeHandler} />
+                <input type="file" accept=".jpg, .jpeg, .png, .gif" multiple hidden ref={image} onChange={handleImage} />
                 <IconButton
                   aria-label="directions" style={{ width: 50 }}
                   onClick={chooseImage}
@@ -262,31 +259,16 @@ export default function MessageChat(props) {
 
                 {/* File */}
                 <Divider orientation="vertical" />
-                <input type="file" hidden ref={file} onChange={changeHandler} />
-                {/* {
-                  isFilePicked ? (
-                    console.log("Filename: ", selectedFile.name,
-                      "\nFiletype: ", selectedFile.type,
-                      "\nSize in bytes: ", selectedFile.size,
-                      "\nlastModifiedDate:", selectedFile.lastModifiedDate.toLocaleDateString()
-                    )
-                  ) : (
-                    console.log("Chưa có file")
-                  )
-                } */}
+                <input type="file" hidden ref={file} onChange={handleFile} />
                 <IconButton
                   aria-label="directions" style={{ width: 50 }}
                   onClick={chooseFile}
                 >
                   <AttachFileIcon />
                 </IconButton>
-
-                <Divider orientation="vertical" />
-                <IconButton aria-label="directions" style={{ width: 50 }}>
-                  <AssignmentTurnedInIcon />
-                </IconButton>
               </Grid>
 
+              {/* Message input */}
               <Grid
                 item
                 xs={12}
@@ -295,6 +277,8 @@ export default function MessageChat(props) {
               >
                 <MessageInput
                   dataEmoji={chosenEmoji}
+                  image={img}
+                  file={sFile}
                   activeRoom={props.activeRoom.id}
                   onSubmitMessage={(messageString) =>
                     submitMessage(messageString)
