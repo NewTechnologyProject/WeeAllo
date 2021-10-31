@@ -87,20 +87,20 @@ export default function UserDetail() {
     birthday: selectedDate,
     phone: phone,
     avartar: image,
-    coverImage: "",
+    //coverImage: "",
   };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (e) => {
+    e.preventDefault();
     dispatch(actions.updateUserById(initialFieldValues, userId));
     setNotify({
       isOpen: true,
       message: "Cập nhật thông tin thành công !",
       type: "success",
     });
-    setInterval(() => {
-      navigate("/user", { replace: true });
-    }, 4000);
+    // setInterval(() => {
+    //   navigate("/user", { replace: true });
+    // }, 4000);
     //console.log("data", data);
   };
   function onDisable() {
