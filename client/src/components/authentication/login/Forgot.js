@@ -18,6 +18,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import Button from "@material-ui/core/Button";
 import firebase from "firebase";
+import { useLocation } from "react-router";
 // material
 import {
   Stack,
@@ -38,16 +39,36 @@ export default function Forgot() {
   const [disable, setDisable] = React.useState(false);
   const [registerComponent, setRegisterComponent] = useState(true);
   const [open, setOpen] = React.useState(false);
+  const [userId, setUserId] = useState();
+
+  const [showPassword, setShowPassword] = useState(false);
   const initialFieldValues = {
-    phone: "",
+    newpass: "",
   };
   const validate = (fieldValues = values) => {
     let temp = { ...errors };
-
+    if (values.newpass != values.confirmpass)
+      setErrors({
+        ...temp,
+      });
     if ("phone" in fieldValues)
       temp.phone = /^[0]{1}\d{9}$/.test(fieldValues.phone)
         ? ""
         : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
+    setErrors({
+      ...temp,
+    });
+    if ("newpass" in fieldValues)
+      temp.newpass = /^\w{6,200}$/.test(fieldValues.newpass)
+        ? ""
+        : "Mật khẩu không được để trống và phải từ 6 kí tự trở lên";
+    setErrors({
+      ...temp,
+    });
+    if ("confirmpass" in fieldValues)
+      temp.confirmpass = /^\w{6,200}$/.test(fieldValues.confirmpass)
+        ? ""
+        : "Mật khẩu không được để trống và phải từ 6 kí tự trở lên";
     setErrors({
       ...temp,
     });
@@ -56,21 +77,6 @@ export default function Forgot() {
   };
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
     useForm(initialFieldValues, validate);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // if (validate()) {
-    // if (actions.searchContact(true)) {
-    // if ((values.phone = actions.register(values.phone))) {
-    //   handleClickOpen();
-    //   console.log("Số điện thoại đã được đăng ký");
-    // } else {
-    onSignInSubmit(e);
-    setDisable(true);
-    setTimeout(() => {
-      setRegisterComponent(false);
-    }, 8000);
-    //   }
-  };
 
   const configureCaptcha = () => {
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
@@ -102,30 +108,41 @@ export default function Forgot() {
       .catch((error) => {
         // Error; SMS not sent
         console.log("SMS không được gởi");
-        // navigate("/register", { replace: true });
+        navigate("/login", { replace: true });
       });
   };
   const onSubmitOTP = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const code = otp;
     console.log(code);
-    window.confirmationResult
-      .confirm(code)
-      .then((result) => {
-        // User signed in successfully.
+    if (code.length) {
+      console.log("OTP k dc rong");
+      window.confirmationResult.confirm(code).then((result) => {
         const user = result.user;
         console.log(JSON.stringify(user));
         dispatch(actions.register(values));
         setTimeout(() => {
           navigate("/login", { replace: true });
         }, 2000);
-
-        // ...
-      })
-      .catch((error) => {
-        // User couldn't sign in (bad verification code?)
-        // ...
       });
+      setDisable(true);
+      setTimeout(() => {
+        setRegisterComponent(false);
+      }, 8000);
+    } else {
+      console.log("hihi");
+      handleClickOpen();
+    }
+  };
+  const handleSubmidOTP = (e) => {
+    e.preventDefault();
+    onSubmitOTP();
+  };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClickClose = () => {
+    setOpen(false);
   };
   const handleClick = () => {
     setOpen(true);
@@ -138,43 +155,44 @@ export default function Forgot() {
 
     setOpen(false);
   };
-  return registerComponent ? (
-    <form autoComplete="off" noValidate onSubmit={onSignInSubmit}>
-      <div id="sign-in-button"></div>
-      <Stack spacing={3}>
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-          <TextField
-            fullWidth
-            value={values.phone}
-            label="So dien thoai"
-            name="phone"
-            onChange={handleInputChange}
-            {...(errors.phone && {
-              error: true,
-              helperText: errors.phone,
-            })}
+  const { state } = useLocation();
+  // console.log(dc);
+  // const { phone } = dc;
+  // console.log("///////////////");
+  // console.log(phone);
 
-            // onChange={(e) => setOTP(e.target.value)}
-          />
-        </Stack>
-        <LoadingButton
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          onClick={handleSubmit}
-        >
-          Xác nhận
-        </LoadingButton>
-      </Stack>
-    </form>
-  ) : (
+  // console.log(state);
+  //  console.log(phone);
+  // const forgotpass = () => {
+  //   dispatch(actions.forgotpass(phone, initialFieldValues));
+
+  //   // dispatch(actions.updateUserById(initialFieldValues, userId));
+
+  //   setTimeout(() => {
+  //     navigate("/login", { replace: true });
+  //   }, 4000);
+  // };
+  const passnew = values.newpass;
+  console.log(passnew);
+  console.log(state.phone);
+
+  const forgotpass = () => {
+    dispatch(actions.forgotpass(state.phone, passnew));
+    // setNotify({
+    //   isOpen: true,
+    //   message: "Đổi mật khẩu thành công !",
+    //   type: "success",
+    // });
+    //setTimeout(() => {
+    navigate("/login", { replace: true });
+    //  }, 4000);
+
+    //navigate("/dashboard", { replace: true });
+  };
+
+  return registerComponent ? (
     <div>
-      <Alert severity="warning" style={{ marginBottom: 10 }}>
-        <AlertTitle>Cảnh báo</AlertTitle>
-        <strong>Vui lòng nhập mã xác thực!</strong>
-      </Alert>
-      <form autoComplete="off" noValidate onSubmit={onSubmitOTP}>
+      <form autoComplete="off" noValidate onSubmit={handleSubmidOTP}>
         <Stack spacing={3}>
           <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
             <TextField
@@ -185,24 +203,101 @@ export default function Forgot() {
             />
           </Stack>
           <LoadingButton
-            //  disabled={disable}
+            fullWidth
+            disabled={disable}
+            size="large"
+            type="submit"
+            variant="contained"
+            //  onClick={handleClick}
+          >
+            Xác nhận
+          </LoadingButton>
+        </Stack>
+        <Dialog
+          open={open}
+          keepMounted
+          onClose={handleClickClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">{"Cảnh báo"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Mã xác nhận OTP không phù hợp
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClickClose} color="primary">
+              Đồng ý
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </form>
+    </div>
+  ) : (
+    <div>
+      <form autoComplete="off" noValidate onSubmit={forgotpass}>
+        <Stack spacing={3}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            <TextField
+              fullWidth
+              type={showPassword ? "text" : "password"}
+              label="Mật khẩu mới"
+              name="newpass"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              value={values.password}
+              onChange={handleInputChange}
+              {...(errors.password && {
+                error: true,
+                helperText: errors.password,
+              })}
+            />
+          </Stack>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            <TextField
+              fullWidth
+              type={showPassword ? "text" : "password"}
+              label="xác nhận mật khẩu"
+              name="confirmpass"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              value={values.password}
+              onChange={handleInputChange}
+              {...(errors.password && {
+                error: true,
+                helperText: errors.password,
+              })}
+            />
+          </Stack>
+          <LoadingButton
             fullWidth
             size="large"
             type="submit"
             variant="contained"
-            onClick={handleClick}
           >
             Xác nhận
           </LoadingButton>
-          <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
-            <Alert
-              onClose={handleClose}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Đăng ký thành công
-            </Alert>
-          </Snackbar>
         </Stack>
       </form>
     </div>

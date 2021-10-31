@@ -1,6 +1,7 @@
 package sv.iuh.weeallo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import sv.iuh.weeallo.models.UserChat;
 import sv.iuh.weeallo.repository.UserRepository;
@@ -28,8 +29,13 @@ public class UserService {
     public UserChat userRegister(UserChat userChat) {
         return userRepository.save(userChat);
     }
-    public UserChat userForgot(UserChat userChat){
-        return userRepository.save(userChat);
+    public boolean userForgot(String phone,String newPass){
+        UserChat userChat = userRepository.findForgot(phone);
+        userChat.setPassword(new BCryptPasswordEncoder().encode(newPass));
+        userRepository.save(userChat);
+        if(userChat==null)
+            return false;
+        return true;
     }
 
     public UserChat getUserById(Long userId){
@@ -43,9 +49,9 @@ public class UserService {
         UserChat userChat = userRepository.findUserChatByPhone(phone);
         return userChat;
     }
-    public UserChat getUserDetailById(Long id){
-        return userRepository.findUserDetailById(id);
-    }
+    // public UserChat getUserDetailById(Long id){
+    //     return userRepository.findUserDetailById(id);
+    // }
     public UserChat saveUserChat(UserChat userChat){
         return userRepository.save(userChat);
     }

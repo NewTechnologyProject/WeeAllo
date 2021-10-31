@@ -20,6 +20,7 @@ export const ACTION_TYPES = {
   FINDUSERBYID: "FINDUSERBYID",
   FINDUSERBYPHONE: "FINDUSERBYPHONE",
   UPDATEBYIDUSER: "UPDATEBYIDUSER",
+  FORGOTPASS: "FORGOTPASS",
 };
 export const login = (phone, pass) => (dispatch) => {
   apiService
@@ -52,6 +53,18 @@ export const updateUserById = (userChat, id) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: ACTION_TYPES.UPDATEBYIDUSER,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const forgotpass = (phone,newpass) => (dispatch) => {
+  apiService
+    .user()
+    .forgotpass(phone,newpass)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.FORGOTPASS,
         payload: response.data,
       });
     })
