@@ -25,7 +25,6 @@
     "qrcode": "^1.4.4",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-<<<<<<< HEAD
     "react-hook": "0.0.1",
     "react-hook-form": "^7.18.0",
     "react-native": "^0.66.1",
@@ -41,10 +40,6 @@
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.0"
-=======
-    "react-native": "^0.66.1",
-    "react-native-web": "0.17.1"
->>>>>>> 910de3c8e38f3bfe9d1617b12583767b9fdc66ad
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

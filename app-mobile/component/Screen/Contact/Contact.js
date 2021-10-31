@@ -5,6 +5,7 @@ import ContactList from './Tab/ContactList';
 import { Header } from 'react-native-elements';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ContactGroupList from './Tab/ContactGroupList';
+import SearchBar from 'react-native-elements/dist/searchbar/SearchBar-ios';
 
 const Tab = createMaterialTopTabNavigator();
 const styles = StyleSheet.create({
@@ -38,18 +39,27 @@ const theme = {
     },
 };
 export default function Contact() {
+    const [textSearch, setTextSearch] = useState('')
     const [index, setIndex] = useState(0);
     return (
         <View style={styles.container}>
-            <Header
-                statusBarProps={{ barStyle: 'light-content' }}
-                barStyle="light-content"
-                centerComponent={{ text: 'Danh Bạ', style: { color: '#fff' } }}
-                containerStyle={{
-                    backgroundColor: '#098524',
-                    justifyContent: 'space-around',
-                }}
-            />
+            <View>
+                <SearchBar
+                    platform='default'
+                    cancelButtonTitle=''
+                    placeholder="Tìm bạn bè..."
+                    onChangeText={setTextSearch}
+                    value={textSearch}
+                    inputContainerStyle={{
+                        height: 55,
+                        paddingTop: 27
+                    }}
+                    inputStyle={{
+                        color: 'black'
+                    }}
+                    placeholderTextColor='black'
+                />
+            </View>
             <Tab.Navigator
                 screenOptions={{
                     tabBarLabelStyle: { fontSize: 12 },
