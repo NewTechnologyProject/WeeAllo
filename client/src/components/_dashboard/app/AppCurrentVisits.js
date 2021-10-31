@@ -41,9 +41,9 @@ export default function AppCurrentVisits() {
       setPhone(userProfile.phone);
     }
   }, [userProfile]);
-  console.log("firstname", firstname);
+  //console.log("firstname", firstname);
   return (
-    <Card style={{ height: "450px" }}>
+    <Card style={{ height: "550px" }}>
       <CardHeader title="Thông tin chung" style={{ padding: "20px" }} />
       <div
         style={{

@@ -42,7 +42,7 @@ export const customerReducer = (state = initialState, action) => {
     case ACTION_TYPES.UPDATEBYIDUSER: {
       return {
         ...state,
-        updateUser: action.payload,
+        userById: action.payload,
       };
     }
     case ACTION_TYPES.FINDUSERBYID: {

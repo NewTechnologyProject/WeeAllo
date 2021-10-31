@@ -15,8 +15,8 @@ export default function AppWebsiteVisits() {
         Chào mừng đến với Weallo!{" "}
       </Typography>
       <small style={{ marginLeft: "100px" }}>
-        Khám phá những tiện ích hỗ trợ làm trò chuyện và làm việc cùng người
-        thân bạn bè và đồng nghiệp
+        Khám phá những tiện ích hỗ trợ trò chuyện và làm việc cùng người thân
+        bạn bè và đồng nghiệp
       </small>
       <div
         id="carouselExampleIndicators"

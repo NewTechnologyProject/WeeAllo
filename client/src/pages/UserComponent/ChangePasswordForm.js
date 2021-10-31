@@ -60,9 +60,9 @@ export default function ChangePasswordForm() {
       message: "Đổi mật khẩu thành công !",
       type: "success",
     });
-    setTimeout(() => {
-      navigate("/dashboard", { replace: true });
-    }, 4000);
+    // setTimeout(() => {
+    //   navigate("/dashboard", { replace: true });
+    // }, 4000);
   };
 
   return (
