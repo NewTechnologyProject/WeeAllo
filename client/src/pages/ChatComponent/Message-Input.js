@@ -17,9 +17,20 @@ export const MessageInput = (props) => {
   const [message, setMessage] = useState("");
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
-  //const user = useSelector(state => state.customer.userAuth);
   const user = useSelector((state) => state.customer.userAuth);
   const today = new Date();
+  const time =
+    today.getFullYear() +
+    "-" +
+    (today.getMonth() + 1) +
+    "-" +
+    today.getDate() +
+    " " +
+    today.getHours() +
+    ":" +
+    today.getMinutes();
+  const dispatch = useDispatch();
+
   const profile = useSelector((state) => state.customer.userById);
   const [userProfile, setUserProfile] = useState([]);
 
@@ -46,23 +57,36 @@ export const MessageInput = (props) => {
     }
   }, [props.dataEmoji]);
 
+  useEffect(() => {
+    if (props.image) {
+      sentMessage();
+    }
+  }, [props.image]);
+
+  useEffect(() => {
+    if (props.file) {
+      sentMessage();
+    }
+  }, [props.file]);
+
   const handleMessageKeyPressEvent = (event) => {
     if (event.key === "Enter") {
-      ///this.handleMessageSendEvent(event)
-      //window.alert(message);
-      //const time = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
       const messageText = {
         status: "send",
         content: message,
+        image: null,
         file: null,
         roomChatId: props.activeRoom,
-        time: today,
+        time,
         userId,
       };
+
       const messageTextRealTime = {
         status: "send",
         content: message,
+        image: null,
         file: null,
+        time,
         roomChatId: {
           id: props.activeRoom,
         },
@@ -70,6 +94,7 @@ export const MessageInput = (props) => {
           id: Number(user),
           firstname: userProfile.firstname,
           lastname: userProfile.lastname,
+          avartar: userProfile.avartar,
         },
       };
       props.onSubmitMessage(messageTextRealTime);
@@ -77,21 +102,26 @@ export const MessageInput = (props) => {
       setMessage("");
     }
   };
-  const dispatch = useDispatch();
 
   const sentMessage = () => {
     const messageText = {
       status: "send",
       content: message,
-      file: null,
+      image: props.image,
+      file: props.file,
       roomChatId: props.activeRoom,
+      time,
       userId,
     };
     const messageTextRealTime = {
       status: "send",
       content: message,
-      file: null,
-      roomChatId: props.activeRoom,
+      image: props.image,
+      file: props.file,
+      time,
+      roomChatId: {
+        id: props.activeRoom,
+      },
       userId: {
         id: Number(user),
         firstname: userProfile.firstname,
@@ -122,8 +152,9 @@ export const MessageInput = (props) => {
         color="primary"
         aria-label="directions"
         style={{ float: "right" }}
+        onClick={sentMessage}
       >
-        <SendIcon onClick={sentMessage} />
+        <SendIcon />
       </IconButton>
     </Fragment>
   );

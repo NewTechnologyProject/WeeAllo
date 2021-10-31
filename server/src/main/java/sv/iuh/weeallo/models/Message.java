@@ -19,7 +19,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "message")
 public class Message implements Serializable {
@@ -32,13 +31,13 @@ public class Message implements Serializable {
     private Long id;
     @Column(name = "status")
     private String status;
-    @Column(name="file")
+    @Column(name = "file")
     private String file;
-    @Column(name="media")
-    private String media;
+    @Column(name = "image")
+    private String image;
     @Column(name = "time")
-    private Date time;
-    @Column(name="content")
+    private String time;
+    @Column(name = "content")
     private String content;
     @JoinColumn(name = "roomChatId", referencedColumnName = "id")
     @ManyToOne
@@ -50,15 +49,17 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(Long id, String status, String file, String media, Date time, String content, RoomChat roomChatId, UserChat userId) {
+    public Message(Long id, String status, String content, String time, String image,String file, RoomChat roomChatId, UserChat userId) {
         this.id = id;
         this.status = status;
         this.file = file;
-        this.media = media;
         this.time = time;
         this.content = content;
+        this.time = time;
+        this.image = image;
         this.roomChatId = roomChatId;
         this.userId = userId;
+        this.file=file;
     }
 
     public String getContent() {
@@ -113,22 +114,22 @@ public class Message implements Serializable {
         this.file = file;
     }
 
-    public Date getTime() {
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
-
-    public String getMedia() {
-        return media;
-    }
-
-    public void setMedia(String media) {
-        this.media = media;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -153,5 +154,5 @@ public class Message implements Serializable {
     public String toString() {
         return "models.Message[ id=" + id + " ]";
     }
-    
+
 }

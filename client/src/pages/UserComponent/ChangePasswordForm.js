@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actions from "src/actions/customer.action";
 import { useNavigate } from "react-router-dom";
 import Notifycation from "./Notifycation";
-import useForm from "../../components/authentication/register/useForm";
-
+// import useForm from "../../components/authentication/register/useForm";
+import { useForm } from "react-hook-form";
 export default function ChangePasswordForm() {
   //const [btnDisabled, setBtnDisabled] = useState(false);
   var btnDisabled = true;
@@ -25,6 +25,12 @@ export default function ChangePasswordForm() {
   const [reNewPassWord, setReNewPassWord] = useState("");
   const user = useSelector((state) => state.customer.userAuth);
   const profile = useSelector((state) => state.customer.userById);
+  const {
+    register,
+    getValues,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   useEffect(() => {
     dispatch(actions.findByIdUser(user));
   }, []);
@@ -41,54 +47,23 @@ export default function ChangePasswordForm() {
       //setNewPassWord(userProfile.password);
     }
   }, [userProfile]);
-  function handleDisable() {
-    if (password !== "" && newPassword !== "" && reNewPassWord !== "") {
-      return (btnDisabled = false);
-    } else {
-      return (btnDisabled = true);
-    }
-  }
-  //console.log(userProfile);
 
-  // console.log(userId);
-  const initialFieldValues = {
-    phone: phone,
-    password: newPassword,
-  };
-  // const validate = (fieldValues = values) => {
-  //   let temp = { ...errors };
-  //   if ("newPassword" in fieldValues) {
-  //     temp.newPassword = /^\w{6,200}$/.test(fieldValues.newPassword)
-  //       ? ""
-  //       : "Mật khẩu không được để trống và phải từ 6 kí tự trở lên";
-  //   }
-  //   setErrors({
-  //     ...temp,
-  //   });
-  //   if (fieldValues == values) return Object.values(temp).every((x) => x == "");
-  // };
-  // const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
-  //   useForm(initialFieldValues, validate);
-  console.log(newPassword);
+  const onSubmit = (data) => {
+    const initialFieldValues = {
+      phone: phone,
+      password: data.newPassword,
+    };
 
-  const handleSubmit = () => {
     dispatch(actions.updateUserById(initialFieldValues, userId));
     setNotify({
       isOpen: true,
       message: "Đổi mật khẩu thành công !",
       type: "success",
     });
-    setInterval(() => {
+    setTimeout(() => {
       navigate("/dashboard", { replace: true });
     }, 4000);
-
-    //navigate("/dashboard", { replace: true });
   };
-  // const handleSubmitForm = () => {
-  //   if (validate()) {
-  //     handleSubmit();
-  //   }
-  // };
 
   return (
     <>
@@ -100,32 +75,32 @@ export default function ChangePasswordForm() {
       >
         <form
           style={{ width: "40%", margin: "auto", marginTop: "50px" }}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <Stack spacing={3}>
             <TextField
               fullWidth
               size="large"
-              label="Mật khẩu cũ"
-              name="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <TextField
-              fullWidth
-              size="large"
               label="Mật khẩu mới"
+              id="newPass"
               name="newPassword"
+              {...register("newPassword", {
+                required: {
+                  value: true,
+                  message: "Vui lòng nhập mật khẩu mới",
+                },
+                minLength: {
+                  value: 6,
+                  message: " Mật khẩu có từ 6 kí tự trở lên",
+                },
+              })}
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassWord(e.target.value)}
-              // onChange={handleInputChange}
-              // {...(errors.newPassword && {
-              //   error: true,
-              //   helperText: errors.newPassword,
-              // })}
             />
+            <small style={{ color: "red" }}>
+              {errors.newPassword?.message}
+            </small>
 
             <TextField
               fullWidth
@@ -133,9 +108,20 @@ export default function ChangePasswordForm() {
               size="large"
               label="Xác nhận mật khẩu"
               name="reNewPassword"
+              {...register("reNewPassword", {
+                required: {
+                  value: true,
+                  message: "Vui lòng xác nhận mật khẩu",
+                },
+                validate: (value) =>
+                  value === getValues("newPassword") || " Mật khẩu không khớp",
+              })}
               value={reNewPassWord}
               onChange={(e) => setReNewPassWord(e.target.value)}
             />
+            <small style={{ color: "red" }}>
+              {errors.reNewPassword?.message}
+            </small>
 
             <LoadingButton
               fullWidth

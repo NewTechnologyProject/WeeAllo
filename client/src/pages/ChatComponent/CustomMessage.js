@@ -2,7 +2,8 @@ import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/styles";
 import Avatar from "@material-ui/core/Avatar";
 import { deepOrange } from "@material-ui/core/colors";
-
+import { FileIcon, defaultStyles } from 'react-file-icon';
+import { Grid } from "@material-ui/core";
 const useStyles = makeStyles((theme) =>
     createStyles({
         messageRow: {
@@ -115,22 +116,40 @@ const useStyles = makeStyles((theme) =>
         },
         displayName: {
             marginLeft: "20px"
+        },
+        displayFile: {
+            padding: 30,
+            display: 'block',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            maxWidth: '15vw',
+            color: 'black',
+            textDecoration: 'none',
+            fontWeight: 'bold'
         }
     })
 );
 
 export const MessageLeft = (props) => {
-    const message = props.message ? props.message : "no message";
+    var re = /(?:\.([^.]+))?$/;
+    const message = props.message ? props.message : "";
     const timestamp = props.timestamp ? props.timestamp : "";
-    const photoURL = props.photoURL ? props.photoURL : "dummy.js";
-    const displayName = props.displayName ? props.displayName : "名無しさん";
+    const photoURL = props.photoURL ? props.photoURL : "";
+    const displayName = props.displayName ? props.displayName : "";
+    const img = props.img ? props.img : "";
+    const filePath = props.file ? props.file : "";
+    var ext = re.exec(filePath)[1];
+    const fileExt1 = filePath.split("https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/")[1];
+    const fileName = String(fileExt1)
+    var fileExt = fileName.split(/-(.+)/)[1];
     const classes = useStyles();
     return (
         <>
             <div className={classes.messageRow}>
                 <Avatar
-                    alt={displayName}
-                    className={classes.orange}
+                    // alt={displayName}
+                    // className={classes.orange}
                     src={photoURL}
                 ></Avatar>
                 <div>
@@ -139,6 +158,21 @@ export const MessageLeft = (props) => {
                         <div>
                             <p className={classes.messageContent}>{message}</p>
                         </div>
+                        <div style={{ width: 300 }}>
+                            <img src={img} style={{ width: '95%' }} /> <br></br>
+                        </div>
+                        {
+                            filePath ? (
+                                <Grid container style={{ width: 300 }}>
+                                    <Grid item xs={2}>
+                                        <a target="_blank" href={filePath} download={fileExt}><FileIcon extension={ext} {...defaultStyles[ext]} /></a>
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        <a target="_blank" href={filePath} className={classes.displayFile}>{fileExt}</a>
+                                    </Grid>
+                                </Grid>
+                            ) : <div></div>
+                        }
                         <div className={classes.messageTimeStampRight}>{timestamp}</div>
                     </div>
                 </div>
@@ -146,15 +180,36 @@ export const MessageLeft = (props) => {
         </>
     );
 };
-//avatarが右にあるメッセージ（自分）
 export const MessageRight = (props) => {
+    var re = /(?:\.([^.]+))?$/;
     const classes = useStyles();
-    const message = props.message ? props.message : "no message";
+    const message = props.message ? props.message : "";
     const timestamp = props.timestamp ? props.timestamp : "";
+    const img = props.img ? props.img : "";
+    const filePath = props.file ? props.file : "";
+    var ext = re.exec(filePath)[1];
+    const fileExt1 = filePath.split("https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/")[1];
+    const fileName = String(fileExt1)
+    var fileExt = fileName.split(/-(.+)/)[1];
     return (
         <div className={classes.messageRowRight}>
             <div className={classes.messageOrange}>
                 <p className={classes.messageContent}>{message}</p>
+                <div>
+                    <img src={img} /><br></br>
+                </div>
+                {
+                    filePath ? (
+                        <Grid container style={{ width: 300 }}>
+                            <Grid item xs={2}>
+                                <a target="_blank" href={filePath} download={fileExt}><FileIcon extension={ext} {...defaultStyles[ext]} /></a>
+                            </Grid>
+                            <Grid item xs={10}>
+                                <a target="_blank" href={filePath} className={classes.displayFile}>{fileExt}</a>
+                            </Grid>
+                        </Grid>
+                    ) : <div></div>
+                }
                 <div className={classes.messageTimeStampRight}>{timestamp}</div>
             </div>
         </div>

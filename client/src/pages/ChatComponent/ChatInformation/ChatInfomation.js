@@ -54,13 +54,13 @@ export default function ChatInfomation(props) {
           });
         }
 
-        if (message.media) {
+        if (message.image) {
           setListFiles((prevState) => {
             return {
               files: [...prevState.files],
               media: [
                 ...prevState.media,
-                { key: message.id, url: message.media },
+                { key: message.id, url: message.image },
               ],
             };
           });
@@ -109,7 +109,7 @@ export default function ChatInfomation(props) {
       <div className={classes.contain}>
         {/* Title */}
         <div className={classes.parentsDiv}>
-          <h4 className={classes.h4}>THÔNG TIN NHÓM</h4>
+          <p>THÔNG TIN NHÓM</p>
         </div>
 
         {/* Information */}
