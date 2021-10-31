@@ -34,13 +34,6 @@ export default function DashboardApp() {
   return (
     <Page title="Trang chủ | WeeAllo">
       <Container maxWidth="xl">
-        {/* <Box sx={{ pb: 5 }}>
-          <Typography variant="h4">Chào mừng đến với Weallo! </Typography>
-          <h3>
-            Khám phá những tiện ích hỗ trợ làm trò chuyện và làm việc cùng người
-            thân bạn bè và đồng nghiệp
-          </h3>
-        </Box> */}
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits />

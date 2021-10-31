@@ -43,7 +43,7 @@ export default function AppCurrentVisits() {
   }, [userProfile]);
   //console.log("firstname", firstname);
   return (
-    <Card style={{ height: "550px" }}>
+    <Card style={{ height: "520px" }}>
       <CardHeader title="Thông tin chung" style={{ padding: "20px" }} />
       <div
         style={{
