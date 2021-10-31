@@ -48,19 +48,23 @@ const Functions = (props) => {
   };
 
   const outGroupChat = () => {
-    if (Number(userId) === props.creator) {
-      changeAdmin(props.roomId, props.members, props.creator);
-    }
+    if (props.members.length <= 2) {
+      removeGroupChat();
+    } else {
+      if (Number(userId) === props.creator) {
+        changeAdmin(props.roomId, props.members, props.creator);
+      }
 
-    deleteUserGroup(props.roomId, userId)
-      .then((response) => {
-        props.onNeedLoad(props.roomId);
-        props.onSetActiveRoomNull();
-        console.log("out");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      deleteUserGroup(props.roomId, userId)
+        .then((response) => {
+          props.onNeedLoad(props.roomId);
+          props.onSetActiveRoomNull();
+          console.log("out");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const setRemoveGroupContent = () => {

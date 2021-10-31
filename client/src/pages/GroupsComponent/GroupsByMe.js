@@ -39,6 +39,15 @@ const GroupsByMe = (props) => {
     navigate("/dashboard/chat", { replace: true });
   };
 
+  const findGroupInList = (list) => {
+    for (let room of list) {
+      if (room.creator && room.creator === Number(userId)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return (
     <Grid
       container
@@ -50,7 +59,7 @@ const GroupsByMe = (props) => {
       {listRooms &&
         listRooms.map((room) => {
           if (
-            room.userGroupList.length > 2 &&
+            // room.userGroupList.length > 2 &&
             room.creator === Number(userId)
           ) {
             const newRoom = {
@@ -94,6 +103,11 @@ const GroupsByMe = (props) => {
             );
           }
         })}
+
+      {!listRooms ||
+        (!findGroupInList(listRooms) && (
+          <div className={classes.empty}>Chưa có nhóm chat</div>
+        ))}
     </Grid>
   );
 };

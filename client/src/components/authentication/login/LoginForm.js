@@ -48,11 +48,13 @@ export default function LoginForm() {
     justifyContent: "center",
     padding: theme.spacing(12, 0),
   }));
+
   const [notify, setNotify] = useState({
     isOpen: false,
     message: "",
     type: "",
   });
+
   const navigate = useNavigate();
   const [check, setCheck] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -89,7 +91,9 @@ export default function LoginForm() {
   useEffect(() => {
     dispatch(actions.login(phone, pass));
   }, [phone, pass]);
+
   console.log(user);
+
   const onLogin = () => {
     if (user === "") {
       setNotify({
@@ -99,8 +103,6 @@ export default function LoginForm() {
         type: "error",
       });
     } else {
-      //console.log("user", user);
-
       dispatch(isAuthenticated(user.id));
       navigate("/dashboard", { replace: true });
     }
@@ -143,6 +145,7 @@ export default function LoginForm() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
   const handleForgot = (e) => {
     e.preventDefault();
 

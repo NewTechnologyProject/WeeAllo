@@ -120,13 +120,15 @@ export default function ChatInfomation(props) {
             }}
           >
             {/* Members of group chat */}
-            <GroupChatMember
-              handleClick={handleClick}
-              creator={props.activeRoom.creator}
-              members={listMembers}
-              open={open}
-              onOpenModal={openModalHandler}
-            />
+            {props.activeRoom.creator && (
+              <GroupChatMember
+                handleClick={handleClick}
+                creator={props.activeRoom.creator}
+                members={listMembers}
+                open={open}
+                onOpenModal={openModalHandler}
+              />
+            )}
 
             {/*Show images  */}
             <ImagesShow
@@ -143,15 +145,17 @@ export default function ChatInfomation(props) {
             />
 
             {/* Other functions */}
-            <Functions
-              creator={props.activeRoom.creator}
-              roomId={props.activeRoom.id}
-              onClickSetting={handleClickSetting}
-              openSetting={openSetting}
-              onNeedLoad={props.onNeedLoad}
-              onSetActiveRoomNull={props.onSetActiveRoomNull}
-              members={listMembers}
-            />
+            {props.activeRoom.creator && (
+              <Functions
+                creator={props.activeRoom.creator}
+                roomId={props.activeRoom.id}
+                onClickSetting={handleClickSetting}
+                openSetting={openSetting}
+                onNeedLoad={props.onNeedLoad}
+                onSetActiveRoomNull={props.onSetActiveRoomNull}
+                members={listMembers}
+              />
+            )}
           </Scrollbar>
         </div>
       </div>

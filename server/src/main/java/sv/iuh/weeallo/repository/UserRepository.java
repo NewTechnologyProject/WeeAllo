@@ -12,6 +12,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserChat, Long> {
+    
     @Query("Select u from UserChat u where u.phone=:phone and u.password=:password")
     UserChat getLogin(@Param("phone") String phone, @Param("password") String pass);
 
