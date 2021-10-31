@@ -12,3 +12,12 @@
   width: 180px;
   height: 180px;
 }
+
+.empty {
+  flex: 1;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 24px;
+  font-weight: 600px;
+  color: #adb5bd;
+}

@@ -56,7 +56,7 @@ const GroupChatMember = (props) => {
                       primary: classes["primary-text"],
                       secondary: classes["secondary-text"],
                     }}
-                    primary={user.firstname}
+                    primary={`${user.firstname} ${user.lastname}`}
                     secondary={user.id === props.creator ? "Trưởng nhóm" : ""}
                   />
                 </ListItem>

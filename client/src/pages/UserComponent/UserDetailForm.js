@@ -90,7 +90,8 @@ export default function UserDetail() {
     coverImage: "",
   };
 
-  const onSubmit = () => {
+  const onSubmit = (event) => {
+    event.preventDefault();
     dispatch(actions.updateUserById(initialFieldValues, userId));
     setNotify({
       isOpen: true,

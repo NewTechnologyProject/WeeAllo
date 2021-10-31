@@ -22,11 +22,11 @@ import classes from "./Message.module.css";
 //import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Scrollbar from "src/components/Scrollbar";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import axios from "axios";
 
 // import Menu from "@material-ui/core/Menu";
@@ -38,7 +38,6 @@ import axios from "axios";
 // ];
 
 // ----------------------------------------------------------------------
-
 
 const URL = "ws://localhost:3030";
 export default function MessageChat(props) {
@@ -54,7 +53,6 @@ export default function MessageChat(props) {
   const image = useRef(null);
   const [img, setImg] = useState();
   const [sFile, setSFile] = useState();
-
 
   //RealTime
   const [name, setName] = useState("Ichlas");
@@ -85,11 +83,11 @@ export default function MessageChat(props) {
 
   const chooseFile = () => {
     file.current.click();
-  }
+  };
 
   const chooseImage = () => {
     image.current.click();
-  }
+  };
 
   const handleImage = (e) => {
     const imageA = e.target.files[0];
@@ -159,7 +157,9 @@ export default function MessageChat(props) {
     setImg();
     setSFile();
   };
-  console.log(messages)
+
+  console.log(messages);
+
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>
@@ -236,7 +236,6 @@ export default function MessageChat(props) {
                   borderBottom: "1px solid #e9e7e5",
                 }}
               >
-
                 {/* Emoji */}
                 <IconButton
                   type="submit"
@@ -249,9 +248,17 @@ export default function MessageChat(props) {
 
                 {/* Image */}
                 <Divider orientation="vertical" />
-                <input type="file" accept=".jpg, .jpeg, .png, .gif" multiple hidden ref={image} onChange={handleImage} />
+                <input
+                  type="file"
+                  accept=".jpg, .jpeg, .png, .gif"
+                  multiple
+                  hidden
+                  ref={image}
+                  onChange={handleImage}
+                />
                 <IconButton
-                  aria-label="directions" style={{ width: 50 }}
+                  aria-label="directions"
+                  style={{ width: 50 }}
                   onClick={chooseImage}
                 >
                   <ImageIcon />
@@ -261,7 +268,8 @@ export default function MessageChat(props) {
                 <Divider orientation="vertical" />
                 <input type="file" hidden ref={file} onChange={handleFile} />
                 <IconButton
-                  aria-label="directions" style={{ width: 50 }}
+                  aria-label="directions"
+                  style={{ width: 50 }}
                   onClick={chooseFile}
                 >
                   <AttachFileIcon />
