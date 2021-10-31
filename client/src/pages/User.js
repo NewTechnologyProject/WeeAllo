@@ -69,7 +69,10 @@ export default function User() {
   return (
     <Page title="User | Minimal-UI">
       <Container>
-        <Typography variant="h4" gutterBottom>
+        {/* <Typography variant="h4" gutterBottom>
+          Thông tin cá nhân
+        </Typography> */}
+        <Typography variant="h4" sx={{ mb: 5 }}>
           Thông tin cá nhân
         </Typography>
         <Box sx={{ width: "100%", typography: "body1" }}>

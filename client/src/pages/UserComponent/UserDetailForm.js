@@ -2,15 +2,25 @@ import { Avatar, Grid, IconButton, Stack, TextField } from "@material-ui/core";
 import Badge from "@material-ui/core/Badge";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import { LoadingButton } from "@material-ui/lab";
-import React, { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as actions from "src/actions/customer.action";
-import axios from "axios";
+import Notifycation from "./Notifycation";
+import { useForm } from "react-hook-form";
 
 export default function UserDetail() {
+  var btnDisable = false;
+  //const [disableButton, setDisableButton] = useState(false);
+  const [btnDisabled, setBtnDisabled] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [notify, setNotify] = useState({
+    isOpen: false,
+    message: "",
+    type: "",
+  });
   const imageAvatar = useRef(null);
   const [userProfile, setUserProfile] = useState([]);
   const [image, setImage] = useState();
@@ -80,132 +90,168 @@ export default function UserDetail() {
     coverImage: "",
   };
 
-  const handleSubmit = () => {
+  const onSubmit = () => {
     dispatch(actions.updateUserById(initialFieldValues, userId));
-    navigate("/dashboard", { replace: true });
+    setNotify({
+      isOpen: true,
+      message: "Cập nhật thông tin thành công !",
+      type: "success",
+    });
+    setInterval(() => {
+      navigate("/user", { replace: true });
+    }, 4000);
+    //console.log("data", data);
   };
+  function onDisable() {
+    if (firstname === "" && lastname === "") {
+      return (btnDisable = true);
+    } else {
+      return (btnDisable = false);
+    }
+  }
+
   return (
-    <Grid container direction="row" justifyContent="center" alignItems="center">
-      <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <div
-          style={{
-            alignSelf: "center",
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
-            marginBottom: "20px",
-            zIndex: "2",
-          }}
-        >
-          <input
-            accept="image/*"
-            id="contained-button-file"
-            name="file"
-            ref={imageAvatar}
-            style={{ display: "none" }}
-            onChange={handleImage}
-            type="file"
-          />
-          <label htmlFor="contained-button-file">
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-            >
-              <Badge
-                overlap="circular"
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                badgeContent={<PhotoCamera style={{ fontSize: "27px" }} />}
+    <>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <form onSubmit={onSubmit}>
+          <div
+            style={{
+              alignSelf: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              marginBottom: "20px",
+              zIndex: "2",
+            }}
+          >
+            <input
+              accept="image/*"
+              id="contained-button-file"
+              name="file"
+              ref={imageAvatar}
+              style={{ display: "none" }}
+              onChange={handleImage}
+              type="file"
+            />
+            <label htmlFor="contained-button-file">
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="span"
               >
-                <Avatar
-                  src={image}
-                  style={{
-                    width: "150px",
-                    height: "150px",
+                <Badge
+                  overlap="circular"
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
                   }}
-                  variant="circle"
-                ></Avatar>
-              </Badge>
-            </IconButton>
-          </label>
-        </div>
+                  badgeContent={<PhotoCamera style={{ fontSize: "27px" }} />}
+                >
+                  <Avatar
+                    src={image}
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                    }}
+                    variant="circle"
+                  ></Avatar>
+                </Badge>
+              </IconButton>
+            </label>
+          </div>
 
-        <Stack spacing={3}>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <TextField
-              fullWidth
-              label="Họ"
-              name="firstname"
-              value={firstname}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-
-            <TextField
-              fullWidth
-              label="Tên"
-              name="lastname"
-              value={lastname}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </Stack>
-
-          <TextField
-            fullWidth
-            label="Số điện thoại"
-            name="phone"
-            disabled={true}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <label>Giới tính :</label>
           <Stack spacing={3}>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <br />
-              <label>Nam: </label>
-              <input
-                type="radio"
-                name="gender"
-                value="Nam"
-                checked={gender === "Nam"}
-                style={{ transform: "scale(1.5)" }}
-                onChange={(e) => setGender(e.target.value)}
-              />
-              <label>Nữ: </label>
-              <input
-                type="radio"
-                name="gender"
-                value="Nữ"
-                checked={gender === "Nữ"}
-                style={{ transform: "scale(1.5)" }}
-                onChange={(e) => setGender(e.target.value)}
-              />
-            </Stack>
-          </Stack>
-          <TextField
-            id="date"
-            label="Ngày sinh"
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            //className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+              <div>
+                <TextField
+                  fullWidth
+                  label="Họ"
+                  name="firstname"
+                  value={firstname}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </div>
 
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-          >
-            Cập nhật
-          </LoadingButton>
-        </Stack>
-      </form>
-    </Grid>
+              <div>
+                <TextField
+                  fullWidth
+                  label="Tên"
+                  name="lastname"
+                  value={lastname}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </div>
+            </Stack>
+
+            <TextField
+              fullWidth
+              label="Số điện thoại"
+              name="phone"
+              disabled={true}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <label>Giới tính :</label>
+            <Stack spacing={3}>
+              <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+                <br />
+                <label>Nam: </label>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="Nam"
+                  checked={gender === "Nam"}
+                  style={{ transform: "scale(1.5)" }}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <label>Nữ: </label>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="Nữ"
+                  checked={gender === "Nữ"}
+                  style={{ transform: "scale(1.5)" }}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+              </Stack>
+            </Stack>
+            <TextField
+              id="date"
+              label="Ngày sinh"
+              type="date"
+              name="ngaysinh"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              //className={classes.textField}
+
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                min: "1912-01-01",
+                max: "2012-01-01",
+              }}
+            />
+
+            <LoadingButton
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              disabled={onDisable()}
+            >
+              Cập nhật
+            </LoadingButton>
+          </Stack>
+        </form>
+      </Grid>
+
+      <Notifycation notify={notify} setNotify={setNotify} />
+    </>
   );
 }

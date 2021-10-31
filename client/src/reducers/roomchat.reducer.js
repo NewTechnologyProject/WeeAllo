@@ -6,6 +6,7 @@ import {
 const initialState = {
   listMessages: [],
   listMembers: [],
+  moveToActiveRoom: null,
 };
 
 export const roomChatReducer = (state = initialState, action) => {
@@ -15,6 +16,14 @@ export const roomChatReducer = (state = initialState, action) => {
       return {
         ...state,
         listMessages: [...action.payload],
+      };
+    }
+
+    //Move to active room
+    case "MOVE TO ACTIVE ROOM": {
+      return {
+        ...state,
+        moveToActiveRoom: { ...action.payload },
       };
     }
 

@@ -118,6 +118,7 @@ export default function MessageChat(props) {
       dispatch(actions.fetchAllMessages(props.activeRoom.id));
     }
   }, [props.activeRoom]);
+
   useEffect(() => {
     if (listMessages) {
       setMessage(listMessages);
@@ -212,7 +213,7 @@ export default function MessageChat(props) {
             )}
           </Grid>
 
-          <Grid style={{ height: "60%", paddingTop: 100 }}>
+          <Grid style={{ marginTop: 300, position: "absolute" }}>
             {emojiStatus === true ? (
               <Picker
                 onEmojiClick={onEmojiClick}
@@ -264,11 +265,6 @@ export default function MessageChat(props) {
                   onClick={chooseFile}
                 >
                   <AttachFileIcon />
-                </IconButton>
-
-                <Divider orientation="vertical" />
-                <IconButton aria-label="directions" style={{ width: 50 }}>
-                  <AssignmentTurnedInIcon />
                 </IconButton>
               </Grid>
 

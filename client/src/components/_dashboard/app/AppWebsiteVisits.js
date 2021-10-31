@@ -1,69 +1,79 @@
-import { merge } from 'lodash';
-import ReactApexChart from 'react-apexcharts';
+import { merge } from "lodash";
+import ReactApexChart from "react-apexcharts";
 // material
-import { Card, CardHeader, Box } from '@material-ui/core';
+import { Card, CardHeader, Box, Typography } from "@material-ui/core";
 //
-import { BaseOptionChart } from '../../charts';
+import { BaseOptionChart } from "../../charts";
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [
-  {
-    name: 'Team A',
-    type: 'column',
-    data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-  },
-  {
-    name: 'Team B',
-    type: 'area',
-    data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
-  },
-  {
-    name: 'Team C',
-    type: 'line',
-    data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
-  }
-];
-
 export default function AppWebsiteVisits() {
-  const chartOptions = merge(BaseOptionChart(), {
-    stroke: { width: [0, 2, 3] },
-    plotOptions: { bar: { columnWidth: '11%', borderRadius: 4 } },
-    fill: { type: ['solid', 'gradient', 'solid'] },
-    labels: [
-      '01/01/2003',
-      '02/01/2003',
-      '03/01/2003',
-      '04/01/2003',
-      '05/01/2003',
-      '06/01/2003',
-      '07/01/2003',
-      '08/01/2003',
-      '09/01/2003',
-      '10/01/2003',
-      '11/01/2003'
-    ],
-    xaxis: { type: 'datetime' },
-    tooltip: {
-      shared: true,
-      intersect: false,
-      y: {
-        formatter: (y) => {
-          if (typeof y !== 'undefined') {
-            return `${y.toFixed(0)} visits`;
-          }
-          return y;
-        }
-      }
-    }
-  });
-
   return (
     <Card>
-      <CardHeader title="Website Visits" subheader="(+43%) than last year" />
-      <Box sx={{ p: 3, pb: 1 }} dir="ltr">
-        <ReactApexChart type="line" series={CHART_DATA} options={chartOptions} height={364} />
-      </Box>
+      <CardHeader />
+      <Typography variant="h4" style={{ textAlign: "center" }}>
+        Chào mừng đến với Weallo!{" "}
+      </Typography>
+      <small style={{ marginLeft: "100px" }}>
+        Khám phá những tiện ích hỗ trợ làm trò chuyện và làm việc cùng người
+        thân bạn bè và đồng nghiệp
+      </small>
+      <div
+        id="carouselExampleIndicators"
+        className="carousel slide"
+        data-ride="carousel"
+      >
+        <ol className="carousel-indicators">
+          <li
+            data-target="#carouselExampleIndicators"
+            data-slide-to={0}
+            className="active"
+          />
+          <li data-target="#carouselExampleIndicators" data-slide-to={1} />
+          <li data-target="#carouselExampleIndicators" data-slide-to={2} />
+        </ol>
+        <div className="carousel-inner">
+          <div className="carousel-item active">
+            <img
+              className="d-block w-100"
+              src="/static/mock-images/avatars/img1.jpg"
+              alt="First slide"
+            />
+          </div>
+          <div className="carousel-item">
+            <img
+              className="d-block w-100"
+              src="/static/mock-images/avatars/img2.jpg"
+              alt="Second slide"
+            />
+          </div>
+          <div className="carousel-item">
+            <img
+              className="d-block w-100"
+              src="/static/mock-images/avatars/img3.png"
+              alt="Third slide"
+            />
+          </div>
+        </div>
+        <a
+          className="carousel-control-prev"
+          href="#carouselExampleIndicators"
+          role="button"
+          data-slide="prev"
+        >
+          <span className="carousel-control-prev-icon" aria-hidden="true" />
+          <span className="sr-only">Previous</span>
+        </a>
+        <a
+          className="carousel-control-next"
+          href="#carouselExampleIndicators"
+          role="button"
+          data-slide="next"
+        >
+          <span className="carousel-control-next-icon" aria-hidden="true" />
+          <span className="sr-only">Next</span>
+        </a>
+      </div>
     </Card>
   );
 }
