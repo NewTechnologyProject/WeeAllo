@@ -159,7 +159,7 @@ export const MessageLeft = (props) => {
                             <p className={classes.messageContent}>{message}</p>
                         </div>
                         <div style={{ width: 300 }}>
-                            <img src={img} style={{ width: '95%' }} />
+                            <img src={img} style={{ width: '95%' }} /> <br></br>
                         </div>
                         {
                             filePath ? (
@@ -196,7 +196,7 @@ export const MessageRight = (props) => {
             <div className={classes.messageOrange}>
                 <p className={classes.messageContent}>{message}</p>
                 <div>
-                    <img src={img} />
+                    <img src={img} /><br></br>
                 </div>
                 {
                     filePath ? (

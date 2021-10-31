@@ -42,7 +42,7 @@ const ContentStyle = styled("div")(({ theme }) => ({
 
 export default function RegisterOTP() {
   return (
-    <RootStyle title="ForgotPassWord | Minimal-UI">
+    <RootStyle title="Quên mật khẩu | Minimal-UI">
       <AuthLayout>
         Đã có tài khoản ? &nbsp;
         <Link
@@ -54,13 +54,24 @@ export default function RegisterOTP() {
           Đăng nhập Ngay !
         </Link>
       </AuthLayout>
+      <MHidden width="mdDown">
+        <SectionStyle>
+          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+            Nhắn tin cùng bạn bè với Weeallo
+          </Typography>
+          <img
+            alt="forgotpass"
+            src="https://cmdrf.sikkim.gov.in/Content/img/forgot-pass.png"
+          />
+        </SectionStyle>
+      </MHidden>
       <Container>
         <ContentStyle>
-          <Alert severity="warning">
+          {/* <Alert severity="warning">
             <AlertTitle>Cảnh báo</AlertTitle>
             Tài khoản đã được đăng ký —{" "}
             <strong>Vui lòng nhập mã xác thực!</strong>
-          </Alert>
+          </Alert> */}
           <Forgot />
         </ContentStyle>
       </Container>

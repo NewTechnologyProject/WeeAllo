@@ -52,6 +52,8 @@ public class Message implements Serializable {
     public Message(Long id, String status, String content, String time, String image,String file, RoomChat roomChatId, UserChat userId) {
         this.id = id;
         this.status = status;
+        this.file = file;
+        this.time = time;
         this.content = content;
         this.time = time;
         this.image = image;
@@ -127,7 +129,7 @@ public class Message implements Serializable {
     public void setTime(String time) {
         this.time = time;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

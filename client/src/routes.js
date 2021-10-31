@@ -6,10 +6,10 @@ import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DashboardApp from "./pages/DashBoardComponent/DashboardApp";
-import Products from "./pages/Products";
 import User from "./pages/User";
 import NotFound from "./pages/Page404";
 import Chat from "./pages/ChatComponent/Chat";
+import Groups from "./pages/GroupsComponent/Groups";
 import Contact from "./pages/ContactComponent/Contact";
 import RegisterOTP from "./pages/RegisterOTP";
 import ForgotPhone from "./pages/ForgotPhone";
@@ -27,6 +27,7 @@ export default function Router() {
         { path: "user", element: <User /> },
         { path: "contact", element: <Contact /> },
         { path: "chat", element: <Chat /> },
+        { path: "groups", element: <Groups /> },
       ],
     },
     {

@@ -1,18 +1,13 @@
 import React, { useState, Fragment, useCallback, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import classes from "./ChatInformation.module.css";
 import Scrollbar from "src/components/Scrollbar";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Collapse from "@material-ui/core/Collapse";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
 import { fetchAllMembers } from "src/actions/roomchat.action";
 import ModalAddMember from "./ModalAddMembers/ModalAddMember";
-import { Grid } from "@material-ui/core";
 import GroupChatMember from "./GroupChatMembers";
 import ImagesShow from "./ImagesShow";
+import FilesShow from "./FilesShow";
 import Functions from "./Functions";
 
 export default function ChatInfomation(props) {
@@ -22,7 +17,9 @@ export default function ChatInfomation(props) {
   const [openImage, setOpenImage] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [listMembers, setListMembers] = useState([]);
+  const [listFiles, setListFiles] = useState({ files: [], media: [] });
   const [needLoadMembers, setNeedLoadMembers] = useState({ name: "new" });
+  const listMessages = useSelector((state) => state.roomchat.listMessages);
 
   const getListMembers = useCallback((roomId) => {
     fetchAllMembers(roomId)
@@ -39,6 +36,38 @@ export default function ChatInfomation(props) {
       getListMembers(props.activeRoom.id);
     }
   }, [fetchAllMembers, props.activeRoom.id, needLoadMembers]);
+
+  useEffect(() => {
+    if (props.activeRoom && listMessages) {
+      setListFiles({ files: [], media: [] });
+
+      listMessages.map((message) => {
+        if (message.file) {
+          setListFiles((prevState) => {
+            return {
+              files: [
+                ...prevState.files,
+                { key: message.id, url: message.file },
+              ],
+              media: [...prevState.media],
+            };
+          });
+        }
+
+        if (message.image) {
+          setListFiles((prevState) => {
+            return {
+              files: [...prevState.files],
+              media: [
+                ...prevState.media,
+                { key: message.id, url: message.image },
+              ],
+            };
+          });
+        }
+      });
+    }
+  }, [props.activeRoom, listMessages]);
 
   const needLoadHandler = (newMembers) => {
     setNeedLoadMembers(newMembers);
@@ -80,7 +109,7 @@ export default function ChatInfomation(props) {
       <div className={classes.contain}>
         {/* Title */}
         <div className={classes.parentsDiv}>
-          <h4 className={classes.h4}>THÔNG TIN NHÓM</h4>
+          <p>THÔNG TIN NHÓM</p>
         </div>
 
         {/* Information */}
@@ -100,43 +129,18 @@ export default function ChatInfomation(props) {
             />
 
             {/*Show images  */}
-            <ImagesShow openImage={openImage} onClickImage={handleClickImage} />
+            <ImagesShow
+              listMedia={listFiles.media}
+              openImage={openImage}
+              onClickImage={handleClickImage}
+            />
 
             {/*Show files  */}
-            <List component="nav" aria-labelledby="nested-list-subheader">
-              <ListItem button onClick={handleClickFile}>
-                <ListItemText primary="File" />
-                {openFile ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={openFile} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  <Grid container>
-                    <Grid item xs={4} className={classes.imgFile}>
-                      <ListItem button>
-                        <img
-                          className={classes.imgFile}
-                          src="https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1634205302114-b4a4c42481d37b8d22c2.jpg
-                      "
-                        />
-                      </ListItem>
-                    </Grid>
-                    <Grid item xs={4} className={classes.imgFile}>
-                      <ListItem button>
-                        <img
-                          className={classes.imgFile}
-                          src="https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1633608170833-FB_IMG_1621397369344.jpg"
-                        />
-                      </ListItem>
-                    </Grid>
-                    <Grid item xs={4} className={classes.imgFile}>
-                      <ListItem button>
-                        <img src="https://halotravel.vn/wp-content/uploads/2020/07/thach_trangg_103512340_187758299273938_8335419467587726993_n.jpg" />
-                      </ListItem>
-                    </Grid>
-                  </Grid>
-                </List>
-              </Collapse>
-            </List>
+            <FilesShow
+              listFiles={listFiles.files}
+              openFile={openFile}
+              onClickFile={handleClickFile}
+            />
 
             {/* Other functions */}
             <Functions
