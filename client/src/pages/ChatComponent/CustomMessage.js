@@ -144,6 +144,8 @@ export const MessageLeft = (props) => {
     const fileName = String(fileExt1)
     var fileExt = fileName.split(/-(.+)/)[1];
     const classes = useStyles();
+    console.log(ext)
+    console.log(filePath)
     return (
         <>
             <div className={classes.messageRow}>
@@ -159,7 +161,7 @@ export const MessageLeft = (props) => {
                             <p className={classes.messageContent}>{message}</p>
                         </div>
                         <div style={{ width: 300 }}>
-                            <img src={img} style={{ width: '95%' }} /> <br></br>
+                            <img src={img} style={{ width: '95%' }} />
                         </div>
                         {
                             filePath ? (
@@ -191,12 +193,13 @@ export const MessageRight = (props) => {
     const fileExt1 = filePath.split("https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/")[1];
     const fileName = String(fileExt1)
     var fileExt = fileName.split(/-(.+)/)[1];
+    console.log(ext)
     return (
         <div className={classes.messageRowRight}>
             <div className={classes.messageOrange}>
                 <p className={classes.messageContent}>{message}</p>
                 <div>
-                    <img src={img} /><br></br>
+                    <img src={img} />
                 </div>
                 {
                     filePath ? (

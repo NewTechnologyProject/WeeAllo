@@ -61,7 +61,7 @@ export default function Register() {
           </Typography>
           <img
             alt="register"
-            src="https://themarqhongkongland.com.vn/wp-content/uploads/2016/12/dang-ky-ngay-2.png"
+            src="/static/illustrations/giaotep2.jpg"
           />
         </SectionStyle>
       </MHidden>

@@ -16,6 +16,7 @@ const initialState = {
   listFriends: [],
   register: null,
   updateUser: null,
+  listphone: []
   // login: null,
 };
 
@@ -55,6 +56,12 @@ export const customerReducer = (state = initialState, action) => {
       return {
         ...state,
         userByPhone: action.payload,
+      };
+    }
+    case ACTION_TYPES.GET_ALL_PHONE: {
+      return {
+        ...state,
+        listphone: action.payload,
       };
     }
     case "AUTHENTICATE_SIGNAL": {

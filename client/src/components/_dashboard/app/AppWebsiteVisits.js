@@ -12,10 +12,9 @@ export default function AppWebsiteVisits() {
   const items = [
     { id: 1, src: "/static/mock-images/avatars/img1.jpg" },
     { id: 2, src: "/static/mock-images/avatars/img2.jpg" },
-    { id: 3, src: "/static/mock-images/avatars/img3.jpg" },
   ];
   return (
-    <Card>
+    <Card style={{ height: 600 }}>
       <CardHeader />
       <Typography variant="h4" style={{ textAlign: "center" }}>
         Chào mừng đến với Weallo!{" "}

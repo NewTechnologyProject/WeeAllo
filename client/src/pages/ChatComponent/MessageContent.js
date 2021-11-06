@@ -36,10 +36,12 @@ export default function App(props) {
           );
         } else if (
           Number(userId) !== message.userId.id &&
-          Number(message.roomChatId.id) === props.activeRoom &&
-          message.content
+          Number(message.roomChatId.id) === props.activeRoom
         ) {
+
           return (
+
+
             <MessageLeft
               key={i}
               message={message.content}

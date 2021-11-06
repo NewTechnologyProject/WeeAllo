@@ -16,6 +16,7 @@ export default {
       listRoom: (userId) => axios.get(url + userId + "/rooms"),
       listFriend: (userId) => axios.get(url + userId + "/friends"),
       forgotpass: (userChat) => axios.post(url + "forgotpass", userChat),
+      getallphone: () => axios.get(url + "get-all-phones")
     };
   },
   contact(url = baseApi + "contact/") {
