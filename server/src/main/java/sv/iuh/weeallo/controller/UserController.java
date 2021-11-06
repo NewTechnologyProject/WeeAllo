@@ -178,4 +178,8 @@ public class UserController {
          userService.saveUserChat(userChat);
          return userChat;
      }
+     @GetMapping("/get-all-phones")
+     public List<UserChat> getAllPhone(){
+        return  userService.getAllPhone();
+     }
 }

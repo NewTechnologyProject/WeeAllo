@@ -284,7 +284,7 @@ export default function SearchContact() {
           <div style={{ width: "100%", textAlign: "center" }}>
             <Search fontSize="large" />
             <Typography variant="h5">
-              Không tìm thấy lời mời nào đã gửi
+              Không tìm thấy liên hệ nào
             </Typography>
           </div>
         </div>

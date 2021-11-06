@@ -244,15 +244,6 @@ export default function LoginForm() {
             justifyContent="space-between"
             sx={{ my: 2 }}
           >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  {...getFieldProps("remember")}
-                  checked={values.remember}
-                />
-              }
-              label="Remember me"
-            />
             <Link
               component={RouterLink}
               variant="subtitle2"
@@ -285,7 +276,7 @@ export default function LoginForm() {
               helperText: errors.phone,
             })}
 
-            // onChange={(e) => setOTP(e.target.value)}
+          // onChange={(e) => setOTP(e.target.value)}
           />
         </Stack>
         <LoadingButton

@@ -95,8 +95,8 @@ export default function Chat({ navigation }) {
             <ScrollView>
                 {
                     list.map((l, i) => (
-                        <TouchableOpacity key={i} onPress={toContent}>
-                            <ListItem.Swipeable >
+                        <TouchableOpacity key={i} >
+                            <ListItem.Swipeable onPress={toContent} >
                                 <Avatar rounded size={50} source={{ uri: l.avatar_url }} />
                                 <ListItem.Content>
                                     <ListItem.Title>{l.name}</ListItem.Title>

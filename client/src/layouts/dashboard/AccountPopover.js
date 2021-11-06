@@ -28,19 +28,9 @@ import { account } from "../../_mocks_/account";
 
 const MENU_OPTIONS = [
   {
-    label: "Home",
-    icon: homeFill,
-    linkTo: "/",
-  },
-  {
     label: "Thông tin cá nhân",
     icon: personFill,
     linkTo: "/dashboard/user",
-  },
-  {
-    label: "Settings",
-    icon: settings2Fill,
-    linkTo: "#",
   },
 ];
 
@@ -101,10 +91,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {accountInfo.displayName}
+            {"Noname"}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {accountInfo.email}
+            {"Noname"}
           </Typography>
         </Box>
 

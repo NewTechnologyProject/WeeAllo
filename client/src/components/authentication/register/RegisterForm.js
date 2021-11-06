@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import eyeFill from "@iconify/icons-eva/eye-fill";
 import eyeOffFill from "@iconify/icons-eva/eye-off-fill";
@@ -44,7 +44,17 @@ export default function RegisterForm() {
   const [registerComponent, setRegisterComponent] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [agree, setAgree] = React.useState(false);
-
+  const [user, setUser] = useState([])
+  useEffect(() => {
+    dispatch(actions.fecthAllPhone())
+  }, []);
+  let check = useSelector(state => state.customer.listphone);
+  useEffect(() => {
+    if (check !== undefined) (
+      setUser(check)
+    )
+  }, [check])
+  console.log(user)
   const initialFieldValues = {
     firstname: "",
     lastname: "",
@@ -90,9 +100,23 @@ export default function RegisterForm() {
       });
     }
     if ("phone" in fieldValues) {
-      temp.phone = /^[0]{1}\d{9}$/.test(fieldValues.phone)
-        ? ""
-        : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
+      let err = 0;
+      user.map((user) => {
+        if (user.phone.toLowerCase() === fieldValues.phone.toLowerCase()) {
+          err = err + 1
+        }
+      })
+      if (fieldValues.phone === '') {
+        temp.phone = fieldValues.phone ? "" : "Số điện thoại không được để trống"
+      } if (fieldValues.phone !== '') {
+        temp.phone = /^[0]{1}\d{9}$/.test(fieldValues.phone)
+          ? ""
+          : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
+      }
+      if (err >= 1) {
+        err < 1 ? temp.phone = "" : temp.phone = "Số điện thoại đã tồn tại"
+      }
+      console.log(err)
       setErrors({
         ...temp,
       });

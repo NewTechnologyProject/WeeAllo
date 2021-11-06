@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 export default function Login({ navigation }) {
     const dispatch = useDispatch()
     const login = () => {
-        dispatch(action.isAuthenticated('1'))
+        navigation.navigate('TabRoute')
     }
     const getMyStringValue = async () => {
         try {

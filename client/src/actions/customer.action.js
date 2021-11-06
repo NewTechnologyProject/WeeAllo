@@ -21,6 +21,7 @@ export const ACTION_TYPES = {
   FINDUSERBYPHONE: "FINDUSERBYPHONE",
   UPDATEBYIDUSER: "UPDATEBYIDUSER",
   FORGOTPASS: "FORGOTPASS",
+  GET_ALL_PHONE: "GET_ALL_PHONE",
 };
 export const login = (phone, pass) => (dispatch) => {
   apiService
@@ -58,10 +59,10 @@ export const updateUserById = (userChat, id) => (dispatch) => {
     })
     .catch((err) => console.log(err));
 };
-export const forgotpass = (phone,newpass) => (dispatch) => {
+export const forgotpass = (phone, newpass) => (dispatch) => {
   apiService
     .user()
-    .forgotpass(phone,newpass)
+    .forgotpass(phone, newpass)
     .then((response) => {
       dispatch({
         type: ACTION_TYPES.FORGOTPASS,
@@ -133,6 +134,21 @@ export const fetchAllFriend = (userId) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: "LIST FRIENDS",
+        payload: response.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+//get all phone
+export const fecthAllPhone = () => (dispatch) => {
+  apiService
+    .user()
+    .getallphone()
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.GET_ALL_PHONE,
         payload: response.data,
       });
     })
