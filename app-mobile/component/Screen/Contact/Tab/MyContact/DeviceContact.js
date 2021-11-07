@@ -1,12 +1,16 @@
-import * as React from 'react';
-import { Image, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Image, PermissionsAndroid, Platform, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet } from "react-native";
 import { Header } from 'react-native-elements/dist/header/Header';
-import { Button, Icon } from 'react-native-elements'
+import { Button, Icon, ListItem, SearchBar } from 'react-native-elements'
 import { useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import imagePath from '../../../../../constants/imagePath';
+import * as Contacts from 'expo-contacts';
 const Tab = createMaterialTopTabNavigator();
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+}
 export default function DeviceContact({ navigation, route }) {
     const styles = StyleSheet.create({
         avatar: {
@@ -29,24 +33,35 @@ export default function DeviceContact({ navigation, route }) {
             flexDirection: 'row',
         }
     });
-    const list = [
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        },
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        }
-    ]
-    const [isVisible, setIsVisible] = useState(false);
+    const [textSearch, setTextSearch] = useState('')
+    const [refreshing, setRefreshing] = useState(false);
     const backToAllChat = () => {
         navigation.navigate('TabRoute')
     }
+    const [contacts, setContacts] = useState([])
+    const getContactInDevice = () => {
+        (async () => {
+            const { status } = await Contacts.requestPermissionsAsync();
+            if (status === 'granted') {
+                const { data } = await Contacts.getContactsAsync({
+                    fields: [Contacts.Fields.PhoneNumbers],
+                });
+
+                if (data.length > 0) {
+                    setContacts(data)
+                }
+            }
+        })();
+    }
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        getContactInDevice()
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+    console.log(contacts)
     return (
-        <View style={styles.container}>
+        <View >
+
             <Header
                 statusBarProps={{ barStyle: 'light-content' }}
                 barStyle="light-content"
@@ -71,29 +86,93 @@ export default function DeviceContact({ navigation, route }) {
                     justifyContent: 'space-around',
                 }}
             />
-            <Image source={imagePath.info}
-                style={{ width: 200, height: 400 }}
-            />
-            <Text>Kiểm tra danh bạ của bạn xem các tài khoản đã tham gia WeeAllo</Text>
-            <Button type="outline" title="KIỂM TRA DANH BẠ"
-                containerStyle={{
-                    paddingTop: 20,
-                    paddingRight: 10
-                }}
-                buttonStyle={{
-                    height: 35,
-                    width: 200,
-                    borderRadius: 30,
-                    borderColor: "#098524",
-                    backgroundColor: '#098524',
-                }}
-                titleStyle={
-                    {
-                        fontSize: 13,
-                        color: 'white',
-                    }
+
+            {
+                contacts.length ?
+                    <View>
+                        <SearchBar
+                            platform='default'
+                            lightTheme='white'
+                            cancelButtonTitle=''
+                            placeholder="Tìm danh bạ..."
+                            onChangeText={setTextSearch}
+                            value={textSearch}
+                            inputStyle={{
+                                color: 'black',
+                                width: 300,
+                                fontSize: 14,
+                            }}
+                            inputContainerStyle={{
+                                height: 35
+                            }}
+                            containerStyle={{
+                            }}
+                            placeholderTextColor='black'
+                        />
+                        <Text style={{ padding: 10 }}>Danh bạ trong máy</Text>
+                    </View>
+                    : null
+            }
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
                 }
-            />
+            >
+                {
+                    contacts.length ?
+                        contacts.map((c, i) => (
+                            <TouchableOpacity key={i}>
+                                <ListItem
+                                    containerStyle={{
+                                        marginTop: -5,
+                                    }}>
+                                    <Icon
+                                        reverse={true}
+                                        reverseColor=''
+                                        name='user-plus'
+                                        type='font-awesome-5'
+                                        color='#5cc8d7'
+                                        size={20}
+                                    />
+                                    <ListItem.Content>
+                                        <ListItem.Title>{c.firstName && c.lastName ? c.firstName + " " + c.lastName : c.firstName}</ListItem.Title>
+                                        <ListItem.Subtitle>{c.phoneNumbers ? c.phoneNumbers[0].number : "o"}</ListItem.Subtitle>
+                                    </ListItem.Content>
+                                </ListItem>
+                            </TouchableOpacity>
+
+                        )) :
+                        <View style={styles.container}>
+                            <Image source={imagePath.info}
+                                style={{ width: 200, height: 400 }}
+                            />
+                            <Text style={{ textAlign: 'center' }}>Kiểm tra danh bạ của bạn xem các tài khoản đã tham gia WeeAllo</Text>
+                            <Button type="outline" title="KIỂM TRA DANH BẠ"
+                                onPress={getContactInDevice}
+                                containerStyle={{
+                                    paddingTop: 20,
+                                    paddingRight: 10
+                                }}
+                                buttonStyle={{
+                                    height: 35,
+                                    width: 200,
+                                    borderRadius: 30,
+                                    borderColor: "#098524",
+                                    backgroundColor: '#098524',
+                                }}
+                                titleStyle={
+                                    {
+                                        fontSize: 13,
+                                        color: 'white',
+                                    }
+                                }
+                            />
+                        </View>
+                }
+            </ScrollView>
         </View>
     );
 }

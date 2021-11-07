@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { ListItem, Avatar } from 'react-native-elements'
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +26,11 @@ const styles = StyleSheet.create({
 export default function ContactList({ navigation }) {
     const dispatch = useDispatch();
     const allContact = useSelector((state) => state.contact.listcontact);
+    const [refreshing, setRefreshing] = useState(false);
     const [contact, setContact] = useState([])
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
     useEffect(() => {
         dispatch(actions.fetchAllContact(1));
     }, []);
@@ -35,7 +39,6 @@ export default function ContactList({ navigation }) {
             setContact(allContact)
         }
     }, [allContact])
-    console.log(contact)
     const toReceive = () => {
         navigation.navigate('MyContact')
     }
@@ -43,10 +46,22 @@ export default function ContactList({ navigation }) {
     const toDevice = () => {
         navigation.navigate('DeviceContact')
     }
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        dispatch(actions.fetchAllContact(1));
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
     return (
-        <View style={styles.container}>
+        <View style={styles.container} on>
             <View>
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
                     <TouchableOpacity onPress={toReceive}>
                         <ListItem
                             containerStyle={{
@@ -85,13 +100,13 @@ export default function ContactList({ navigation }) {
                         </ListItem>
                     </TouchableOpacity>
                     <Text style={{ padding: 10 }}>Tất cả liên hệ</Text>
-                    {/* {
-                        list.map((l, i) => (
-                            <ListItem.Swipeable key={i}
+                    {
+                        contact.map((c, i) => (
+                            <ListItem key={i}
                             >
-                                <Avatar rounded size={50} source={{ uri: l.avatar_url }} />
+                                <Avatar rounded size={50} source={{ uri: c.avartar }} />
                                 <ListItem.Content>
-                                    <ListItem.Title>{l.name}</ListItem.Title>
+                                    <ListItem.Title>{c.firstname + " " + c.lastname}</ListItem.Title>
                                 </ListItem.Content>
                                 <Icon
                                     name='comment-dots'
@@ -99,9 +114,9 @@ export default function ContactList({ navigation }) {
                                     color='gray'
                                     size={20}
                                 />
-                            </ListItem.Swipeable>
+                            </ListItem>
                         ))
-                    } */}
+                    }
                 </ScrollView>
             </View>
 
