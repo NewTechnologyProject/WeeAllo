@@ -3,6 +3,7 @@ import axios from "axios";
 // import { phone } from "faker";
 
 const baseApi = "http://192.168.56.1:4000/api/";
+
 export default {
   user(url = baseApi + "user/") {
     return {
@@ -16,7 +17,7 @@ export default {
       listRoom: (userId) => axios.get(url + userId + "/rooms"),
       listFriend: (userId) => axios.get(url + userId + "/friends"),
       forgotpass: (userChat) => axios.post(url + "forgotpass", userChat),
-      getallphone: () => axios.get(url + "get-all-phones")
+      getallphone: () => axios.get(url + "get-all-phones"),
     };
   },
   contact(url = baseApi + "contact/") {

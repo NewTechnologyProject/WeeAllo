@@ -89,6 +89,7 @@ export default function ChatContent({ navigation, route }) {
             console.log(messageText);
         }
     }
+
     return (
         <View style={styles.container}>
             <Header
