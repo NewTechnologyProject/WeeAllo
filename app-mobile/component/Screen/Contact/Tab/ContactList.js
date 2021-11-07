@@ -3,25 +3,24 @@ import { RefreshControl, ScrollView, SectionList, StyleSheet, Text, TouchableOpa
 import { Icon } from 'react-native-elements'
 import { ListItem, Avatar } from 'react-native-elements'
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../../../action/contact.action"
+import * as actions from "../../../../action/contact.action";
 const styles = StyleSheet.create({
-    container: {
-    },
+    container: {},
     sectionHeader: {
         paddingTop: 2,
         paddingLeft: 10,
         paddingRight: 10,
         paddingBottom: 2,
         fontSize: 14,
-        fontWeight: 'bold',
-        backgroundColor: 'rgba(247,247,247,1.0)',
+        fontWeight: "bold",
+        backgroundColor: "rgba(247,247,247,1.0)",
     },
     item: {
         padding: 10,
         fontSize: 18,
         height: 44,
     },
-})
+});
 
 export default function ContactList({ navigation }) {
     const dispatch = useDispatch();
@@ -39,9 +38,10 @@ export default function ContactList({ navigation }) {
             setContact(allContact)
         }
     }, [allContact])
+    console.log(contact);
     const toReceive = () => {
-        navigation.navigate('MyContact')
-    }
+        navigation.navigate("MyContact");
+    };
 
     const toDevice = () => {
         navigation.navigate('DeviceContact')

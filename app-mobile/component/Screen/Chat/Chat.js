@@ -5,13 +5,15 @@ import { ListItem, Avatar, Icon, SpeedDial } from 'react-native-elements'
 import SearchBar from 'react-native-elements/dist/searchbar/SearchBar-ios';
 import { useState } from 'react';
 export default function Chat({ navigation }) {
+    const [textSearch, setTextSearch] = useState('')
+    const [open, setOpen] = useState(false)
+
     const styles = StyleSheet.create({
         avatar: {
             borderRadius: 1
         }
     });
-    const [textSearch, setTextSearch] = useState('')
-    const [open, setOpen] = useState(false)
+    
     const list = [
         {
             name: 'Nam Bùi',
