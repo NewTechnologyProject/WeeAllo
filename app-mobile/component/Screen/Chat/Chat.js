@@ -38,40 +38,10 @@ export default function Chat({ navigation }) {
             avatar_url: 'https://scontent.fsgn4-1.fna.fbcdn.net/v/t1.6435-9/48429385_134897407522376_8759135099208859648_n.jpg?_nc_cat=101&ccb=1-5&_nc_sid=174925&_nc_ohc=LqyPurR1UFYAX8EHzUD&_nc_ht=scontent.fsgn4-1.fna&oh=cda97197288b808bc12d98f63e5bc622&oe=61A0E966',
             subtitle: 'Em ngại lắm'
         },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn4-1.fna.fbcdn.net/v/t1.6435-9/46756087_119658695712914_8390071866588397568_n.jpg?_nc_cat=103&ccb=1-5&_nc_sid=174925&_nc_ohc=TrYP_VpZO6YAX_R-ROC&_nc_ht=scontent.fsgn4-1.fna&oh=f3061c30e2c3e85774d7d41315f837fc&oe=61A25529',
-            subtitle: 'Quất em đi'
-        },
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn8-1.fna.fbcdn.net/v/t1.6435-9/70992407_2402905143369728_3337010892582682624_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=ad2b24&_nc_ohc=TlHe4q5tX0QAX_PqyOI&_nc_ht=scontent.fsgn8-1.fna&oh=40e20e88ce13b1cebdfd93a4f514578d&oe=619ECDB2',
-            subtitle: 'Quất em đi'
-        },
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn8-1.fna.fbcdn.net/v/t1.6435-9/70992407_2402905143369728_3337010892582682624_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=ad2b24&_nc_ohc=TlHe4q5tX0QAX_PqyOI&_nc_ht=scontent.fsgn8-1.fna&oh=40e20e88ce13b1cebdfd93a4f514578d&oe=619ECDB2',
-            subtitle: 'Quất em đi'
-        },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn8-1.fna.fbcdn.net/v/t1.6435-9/70992407_2402905143369728_3337010892582682624_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=ad2b24&_nc_ohc=TlHe4q5tX0QAX_PqyOI&_nc_ht=scontent.fsgn8-1.fna&oh=40e20e88ce13b1cebdfd93a4f514578d&oe=619ECDB2',
-            subtitle: 'Quất em đi'
-        },
+
     ]
-    const toContent = () => {
-        navigation.navigate('ChatContent')
-    }
+
+
     const updateSearch = (search) => {
         setTextSearch(search);
     };
@@ -96,7 +66,7 @@ export default function Chat({ navigation }) {
                 {
                     list.map((l, i) => (
                         <TouchableOpacity key={i} >
-                            <ListItem.Swipeable onPress={toContent} >
+                            <ListItem.Swipeable onPress={() => navigation.navigate('ChatContent', { name: l.name })} >
                                 <Avatar rounded size={50} source={{ uri: l.avatar_url }} />
                                 <ListItem.Content>
                                     <ListItem.Title>{l.name}</ListItem.Title>
