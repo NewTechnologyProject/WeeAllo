@@ -23,8 +23,26 @@ export const login = (phone, pass) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: "LOGIN",
+
+        type: ACTION_TYPES.LOGIN,
         payload: response.data,
       });
     })
     .catch((err) => console.log(err));
+};
+
+// Get all rooms
+export const fetchAllRoom = (userId) => (dispatch) => {
+  apiService
+    .user()
+    .listRoom(userId)
+    .then((response) => {
+      dispatch({
+        type: "LIST ROOMS",
+        payload: response.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

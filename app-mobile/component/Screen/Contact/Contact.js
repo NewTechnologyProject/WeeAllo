@@ -43,23 +43,66 @@ export default function Contact() {
     const [index, setIndex] = useState(0);
     return (
         <View style={styles.container}>
-            <View>
-                <SearchBar
+            <Header
+                statusBarProps={{ barStyle: 'light-content' }}
+                barStyle="light-content"
+                centerComponent={<SearchBar
                     platform='default'
                     cancelButtonTitle=''
                     placeholder="Tìm bạn bè..."
                     onChangeText={setTextSearch}
                     value={textSearch}
-                    inputContainerStyle={{
-                        height: 55,
-                        paddingTop: 27
-                    }}
                     inputStyle={{
-                        color: 'black'
+                        color: 'black',
+                        width: 300,
+                    }}
+                    containerStyle={{
+
+
                     }}
                     placeholderTextColor='black'
-                />
-            </View>
+                />}
+                containerStyle={{
+                    backgroundColor: '#f2f2f2',
+                    justifyContent: 'space-around',
+                    height: 80
+
+                }}
+                centerContainerStyle={{
+                    flex: 6
+                }}
+                leftContainerStyle={{
+                    flex: 0
+                }}
+                rightContainerStyle={{
+                    flex: 0
+                }}
+            />
+            {/* <Header
+                statusBarProps={{ barStyle: 'light-content' }}
+                barStyle="light-content"
+                componentStyle={
+                    {
+                        height: 50
+                    }
+                }
+            // centerComponent={<SearchBar
+            //     platform='default'
+            //     cancelButtonTitle=''
+            //     placeholder="Tìm bạn bè..."
+            //     onChangeText={setTextSearch}
+            //     value={textSearch}
+            //     inputStyle={{
+            //         color: 'black'
+            //     }}
+            //     placeholderTextColor='black'
+            // />}
+            centerContainerStyle={{
+                padding: 0,
+                margin: 0
+            }}
+            /> */}
+
             <Tab.Navigator
                 screenOptions={{
                     tabBarLabelStyle: { fontSize: 12 },

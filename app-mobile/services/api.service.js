@@ -3,6 +3,9 @@ import axios from "axios";
 // import { phone } from "faker";
 
 const baseApi = "http://192.168.1.140:4000/api/";
+//const baseApi = "http://192.168.1.17:4000/api/";
+// const baseApi = "http://192.168.1.8:4000/api/";
+
 export default {
   user(url = baseApi + "user/") {
     return {
