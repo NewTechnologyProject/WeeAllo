@@ -1,8 +1,11 @@
 import * as React from "react";
+import MyContact from "../Screen/Contact/Tab/MyContact/MyContact";
 import ChatContent from "../Screen/Chat/ChatScreen/ChatContent";
 import GroupInformation from "../Screen/Contact/Tab/GroupInformation/GroupInformation";
 import GroupMembers from "../Screen/Contact/Tab/GroupInformation/GroupMembers";
 import GroupMedia from "../Screen/Contact/Tab/GroupInformation/GroupMedia";
+import DeviceContact from "../Screen/Contact/Tab/MyContact/DeviceContact";
+import Login from "../Authentication/Login";
 import TabRoute from "./TabRoute";
 
 export default function MainStack(Stack) {
@@ -13,6 +16,9 @@ export default function MainStack(Stack) {
       <Stack.Screen name="GroupInformation" component={GroupInformation} />
       <Stack.Screen name="GroupMembers" component={GroupMembers} />
       <Stack.Screen name="GroupMedia" component={GroupMedia} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="MyContact" component={MyContact} />
+      <Stack.Screen name="DeviceContact" component={DeviceContact} />
     </>
   );
 }

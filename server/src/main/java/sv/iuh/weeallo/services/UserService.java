@@ -55,4 +55,8 @@ public class UserService {
     public UserChat saveUserChat(UserChat userChat){
         return userRepository.save(userChat);
     }
+    
+    public List<UserChat> getAllPhone(){
+        return userRepository.getAllPhone();
+    }
 }

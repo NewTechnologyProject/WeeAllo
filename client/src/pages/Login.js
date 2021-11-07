@@ -69,7 +69,7 @@ export default function Login() {
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
             Chào mừng đến với Weeallo
           </Typography>
-          <img src="/static/illustrations/illustration_login.png" alt="login" />
+          <img src="/static/illustrations/giaotiep.png" alt="login" />
         </SectionStyle>
       </MHidden>
 
@@ -80,7 +80,7 @@ export default function Login() {
               Đăng nhập với Weeallo
             </Typography>
             <Typography sx={{ color: "text.secondary" }}>
-              nhập thông tin tài khoản bên dưới
+              Nhập thông tin tài khoản bên dưới
             </Typography>
           </Stack>
           {/* <AuthSocial /> */}

@@ -35,18 +35,19 @@ export default function DashboardApp() {
     <Page title="Trang chủ | WeeAllo">
       <Container maxWidth="xl">
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6} lg={8}>
-            <AppWebsiteVisits />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentVisits />
-          </Grid>
           <Grid item xs={12} sm={6} md={6}>
             <AppWeeklySales />
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
             <AppNewUsers />
           </Grid>
+          <Grid item xs={12} md={6} lg={8}>
+            <AppWebsiteVisits />
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <AppCurrentVisits />
+          </Grid>
+
         </Grid>
       </Container>
     </Page>
