@@ -86,7 +86,7 @@ const GroupInformation = ({ navigation }) => {
           </TouchableOpacity>
         }
         containerStyle={{
-          backgroundColor: "#098524",
+          backgroundColor: "#37b24d",
           justifyContent: "space-around",
         }}
       />
@@ -108,19 +108,31 @@ const GroupInformation = ({ navigation }) => {
         </View>
 
         <View style={styles.options}>
-          {list.map((item, i) => (
-            <TouchableOpacity key={i} onPress={item.function}>
-              <ListItem bottomDivider>
-                <Icon name={item.icon} type={"font-awesome"} color="#868e96" />
-                <ListItem.Content>
-                  <ListItem.Title style={{ color: "#495057" }}>
-                    {item.title}
-                  </ListItem.Title>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-            </TouchableOpacity>
-          ))}
+          {list.map((item, i) => {
+            if (!activeRoom.creator) {
+              if (item.icon === "users" || item.icon === "cog") {
+                return;
+              }
+            }
+
+            return (
+              <TouchableOpacity key={i} onPress={item.function}>
+                <ListItem bottomDivider>
+                  <Icon
+                    name={item.icon}
+                    type={"font-awesome"}
+                    color="#868e96"
+                  />
+                  <ListItem.Content>
+                    <ListItem.Title style={{ color: "#495057" }}>
+                      {item.title}
+                    </ListItem.Title>
+                  </ListItem.Content>
+                  <ListItem.Chevron />
+                </ListItem>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </View>
     </View>

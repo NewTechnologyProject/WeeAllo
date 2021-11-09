@@ -1,25 +1,9 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  BottomSheet,
-  Icon,
-  Input,
-  ListItem,
-  Avatar,
-  Badge,
-} from "react-native-elements";
-import {
-  ScrollView,
-  SectionList,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  Button,
-  Alert,
-} from "react-native";
+import { Icon } from "react-native-elements";
+import { View, StyleSheet } from "react-native";
+
+import { GiftedChat } from "react-native-gifted-chat";
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../action/roomchat.action";
 
@@ -28,6 +12,37 @@ export default function ChatContent({ navigation, route }) {
   const dispatch = useDispatch();
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const [messages, setMessages] = useState([]);
+  const userId = "2";
+
+  // const onSend = useCallback((messages = []) => {
+  //   setMessages((previousMessages) =>
+  //     GiftedChat.append(previousMessages, messages)
+  //   );
+  // }, []);
+
+  useEffect(() => {
+    setMessages([]);
+    if (listMessages.length > 0) {
+      listMessages.map((message) =>
+        setMessages((prevState) => {
+          return [
+            ...prevState,
+            {
+              _id: message.id,
+              text: message.content ? message.content : "",
+              createdAt: new Date(),
+              user: {
+                _id: message.userId.id,
+                name: `${message.userId.firstname} ${message.userId.lastname}`,
+                avatar: message.userId.avatar ? message.userId.avatar : "",
+              },
+            },
+          ];
+        })
+      );
+    }
+  }, [listMessages]);
 
   useEffect(() => {
     if (activeRoom) {
@@ -91,11 +106,25 @@ export default function ChatContent({ navigation, route }) {
           />
         }
         containerStyle={{
-          backgroundColor: "#098524",
+          backgroundColor: "#37b24d",
           justifyContent: "space-around",
         }}
       />
-      <ScrollView>
+
+      <GiftedChat
+        messages={messages}
+        // onSend={(messages) => onSend(messages)}
+        user={{
+          _id: Number(userId),
+        }}
+        listViewProps={{
+          style: {
+            backgroundColor: "white",
+          },
+        }}
+      />
+
+      {/* <ScrollView>
         {listMessages &&
           listMessages.map((message) => {
             if (message.content) {
@@ -172,7 +201,12 @@ export default function ChatContent({ navigation, route }) {
             />
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
