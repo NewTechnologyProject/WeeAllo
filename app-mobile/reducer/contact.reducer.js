@@ -8,6 +8,7 @@ const initialState = {
   detailContact: null,
   addContact: null,
   userQR: null,
+  jsonString: null
 };
 
 export const contactReducer = (state = initialState, action) => {
@@ -76,6 +77,11 @@ export const contactReducer = (state = initialState, action) => {
       return {
         ...state,
         countFriend: action.payload,
+      };
+    case ACTION_TYPES.GET_JSON_STRING:
+      return {
+        ...state,
+        listDeviceContact: action.payload,
       };
     default:
       return state;
