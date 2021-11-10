@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../../action/user.action";
 import {
   ScrollView,
-  SectionList,
   StyleSheet,
   Text,
   View,
