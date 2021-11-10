@@ -171,16 +171,16 @@ export default function ChatContent({ navigation, route }) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <ScrollView>
-                    {emojiStaus === true ? (
-                        <EmojiSelector
-                            onEmojiSelected={emoji => onChangeEmoji(emoji)}
-                            style={{ height: 250 }}
-                        />
-                    ) : (
-                        <Text></Text>
-                    )}
-                </ScrollView>
+                {emojiStaus === true ? (
+                    <EmojiSelector
+                        onEmojiSelected={emoji => onChangeEmoji(emoji)}
+                        columns={10}
+                        showSearchBar={false}
+                        style={{ height: 250 }}
+                    />
+                ) : (
+                    <Text></Text>
+                )}
             </View>
         </View>
     );
