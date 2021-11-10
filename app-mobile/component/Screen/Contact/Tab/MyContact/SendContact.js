@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { ScrollView, SectionList, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, ScrollView, SectionList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { StyleSheet, Alert } from "react-native";
 import { ListItem, Avatar, Badge, ButtonGroup, Button } from 'react-native-elements'
-import { useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as actions from "../../../../../action/contact.action"
 export default function SendContact({ navigation, route }) {
     const styles = StyleSheet.create({
         avatar: {
@@ -27,55 +28,73 @@ export default function SendContact({ navigation, route }) {
             flexDirection: 'row',
         },
     });
-    const list = [
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        },
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        },
-    ]
-    const [isVisible, setIsVisible] = useState(false);
-    const backToAllChat = () => {
-        navigation.navigate('TabRoute')
+    const dispatch = useDispatch();
+    const sendContact = useSelector((state) => state.contact.listSend);
+    const [refreshing, setRefreshing] = useState(false);
+    const [allSendContact, setAllSendContact] = useState([])
+    const wait = (timeout) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
     }
+    useEffect(() => {
+        dispatch(actions.fetchSendContact(1));
+    }, []);
+    useEffect(() => {
+        if (sendContact) {
+            setAllSendContact(sendContact)
+        }
+    }, [sendContact])
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        dispatch(actions.fetchSendContact(1));
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
     return (
         <View style={styles.container}>
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+            >
+
                 {
-                    list.map((l, i) => (
-                        <ListItem.Swipeable key={i}
-                        >
-                            <Avatar rounded size={50} source={{ uri: l.avatar_url }} />
-                            <ListItem.Content >
-                                <ListItem.Title>{l.name}</ListItem.Title>
-                                <ListItem.Subtitle>{"Đã gửi lời mời kết bạn !"}</ListItem.Subtitle>
-                            </ListItem.Content>
-                            <Button type="outline" title="Hủy lời mời"
-                                containerStyle={{
-                                    paddingTop: 5,
-                                    paddingRight: 5
-                                }}
-                                buttonStyle={{
-                                    height: 35,
-                                    width: 90,
-                                    borderColor: "#8B0016",
-                                    borderRadius: 30,
-                                    backgroundColor: '#8B0016',
-                                }}
-                                titleStyle={
-                                    {
-                                        fontSize: 13,
-                                        color: '#ffffff'
+                    allSendContact.length ?
+                        allSendContact.map((c, i) => (
+                            <ListItem.Swipeable key={i}
+                            >
+                                <Avatar rounded size={50} source={{ uri: c.avartar }} />
+                                <ListItem.Content >
+                                    <ListItem.Title>{c.firstname + " " + c.lastname}</ListItem.Title>
+                                    <ListItem.Subtitle>{"Đã gửi lời mời kết bạn !"}</ListItem.Subtitle>
+                                </ListItem.Content>
+                                <Button type="outline" title="Hủy lời mời"
+                                    containerStyle={{
+                                        paddingTop: 5,
+                                        paddingRight: 5
+                                    }}
+                                    buttonStyle={{
+                                        height: 35,
+                                        width: 90,
+                                        borderColor: "#8B0016",
+                                        borderRadius: 30,
+                                        backgroundColor: '#8B0016',
+                                    }}
+                                    titleStyle={
+                                        {
+                                            fontSize: 13,
+                                            color: '#ffffff'
+                                        }
                                     }
-                                }
-                            />
-                        </ListItem.Swipeable>
-                    ))
+                                />
+                            </ListItem.Swipeable>
+                        ))
+                        :
+                        <View style={{ alignItems: 'center' }}>
+                            <Text style={{ paddingTop: 40 }}>Chưa gửi lời mời kết bạn nào !</Text>
+                        </View>
                 }
             </ScrollView>
         </View>
