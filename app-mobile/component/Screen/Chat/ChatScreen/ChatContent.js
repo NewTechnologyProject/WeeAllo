@@ -141,7 +141,7 @@ export default function ChatContent({ navigation, route }) {
         />
 
         {/* </Touchable> */}
-        <Composer {...props} ={() => { setStatusEmoji(!statusEmoji); console.log(statusEmoji) }} />
+        <Composer {...props} />
       </View>
     )
   }
