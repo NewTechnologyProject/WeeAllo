@@ -140,6 +140,10 @@ public class UserChat implements Serializable {
         this.password = password;
     }
 
+    public UserChat(String phone) {
+        this.phone = phone;
+    }
+
     public UserChat(Long id) {
         this.id = id;
     }

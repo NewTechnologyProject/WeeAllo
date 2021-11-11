@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
-import { Image, PermissionsAndroid, Platform, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { Header } from 'react-native-elements/dist/header/Header';
 import { Button, Icon, ListItem, SearchBar } from 'react-native-elements'
-import { useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import imagePath from '../../../../../constants/imagePath';
+import * as actions from "../../../../../action/contact.action"
 import * as Contacts from 'expo-contacts';
+import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 const Tab = createMaterialTopTabNavigator();
 const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -33,13 +35,19 @@ export default function DeviceContact({ navigation, route }) {
             flexDirection: 'row',
         }
     });
+    const dispatch = useDispatch();
     const [textSearch, setTextSearch] = useState('')
+    const listDevice = useSelector((state) => state.contact.listDeviceContact);
     const [refreshing, setRefreshing] = useState(false);
+    const [contactDevice, setContactDevice] = useState([]);
     const backToAllChat = () => {
         navigation.navigate('TabRoute')
     }
     const [contacts, setContacts] = useState([])
-    const getContactInDevice = () => {
+    useEffect(() => {
+
+    })
+    useEffect(() => {
         (async () => {
             const { status } = await Contacts.requestPermissionsAsync();
             if (status === 'granted') {
@@ -52,13 +60,35 @@ export default function DeviceContact({ navigation, route }) {
                 }
             }
         })();
+    });
+    const getContactInDevice = () => {
+        if (contacts) {
+            dispatch(actions.getJsonString(contacts, 1));
+        }
     }
     const onRefresh = React.useCallback(() => {
+        async () => {
+            const { status } = await Contacts.requestPermissionsAsync();
+            if (status === 'granted') {
+                const { data } = await Contacts.getContactsAsync({
+                    fields: [Contacts.Fields.PhoneNumbers],
+                });
+
+                if (data.length > 0) {
+                    setContacts(data)
+                }
+            }
+        }
         setRefreshing(true);
         getContactInDevice()
         wait(2000).then(() => setRefreshing(false));
     }, []);
-    console.log(contacts)
+    useEffect(() => {
+        if (listDevice) {
+            setContactDevice(listDevice)
+        }
+    }, [listDevice])
+    console.log(contactDevice)
     return (
         <View >
 
@@ -122,24 +152,17 @@ export default function DeviceContact({ navigation, route }) {
                 }
             >
                 {
-                    contacts.length ?
-                        contacts.map((c, i) => (
+                    contactDevice.length ?
+                        contactDevice.map((c, i) => (
                             <TouchableOpacity key={i}>
                                 <ListItem
                                     containerStyle={{
                                         marginTop: -5,
                                     }}>
-                                    <Icon
-                                        reverse={true}
-                                        reverseColor=''
-                                        name='user-plus'
-                                        type='font-awesome-5'
-                                        color='#5cc8d7'
-                                        size={20}
-                                    />
+                                    <Avatar rounded size={50} source={{ uri: c.avartar }} />
                                     <ListItem.Content>
-                                        <ListItem.Title>{c.firstName && c.lastName ? c.firstName + " " + c.lastName : c.firstName}</ListItem.Title>
-                                        <ListItem.Subtitle>{c.phoneNumbers ? c.phoneNumbers[0].number : "o"}</ListItem.Subtitle>
+                                        <ListItem.Title>{c.firstname && c.lastname ? c.firstname + " " + c.lastname : "Noname"}</ListItem.Title>
+                                        <ListItem.Subtitle>{c.phone ? c.phone : "000-000-0000"}</ListItem.Subtitle>
                                     </ListItem.Content>
                                 </ListItem>
                             </TouchableOpacity>

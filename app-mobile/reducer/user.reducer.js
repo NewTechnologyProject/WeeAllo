@@ -16,10 +16,47 @@ const initialState = {
   register: null,
   updateUser: null,
   // login: null,
+
 };
 
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case "LOGIN": {
+      return {
+        ...state,
+        login: action.payload,
+      };
+    }
+
+    case "AUTHENTICATE_SIGNAL": {
+      if (AsyncStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
+        AsyncStorage.setItem(
+          SET_USER_AUTHENTICATE,
+          JSON.stringify(action.userExitedid)
+        );
+        return {
+          ...state,
+          userAuth: action.userExitedid,
+        };
+      }
+      if (AsyncStorage.getItem(SET_USER_AUTHENTICATE) !== action.userExitedid) {
+        AsyncStorage.setItem(
+          SET_USER_AUTHENTICATE,
+          JSON.stringify(action.userExitedid)
+        );
+        return {
+          ...state,
+          userAuth: action.userExitedid,
+        };
+      }
+    }
+    case "LOGOUT_SIGNAL": {
+      AsyncStorage.setItem(SET_USER_AUTHENTICATE, JSON.stringify());
+      return {
+        ...state,
+        userAuth: "undefined",
+      };
+    }
     case "AUTHENTICATE_SIGNAL": {
       if (AsyncStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
         AsyncStorage.setItem(

@@ -1,5 +1,9 @@
 package sv.iuh.weeallo.services;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sv.iuh.weeallo.models.Contact;
@@ -149,6 +153,9 @@ public class ContactService {
     }
     public UserChat findByPhone(String phone,Long idAuth){
         UserChat userChat=userRepository.findContactByPhone(phone);
+        if(userChat==null){
+            return null;
+        }
         userChat.setStatus("none");
         if(idAuth==userChat.getId()){
             userChat.setStatus("you");
@@ -179,5 +186,21 @@ public class ContactService {
         List<Contact> list= contactRepository.getAllContact(id);
         int friends = list.size();
         return friends;
+    }
+    public List<UserChat> listDeviceContact(String jsonString,Long userAuth) {
+        List<UserChat> list = new ArrayList<>();
+        JsonArray jsonArraySend = new JsonParser().parse(jsonString).getAsJsonArray();
+        for (JsonElement ls : jsonArraySend) {
+            JsonObject jsonObjectSend = ls.getAsJsonObject();
+            JsonArray phone = jsonObjectSend.get("phoneNumbers").getAsJsonArray();
+            JsonObject jsonObject = (JsonObject) phone.get(0);
+            String phoneNumber = jsonObject.get("number").getAsString();
+            String phoneNum = phoneNumber.replaceAll("\\+" + "84", "0");
+            UserChat u = findByPhone(phoneNum,userAuth);
+            if(u!=null){
+                list.add(u);
+            }
+        }
+        return list;
     }
 }

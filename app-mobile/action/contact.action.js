@@ -14,6 +14,7 @@ export const ACTION_TYPES = {
   FIND_USER_BY_ID: "FIND_USER_BY_ID",
   FIND_USER_BY_PHONE: "FIND_USER_BY_PHONE",
   COUNT_FRIEND: "COUNT_FRIEND",
+  GET_JSON_STRING: "GET_JSON_STRING",
 };
 
 export const fetchAllContact = (id) => (dispatch) => {
@@ -171,4 +172,16 @@ export const findUserByPhone = (phone, id) => (dispatch) => {
       });
     })
     .catch((err) => console.log(err));
+};
+export const getJsonString = (jsonString, id) => (dispatch) => {
+  apiService
+    .contact()
+    .getJsonString(jsonString, id)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.GET_JSON_STRING,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err.response.request._response));
 };

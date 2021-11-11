@@ -52,7 +52,7 @@ const GroupMedia = ({ navigation }) => {
           </TouchableOpacity>
         }
         containerStyle={{
-          backgroundColor: "#098524",
+          backgroundColor: "#37b24d",
           justifyContent: "space-around",
         }}
       />

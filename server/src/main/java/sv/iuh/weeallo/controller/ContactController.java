@@ -1,5 +1,7 @@
 package sv.iuh.weeallo.controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +10,9 @@ import sv.iuh.weeallo.models.Contact;
 import sv.iuh.weeallo.models.UserChat;
 import sv.iuh.weeallo.services.ContactService;
 import sv.iuh.weeallo.services.UserService;
+import com.google.gson.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -77,5 +81,9 @@ public class ContactController {
     public ResponseEntity<Integer> countFriend(@PathVariable("id") Long id){
         int friends = contactService.countFriend(id);
         return new ResponseEntity<Integer>(friends,HttpStatus.OK) ;
+    }
+    @PostMapping("/contact-json-device/{idAuth}")
+    public List<UserChat> getStringDevice(@RequestBody String jsonString,@PathVariable("idAuth") Long idAuth){
+        return contactService.listDeviceContact(jsonString,idAuth);
     }
 }
