@@ -1,11 +1,15 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon } from "react-native-elements";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, LogBox, Touchable, Text } from "react-native";
 
-import { GiftedChat } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, Actions, Composer, Send, renderAccessory } from "react-native-gifted-chat";
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../action/roomchat.action";
+import * as action from "../../../../action/message.action";
+
+import EmojiSelector, { Categories } from "react-native-emoji-selector";
+import DocumentPicker from 'react-native-document-picker'
 
 export default function ChatContent({ navigation, route }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,11 +19,26 @@ export default function ChatContent({ navigation, route }) {
   const [messages, setMessages] = useState([]);
   const userId = "2";
 
-  // const onSend = useCallback((messages = []) => {
-  //   setMessages((previousMessages) =>
-  //     GiftedChat.append(previousMessages, messages)
-  //   );
-  // }, []);
+  const onSend = useCallback((messages = []) => {
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, messages)
+    );
+    sentMessage(messages[0]);
+  }, []);
+
+  const sentMessage = (message) => {
+    const messageText = {
+      status: "send",
+      content: message.text,
+      image: null,
+      file: null,
+      roomChatId: activeRoom.id,
+      time: new Date(),
+      userId: 2,
+    };
+    console.log(messageText);
+    dispatch(action.addMessage(messageText));
+  };
 
   useEffect(() => {
     setMessages([]);
@@ -31,7 +50,7 @@ export default function ChatContent({ navigation, route }) {
             {
               _id: message.id,
               text: message.content ? message.content : "",
-              createdAt: new Date(),
+              createdAt: message.time,
               user: {
                 _id: message.userId.id,
                 name: `${message.userId.firstname} ${message.userId.lastname}`,
@@ -78,6 +97,71 @@ export default function ChatContent({ navigation, route }) {
       flexDirection: "row",
     },
   });
+
+  // LogBox.ignoreLogs(['Remote debugger']);
+  const renderActions = (props) => {
+    return (
+      <Actions
+        {...props}
+        options={{
+          ['Document']: async (props) => {
+            try {
+              const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles],
+              });
+              console.log("image file", result)
+            } catch (e) {
+              if (DocumentPicker.isCancel(e)) {
+                console.log("User cancelled!")
+              } else {
+                throw e;
+              }
+            }
+
+          },
+          Cancel: (props) => { console.log("Cancel") }
+        }}
+        onSend={args => console.log(args)}
+      />
+    )
+  };
+
+  const [statusEmoji, setStatusEmoji] = useState(false);
+  const renderComposer = props => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {/* <Touchable > */}
+        <Icon
+          name="laugh"
+          type="font-awesome-5"
+          color={"#868e96"}
+          size={20}
+          style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
+          onPress={() => { setStatusEmoji(!statusEmoji); console.log(statusEmoji) }}
+        />
+
+        {/* </Touchable> */}
+        <Composer {...props} />
+      </View>
+    )
+  }
+
+  const renderAccessory = props => {
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {statusEmoji === true ? (
+          <EmojiSelector
+            category={Categories.symbols}
+            onEmojiSelected={emoji => console.log(emoji)}
+          />
+        ) : (
+          <View style={{}} />
+        )}
+      </View>
+    )
+  }
+
+
   return (
     <View style={styles.container}>
       <Header
@@ -85,7 +169,7 @@ export default function ChatContent({ navigation, route }) {
         barStyle="light-content"
         centerComponent={{
           text: activeRoom.roomName,
-          style: { color: "#fff" },
+          style: { color: "#fff", fontWeight: "bold" },
         }}
         leftComponent={
           <Icon
@@ -113,7 +197,7 @@ export default function ChatContent({ navigation, route }) {
 
       <GiftedChat
         messages={messages}
-        // onSend={(messages) => onSend(messages)}
+        onSend={(messages) => onSend(messages)}
         user={{
           _id: Number(userId),
         }}
@@ -122,7 +206,23 @@ export default function ChatContent({ navigation, route }) {
             backgroundColor: "white",
           },
         }}
+        renderActions={() => renderActions()}
+        // renderAccessory={renderAccessory} //under input
+        renderAvatarOnTop={true}
+        renderUsernameOnMessage={true} //show username
+        renderComposer={renderComposer}
+
       />
+
+      {statusEmoji === true ? (
+        <EmojiSelector
+          category={Categories.symbols}
+          onEmojiSelected={emoji => console.log(emoji)}
+        />
+      ) : (
+        <View style={{}} />
+      )}
+
 
       {/* <ScrollView>
         {listMessages &&
@@ -208,5 +308,12 @@ export default function ChatContent({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+
+  sendContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginRight: 15,
   },
 });
