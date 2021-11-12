@@ -38,12 +38,12 @@ export default function ContactList({ navigation }) {
             setContact(allContact)
         }
     }, [allContact])
-    console.log(contact);
     const toReceive = () => {
         navigation.navigate("MyContact");
     };
 
     const toDevice = () => {
+        dispatch(actions.getJsonString([], 1));
         navigation.navigate('DeviceContact')
     }
     const onRefresh = React.useCallback(() => {
@@ -52,7 +52,7 @@ export default function ContactList({ navigation }) {
         wait(2000).then(() => setRefreshing(false));
     }, []);
     return (
-        <View style={styles.container} on>
+        <View style={styles.container}>
             <View>
                 <ScrollView
                     refreshControl={
@@ -99,7 +99,7 @@ export default function ContactList({ navigation }) {
                             </ListItem.Content>
                         </ListItem>
                     </TouchableOpacity>
-                    <Text style={{ padding: 10 }}>Tất cả liên hệ</Text>
+                    <Text style={{ padding: 10 }}>Tất cả liên hệ ( {contact.length ? contact.length : "0"} )</Text>
                     {
                         contact.map((c, i) => (
                             <ListItem key={i}

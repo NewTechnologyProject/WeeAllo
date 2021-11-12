@@ -22,7 +22,7 @@ export default function Chat({ navigation }) {
   const [textSearch, setTextSearch] = useState("");
   const [open, setOpen] = useState(false);
 
-  const userId = "2";
+  const userId = "1";
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.user.listRooms);
 

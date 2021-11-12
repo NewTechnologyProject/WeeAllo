@@ -15,6 +15,7 @@ export const ACTION_TYPES = {
   FIND_USER_BY_PHONE: "FIND_USER_BY_PHONE",
   COUNT_FRIEND: "COUNT_FRIEND",
   GET_JSON_STRING: "GET_JSON_STRING",
+  SEARCH_CONTACT_MOBILE: "SEARCH_CONTACT_MOBILE"
 };
 
 export const fetchAllContact = (id) => (dispatch) => {
@@ -183,5 +184,17 @@ export const getJsonString = (jsonString, id) => (dispatch) => {
         payload: response.data,
       });
     })
-    .catch((err) => console.log(err.response.request._response));
+    .catch((err) => console.log(err));
+};
+export const searchContactMobile = (id, phone) => (dispatch) => {
+  apiService
+    .contact()
+    .searchContactMobile(id, phone)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.SEARCH_CONTACT_MOBILE,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
 };

@@ -86,4 +86,15 @@ public class ContactController {
     public List<UserChat> getStringDevice(@RequestBody String jsonString,@PathVariable("idAuth") Long idAuth){
         return contactService.listDeviceContact(jsonString,idAuth);
     }
+    @GetMapping("/search-contact-mobile/{idAuth}&{phone}")
+    public List<UserChat> searchContactMobile(@PathVariable("phone") String phone,@PathVariable("idAuth") Long idAuth){
+        if(phone.equals("null")){
+            return null;
+        }
+        else if(phone.length()<6) {
+           return null;
+        }else {
+            return contactService.searchToAddMobile(phone, idAuth);
+        }
+    }
 }

@@ -203,4 +203,15 @@ public class ContactService {
         }
         return list;
     }
+    public List<UserChat> searchToAddMobile(String phone,Long userAuth){
+        List<UserChat> list= new ArrayList<>();
+        List<UserChat> listUser= userRepository.searchFriend(phone);
+        for (UserChat user:listUser) {
+            UserChat u=findByPhone(user.getPhone(),userAuth);
+            if(u!=null){
+                list.add(u);
+            }
+        }
+        return list;
+    }
 }

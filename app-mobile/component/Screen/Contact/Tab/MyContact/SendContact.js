@@ -88,6 +88,9 @@ export default function SendContact({ navigation, route }) {
                                             color: '#ffffff'
                                         }
                                     }
+                                    onPress={() => {
+                                        dispatch(actions.deleteSendContact(1, c.id))
+                                    }}
                                 />
                             </ListItem.Swipeable>
                         ))

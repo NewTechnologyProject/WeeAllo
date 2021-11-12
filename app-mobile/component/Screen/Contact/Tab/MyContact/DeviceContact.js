@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from 'react-native-elements/dist/header/Header';
-import { Button, Icon, ListItem, SearchBar } from 'react-native-elements'
+import { Badge, Button, Icon, ListItem, SearchBar } from 'react-native-elements'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import imagePath from '../../../../../constants/imagePath';
 import * as actions from "../../../../../action/contact.action"
@@ -40,13 +40,15 @@ export default function DeviceContact({ navigation, route }) {
     const listDevice = useSelector((state) => state.contact.listDeviceContact);
     const [refreshing, setRefreshing] = useState(false);
     const [contactDevice, setContactDevice] = useState([]);
+    const [change, setChange] = useState(false);
+    const [change1, setChange1] = useState(false);
+    const [change2, setChange2] = useState(false);
+    const [animate, setAnimate] = useState(false);
     const backToAllChat = () => {
         navigation.navigate('TabRoute')
+        setNull()
     }
     const [contacts, setContacts] = useState([])
-    useEffect(() => {
-
-    })
     useEffect(() => {
         (async () => {
             const { status } = await Contacts.requestPermissionsAsync();
@@ -60,10 +62,11 @@ export default function DeviceContact({ navigation, route }) {
                 }
             }
         })();
-    });
+    }, []);
     const getContactInDevice = () => {
         if (contacts) {
             dispatch(actions.getJsonString(contacts, 1));
+            wait(3000).then(() => setAnimate(false));
         }
     }
     const onRefresh = React.useCallback(() => {
@@ -88,10 +91,265 @@ export default function DeviceContact({ navigation, route }) {
             setContactDevice(listDevice)
         }
     }, [listDevice])
-    console.log(contactDevice)
+    const setNull = () => {
+        setContactDevice([])
+    }
+    const renderStatus = (status) => {
+        if (status === 'none') {
+            return (
+                !change1 ?
+                    <Badge containerStyle={{ fontSize: 10 }} value="Chưa là bạn bè" status="error" />
+                    : <Badge containerStyle={{ fontSize: 10 }} value="Đã gửi lời mời kết bạn" status="primary" />
+            )
+        }
+        else if (status === 'friend') {
+            return (
+                <Badge containerStyle={{ fontSize: 10 }} value="Bạn bè" status="success" />
+            )
+        }
+        else if (status === 'receive') {
+            return (
+                !change2 ?
+                    <Badge containerStyle={{ fontSize: 10 }} value="Đã gửi lời mời kết bạn" status="primary" /> :
+                    <Badge containerStyle={{ fontSize: 10 }} value="Chưa là bạn bè" status="error" />
+            )
+        }
+        else if (status === 'send') {
+            return (
+                change ? <Badge containerStyle={{ fontSize: 10 }} value="Bạn bè" status="success" />
+                    :
+                    <Badge containerStyle={{ fontSize: 10 }} value="Đã nhận lời mời kết bạn" status="warning" />
+            )
+        }
+        else if (status === 'you') {
+            return (
+                <Badge containerStyle={{ fontSize: 10 }} value="Tài khoản của bạn" status="success" />
+            )
+        }
+    }
+    const renderButton = (status, id, lastname, firstname) => {
+        if (status === 'none') {
+            return (
+                !change1 ?
+                    <TouchableOpacity
+                        onPress={() => {
+                            setChange1(true)
+                            dispatch(actions.addContact(1, id))
+                            Alert.alert(
+                                "Bạn bè",
+                                "Đã gửi lời mời kết bạn đến " + firstname + " " + lastname,
+                                [
+                                    {
+                                        text: "Xác nhận",
+                                        style: "default"
+                                    },
+                                ]
+                            );
+                        }
+                        }
+                    >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon
+                                name="user"
+                                type="font-awesome-5"
+                                color={"#868e96"}
+                                size={20}
+                            />
+                            <Icon
+                                name="plus"
+                                type="font-awesome-5"
+                                color={"#868e96"}
+                                size={10}
+                            />
+                        </View>
+                    </TouchableOpacity> :
+                    <TouchableOpacity
+                        onPress={() => {
+                            setChange1(!change1)
+                            dispatch(actions.deleteSendContact(1, id))
+                            Alert.alert(
+                                "Bạn bè",
+                                "Đã hủy lời mời đã gửi đến " + firstname + " " + lastname,
+                                [
+                                    {
+                                        text: "Xác nhận",
+                                        style: "default"
+                                    },
+                                ]
+                            );
+                        }
+                        }
+                    >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon
+                                name="user"
+                                type="font-awesome-5"
+                                color={"#045BD3"}
+                                size={20}
+                            />
+                            <Icon
+                                name="arrow-right"
+                                type="font-awesome-5"
+                                color={"#045BD3"}
+                                size={10}
+                            />
+                        </View>
+                    </TouchableOpacity>
+            )
+        }
+        else if (status === 'friend') {
+            return (
+                <TouchableOpacity>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Icon
+                            name="user"
+                            type="font-awesome-5"
+                            color={"#37b24d"}
+                            size={20}
+                        />
+                        <Icon
+                            name="check"
+                            type="font-awesome-5"
+                            color={"#37b24d"}
+                            size={10}
+                        />
+                    </View>
+                </TouchableOpacity>
+            )
+        }
+        else if (status === 'receive') {
+            return (
+                !change2 ?
+                    <TouchableOpacity
+                        onPress={() => {
+                            setChange2(true)
+                            dispatch(actions.deleteSendContact(1, id))
+                            Alert.alert(
+                                "Bạn bè",
+                                "Đã hủy lời mời kết bạn đến " + firstname + " " + lastname,
+                                [
+                                    {
+                                        text: "Xác nhận",
+                                        style: "default"
+                                    },
+                                ]
+                            );
+                        }
+                        }
+                    >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon
+                                name="user"
+                                type="font-awesome-5"
+                                color={"#045BD3"}
+                                size={20}
+                            />
+                            <Icon
+                                name="arrow-right"
+                                type="font-awesome-5"
+                                color={"#045BD3"}
+                                size={10}
+                            />
+                        </View>
+                    </TouchableOpacity> :
+                    <TouchableOpacity
+                        onPress={() => {
+                            setChange2(false)
+                            dispatch(actions.addContact(1, id))
+                            Alert.alert(
+                                "Bạn bè",
+                                "Đã gửi lời mời kết bạn đến " + firstname + " " + lastname,
+                                [
+                                    {
+                                        text: "Xác nhận",
+                                        style: "default"
+                                    },
+                                ]
+                            );
+                        }
+                        }
+                    >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon
+                                name="user"
+                                type="font-awesome-5"
+                                color={"#868e96"}
+                                size={20}
+                            />
+                            <Icon
+                                name="plus"
+                                type="font-awesome-5"
+                                color={"#868e96"}
+                                size={10}
+                            />
+                        </View>
+                    </TouchableOpacity>
+            )
+        }
+        else if (status === 'send') {
+            return (
+                change ?
+                    <TouchableOpacity>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon
+                                name="user"
+                                type="font-awesome-5"
+                                color={"#37b24d"}
+                                size={20}
+                            />
+                            <Icon
+                                name="check"
+                                type="font-awesome-5"
+                                color={"#37b24d"}
+                                size={10}
+                            />
+                        </View>
+                    </TouchableOpacity> :
+                    <TouchableOpacity
+                        onPress={() => {
+                            setChange(true)
+                            dispatch(actions.acceptContact(id, 1))
+                            Alert.alert(
+                                "Bạn bè",
+                                "Đã trở thành bạn bè với " + firstname + " " + lastname,
+                                [
+                                    {
+                                        text: "Xác nhận",
+                                        style: "default"
+                                    },
+                                ]
+                            );
+                        }
+                        }
+                    >
+                        <View style={{ flexDirection: 'row' }}
+
+                        >
+                            <Icon
+                                name="user"
+                                type="font-awesome-5"
+                                color={"#B43104"}
+                                size={20}
+                            />
+                            <Icon
+                                name="arrow-left"
+                                type="font-awesome-5"
+                                color={"#B43104"}
+                                size={10}
+
+                            />
+                        </View>
+                    </TouchableOpacity>
+            )
+        }
+        else if (status === 'you') {
+            return (
+                <></>
+            )
+        }
+    }
     return (
         <View >
-
             <Header
                 statusBarProps={{ barStyle: 'light-content' }}
                 barStyle="light-content"
@@ -162,8 +420,10 @@ export default function DeviceContact({ navigation, route }) {
                                     <Avatar rounded size={50} source={{ uri: c.avartar }} />
                                     <ListItem.Content>
                                         <ListItem.Title>{c.firstname && c.lastname ? c.firstname + " " + c.lastname : "Noname"}</ListItem.Title>
+                                        <Text style={{ paddingTop: 5, paddingBottom: 5 }}>{renderStatus(c.status)}</Text>
                                         <ListItem.Subtitle>{c.phone ? c.phone : "000-000-0000"}</ListItem.Subtitle>
                                     </ListItem.Content>
+                                    {renderButton(c.status, c.id, c.lastname, c.firstname)}
                                 </ListItem>
                             </TouchableOpacity>
 
@@ -174,7 +434,9 @@ export default function DeviceContact({ navigation, route }) {
                             />
                             <Text style={{ textAlign: 'center' }}>Kiểm tra danh bạ của bạn xem các tài khoản đã tham gia WeeAllo</Text>
                             <Button type="outline" title="KIỂM TRA DANH BẠ"
-                                onPress={getContactInDevice}
+                                onPress={() => {
+                                    getContactInDevice();
+                                }}
                                 containerStyle={{
                                     paddingTop: 20,
                                     paddingRight: 10
@@ -193,9 +455,11 @@ export default function DeviceContact({ navigation, route }) {
                                     }
                                 }
                             />
+
                         </View>
                 }
             </ScrollView>
+            <ActivityIndicator size="large" color="#00ff00" animating={animate} />
         </View>
     );
 }
