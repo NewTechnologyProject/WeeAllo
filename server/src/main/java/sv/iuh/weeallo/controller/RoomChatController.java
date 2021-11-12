@@ -47,9 +47,7 @@ public class RoomChatController {
                         message.getTime(), message.getImage(), message.getFile(), roomChat, user));
             }
         }
-        Collections.sort(newListMessages, Comparator.comparing(Message::getId, (s1, s2) -> {
-            return s2.compareTo(s1);
-        }));
+        Collections.sort(newListMessages, Comparator.comparing(Message::getId));
         return newListMessages;
     }
 
