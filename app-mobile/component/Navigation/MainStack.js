@@ -7,6 +7,7 @@ import GroupMedia from "../Screen/Contact/Tab/GroupInformation/GroupMedia";
 import DeviceContact from "../Screen/Contact/Tab/MyContact/DeviceContact";
 import Login from "../Authentication/Login";
 import TabRoute from "./TabRoute";
+import DetailContact from "../Screen/Contact/Tab/MyContact/DetailContact";
 
 export default function MainStack(Stack) {
   return (
@@ -19,6 +20,7 @@ export default function MainStack(Stack) {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="MyContact" component={MyContact} />
       <Stack.Screen name="DeviceContact" component={DeviceContact} />
+      <Stack.Screen name="DetailContact" component={DetailContact} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../../../action/contact.action"
-import { RefreshControl, ScrollView, Text, View } from 'react-native';
+import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { StyleSheet } from "react-native";
 import { ListItem, Avatar, Button } from 'react-native-elements'
 export default function ReceiveContact({ navigation }) {
@@ -61,7 +61,7 @@ export default function ReceiveContact({ navigation }) {
                 {
                     allReceiveContact.length ?
                         allReceiveContact.map((c, i) => (
-                            <ListItem.Swipeable key={i}
+                            <ListItem key={i}
                             >
                                 <Avatar rounded size={50} source={{ uri: c.avartar }} />
                                 <ListItem.Content >
@@ -86,6 +86,19 @@ export default function ReceiveContact({ navigation }) {
                                                     color: '#ffffff'
                                                 }
                                             }
+                                            onPress={() => {
+                                                dispatch(actions.acceptContact(c.id, 1))
+                                                Alert.alert(
+                                                    "Bạn bè",
+                                                    "Đã trở thành bạn bè với " + c.firstname + " " + c.lastname,
+                                                    [
+                                                        {
+                                                            text: "Xác nhận",
+                                                            style: "default"
+                                                        },
+                                                    ]
+                                                );
+                                            }}
                                         />
                                         <Button type="outline" title="Từ chối"
                                             containerStyle={{
@@ -105,11 +118,24 @@ export default function ReceiveContact({ navigation }) {
                                                     color: 'black'
                                                 }
                                             }
+                                            onPress={() => {
+                                                dispatch(actions.deleteReceiveContact(1, c.id))
+                                                Alert.alert(
+                                                    "Bạn bè",
+                                                    "Đã từ chối trở thành bạn bè với " + c.firstname + " " + c.lastname,
+                                                    [
+                                                        {
+                                                            text: "Xác nhận",
+                                                            style: "default"
+                                                        },
+                                                    ]
+                                                );
+                                            }}
                                         />
                                     </View>
 
                                 </ListItem.Content>
-                            </ListItem.Swipeable>
+                            </ListItem>
                         ))
                         : <View style={{ alignItems: 'center' }}>
                             <Text style={{ paddingTop: 40 }}>Chưa nhận lời mời kết bạn nào !</Text>
