@@ -6,12 +6,13 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Image,
   View,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { ListItem, Avatar } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../../../action/contact.action";
+import * as actions from "../../../action/user.action";
 const styles = StyleSheet.create({
   container: {},
   sectionHeader: {
@@ -30,29 +31,41 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function ContactList({ navigation }) {
+export default function Profile1({ navigation }) {
   const dispatch = useDispatch();
-  const allContact = useSelector((state) => state.contact.listcontact);
+  const [userProfile, setUserProfile] = useState([]);
+  const [image, setImage] = useState(null);
+  const [firstname, setFirstName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const user = useSelector((state) => state.user.userAuth);
+  const profile = useSelector((state) => state.user.userById);
   const [refreshing, setRefreshing] = useState(false);
-  const [contact, setContact] = useState([]);
-  const wait = (timeout) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
-  };
   useEffect(() => {
-    dispatch(actions.fetchAllContact(1));
+    dispatch(actions.findByIdUser(user));
   }, []);
   useEffect(() => {
-    if (allContact) {
-      setContact(allContact);
+    if (profile != undefined || profile != null) {
+      setUserProfile(profile);
     }
-  }, [allContact]);
-  console.log(contact);
-  const toReceive = () => {
-    navigation.navigate("MyContact");
+  }, [profile]);
+  useEffect(() => {
+    if (userProfile !== undefined) {
+      //setUserId(userProfile.id);
+      setImage(userProfile.avartar);
+      setFirstName(userProfile.firstname);
+      setLastName(userProfile.lastname);
+      //   setPhone(userProfile.phone);
+      //   setGender(userProfile.gender);
+      //   setDate(userProfile.birthday);
+    }
+  }, [userProfile]);
+  const logout = () => {
+    dispatch(actions.userlogout);
+    console.log("id", user.id);
+    navigation.navigate("Login");
   };
-
-  const toDevice = () => {
-    navigation.navigate("DeviceContact");
+  const changeEdit = () => {
+    navigation.navigate("EditProfile");
   };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
@@ -67,26 +80,43 @@ export default function ContactList({ navigation }) {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
-          <TouchableOpacity onPress={toReceive}>
+          <TouchableOpacity onPress={changeEdit}>
             <ListItem
               containerStyle={{
                 marginTop: -5,
               }}
             >
-              <Icon
+              {/* <Icon
                 reverse={true}
                 reverseColor=""
                 name="user-plus"
                 type="font-awesome-5"
                 color="#5cc8d7"
                 size={20}
+              /> */}
+              <Avatar
+                rounded
+                source={{
+                  uri: image,
+                }}
+                size="large"
               />
               <ListItem.Content>
-                <ListItem.Title>{"Lời mời kết bạn"}</ListItem.Title>
+                <ListItem.Title>{firstname + " " + lastname}</ListItem.Title>
+                <Text>Sửa thông tin cá nhân</Text>
               </ListItem.Content>
+              <Icon
+                style={{}}
+                reverse={true}
+                reverseColor=""
+                name="user-edit"
+                type="font-awesome-5"
+                color="#5cc8d7"
+                size={12}
+              />
             </ListItem>
           </TouchableOpacity>
-          <TouchableOpacity onPress={toDevice}>
+          <TouchableOpacity onPress={logout}>
             <ListItem
               topDivider
               containerStyle={{
@@ -96,33 +126,16 @@ export default function ContactList({ navigation }) {
               <Icon
                 reverse={true}
                 reverseColor=""
-                name="address-book"
+                name="sign-out-alt"
                 type="font-awesome-5"
                 color="#447d00"
                 size={20}
               />
               <ListItem.Content>
-                <ListItem.Title>{"Duyệt trong danh bạ"}</ListItem.Title>
+                <ListItem.Title>{"Đăng xuất"}</ListItem.Title>
               </ListItem.Content>
             </ListItem>
           </TouchableOpacity>
-          <Text style={{ padding: 10 }}>Tất cả liên hệ</Text>
-          {contact.map((c, i) => (
-            <ListItem key={i}>
-              <Avatar rounded size={50} source={{ uri: c.avartar }} />
-              <ListItem.Content>
-                <ListItem.Title>
-                  {c.firstname + " " + c.lastname}
-                </ListItem.Title>
-              </ListItem.Content>
-              <Icon
-                name="comment-dots"
-                type="font-awesome-5"
-                color="gray"
-                size={20}
-              />
-            </ListItem>
-          ))}
         </ScrollView>
       </View>
     </View>

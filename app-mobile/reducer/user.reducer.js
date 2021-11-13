@@ -16,7 +16,6 @@ const initialState = {
   register: null,
   updateUser: null,
   // login: null,
-
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -28,35 +27,19 @@ export const userReducer = (state = initialState, action) => {
       };
     }
 
-    case "AUTHENTICATE_SIGNAL": {
-      if (AsyncStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
-        AsyncStorage.setItem(
-          SET_USER_AUTHENTICATE,
-          JSON.stringify(action.userExitedid)
-        );
-        return {
-          ...state,
-          userAuth: action.userExitedid,
-        };
-      }
-      if (AsyncStorage.getItem(SET_USER_AUTHENTICATE) !== action.userExitedid) {
-        AsyncStorage.setItem(
-          SET_USER_AUTHENTICATE,
-          JSON.stringify(action.userExitedid)
-        );
-        return {
-          ...state,
-          userAuth: action.userExitedid,
-        };
-      }
-    }
-    case "LOGOUT_SIGNAL": {
-      AsyncStorage.setItem(SET_USER_AUTHENTICATE, JSON.stringify());
+    case "UPDATEBYIDUSER": {
       return {
         ...state,
-        userAuth: "undefined",
+        userById: action.payload,
       };
     }
+    case "FINDUSERBYID": {
+      return {
+        ...state,
+        userById: action.payload,
+      };
+    }
+
     case "AUTHENTICATE_SIGNAL": {
       if (AsyncStorage.getItem(SET_USER_AUTHENTICATE) === "undefined") {
         AsyncStorage.setItem(
@@ -84,7 +67,7 @@ export const userReducer = (state = initialState, action) => {
       AsyncStorage.setItem(SET_USER_AUTHENTICATE, JSON.stringify());
       return {
         ...state,
-        userAuth: "undefined",
+        userAuth: undefined,
       };
     }
 
