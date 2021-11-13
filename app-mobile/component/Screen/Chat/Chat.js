@@ -1,20 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import * as React from "react";
+import { ScrollView, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native";
+import { ListItem, Avatar, Icon, SpeedDial } from "react-native-elements";
+import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  View,
-  FlatList,
-} from "react-native";
-import {
-  ListItem,
-  Avatar,
-  Icon,
-  SpeedDial,
-  Header,
-} from "react-native-elements";
-
+import * as actions from "../../../action/user.action";
 import * as actions from "../../../action/user.action";
 import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
 

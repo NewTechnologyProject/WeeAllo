@@ -3,13 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="7d9496a6-f8d9-48bd-a536-54568e402e65" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ChatComponent/Message-Input.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ChatComponent/Message-Input.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ChatComponent/Message.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ChatComponent/Message.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/ChatComponent/MessageContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/pages/ChatComponent/MessageContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-mobile/component/Screen/Chat/ChatScreen/ChatContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/component/Screen/Chat/ChatScreen/ChatContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-mobile/services/api.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/services/api.service.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/controller/RoomChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/controller/RoomChatController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/models/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/models/Message.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/services/AmazonClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/services/AmazonClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +44,8 @@
       <workItem from="1633315817474" duration="813000" />
       <workItem from="1635047566275" duration="3183000" />
       <workItem from="1636535189891" duration="11000" />
+      <workItem from="1636715135534" duration="202000" />
+      <workItem from="1636715490894" duration="233000" />
     </task>
     <servers />
   </component>
