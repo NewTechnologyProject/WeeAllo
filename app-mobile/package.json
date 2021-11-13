@@ -37,6 +37,7 @@
     "react-native": "^0.66.1",
     "react-native-contacts": "^7.0.2",
     "react-native-datepicker": "^1.7.2",
+    "react-native-custom-qr-codes-expo": "^2.2.0",
     "react-native-document-picker": "^7.1.1",
     "react-native-easy-chat-ui": "^0.4.14",
     "react-native-elements": "^3.4.2",
@@ -45,6 +46,7 @@
     "react-native-image-pan-zoom": "^2.1.12",
     "react-native-image-zoom-viewer": "^3.0.1",
     "react-native-pager-view": "5.4.6",
+    "react-native-qrcode-svg": "^6.1.1",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "~3.8.0",
     "react-native-tab-view": "^3.1.1",
@@ -53,7 +55,8 @@
     "react-qr-reader": "^2.2.1",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
-    "redux-thunk": "^2.4.0"
+    "redux-thunk": "^2.4.0",
+    "expo-barcode-scanner": "~11.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
