@@ -1,11 +1,20 @@
-import * as React from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
-import { StyleSheet } from "react-native";
-import { ListItem, Avatar, Icon, SpeedDial } from "react-native-elements";
-import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../../action/user.action";
+import {
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  FlatList,
+} from "react-native";
+import {
+  ListItem,
+  Avatar,
+  Icon,
+  SpeedDial,
+  Header,
+} from "react-native-elements";
+
 import * as actions from "../../../action/user.action";
 import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
 
@@ -13,7 +22,7 @@ export default function Chat({ navigation }) {
   const [textSearch, setTextSearch] = useState("");
   const [open, setOpen] = useState(false);
 
-  const userId = "1";
+  const userId = "2";
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.user.listRooms);
 
