@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -16,6 +17,9 @@ import Register from "../Authentication/Register";
 import ForgotPass from "../Authentication/ForgotPass";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatContent from "../Screen/Chat/ChatScreen/ChatContent";
+
+// #098524
+
 export default function TabRoute({ navigation }) {
   const [index, setIndex] = useState(0);
   const [getValue, setGetValue] = useState(null);
@@ -34,11 +38,11 @@ export default function TabRoute({ navigation }) {
       screenOptions={{
         headerShown: false,
         headerStyle: {
-          backgroundColor: "#098524",
+          backgroundColor: "#37b24d",
         },
         headerTintColor: "white",
-        tabBarActiveTintColor: "#098524",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: "#37b24d",
+        tabBarInactiveTintColor: "#868e96",
         tabBarShowLabel: true,
         size: 20,
         tabBarItemStyle: {
@@ -47,7 +51,7 @@ export default function TabRoute({ navigation }) {
       }}
     >
       <Tab.Screen
-        name="Tin nhắn"
+        name="Tin Nhắn"
         component={Chat}
         options={{
           tabBarIcon: ({ focused }) => {
@@ -55,7 +59,7 @@ export default function TabRoute({ navigation }) {
               <Icon
                 name="comment"
                 type="font-awesome-5"
-                color={focused ? "#098524" : "gray"}
+                color={focused ? "#37b24d" : "#868e96"}
                 size={focused ? 21 : 17}
               />
             );
@@ -71,7 +75,7 @@ export default function TabRoute({ navigation }) {
               <Icon
                 name="address-book"
                 type="font-awesome-5"
-                color={focused ? "#098524" : "gray"}
+                color={focused ? "#37b24d" : "#868e96"}
                 size={focused ? 21 : 17}
               />
             );
@@ -87,7 +91,7 @@ export default function TabRoute({ navigation }) {
               <Icon
                 name="user"
                 type="font-awesome-5"
-                color={focused ? "#098524" : "gray"}
+                color={focused ? "#37b24d" : "#868e96"}
                 size={focused ? 21 : 17}
               />
             );
