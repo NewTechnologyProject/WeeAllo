@@ -8,7 +8,7 @@ import ContactGroupList from "./Tab/ContactGroupList";
 import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
 import * as actions from "../../../action/contact.action"
 import { Icon } from "react-native-elements/dist/icons/Icon";
-import { QRCode } from 'react-native-custom-qr-codes-expo';
+// import { QRCode } from 'react-native-custom-qr-codes-expo';
 const Tab = createMaterialTopTabNavigator();
 const styles = StyleSheet.create({
   container: {
