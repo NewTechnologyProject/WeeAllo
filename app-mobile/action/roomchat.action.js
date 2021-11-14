@@ -14,7 +14,6 @@ export const fetchAllMessages = (roomId) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
-//Get list messages
 export const fetchAllMembers = (roomId) => (dispatch) => {
   apiService
     .roomchat()
@@ -26,4 +25,37 @@ export const fetchAllMembers = (roomId) => (dispatch) => {
       });
     })
     .catch((error) => console.log(error));
+};
+
+//Add new group chat
+export const addNewGroupChat = (newGroupChat) => {
+  return apiService.roomchat().newGroupChat(newGroupChat);
+};
+
+//Upload image to aws s3
+export const uploadAvatar = (formData) => {
+  return apiService.upload().image(formData);
+};
+
+//Delete group chat
+export const deleteRoomChat = (roomId) => {
+  return apiService.roomchat().deleteRoom(roomId);
+};
+
+//Get list members
+export const fetchAllMembersToGetName = (roomId) => {
+  return apiService.roomchat().listMembers(roomId);
+};
+
+//Update creator
+export const updateCreator = (roomId, creator) => {
+  apiService
+    .roomchat()
+    .updateCreator(roomId, creator)
+    .then((response) => {
+      console.log("success");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };

@@ -16,15 +16,21 @@ import {
 } from "react-native-elements";
 
 import * as actions from "../../../action/user.action";
+import {
+  fetchAllMembersToGetName,
+  fetchAllMembers,
+} from "../../../action/roomchat.action";
 import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
+import { set } from "react-hook-form";
 
-export default function Chat({ navigation }) {
+export default function Chat({ navigation, route }) {
   const [textSearch, setTextSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const [listRooms, setListRooms] = useState([]);
 
   const userId = "2";
   const dispatch = useDispatch();
-  const listRooms = useSelector((state) => state.user.listRooms);
+  const rooms = useSelector((state) => state.user.listRooms);
 
   const loadRoomsHandler = useCallback(() => {
     dispatch(actions.fetchAllRoom(userId));
@@ -32,15 +38,75 @@ export default function Chat({ navigation }) {
 
   useEffect(() => {
     loadRoomsHandler();
-  }, [loadRoomsHandler]);
+  }, [loadRoomsHandler, route.params]);
 
-  const toChatContent = (room) => {
+  //Set members on room to get name
+  const setListMembersOnRoom = useCallback(
+    (rooms) => {
+      if (rooms.length > 0) {
+        rooms.map(async (room) => {
+          let members = [];
+
+          const res = await fetchAllMembersToGetName(room.id);
+          const data = res.data;
+
+          members = data;
+
+          const newRoom = { ...room, userGroupList: members };
+          setListRooms((prevState) => {
+            return [...prevState, newRoom];
+          });
+        });
+      }
+    },
+    [fetchAllMembersToGetName]
+  );
+
+  useEffect(() => {
+    setListRooms([]);
+    setListMembersOnRoom(rooms);
+  }, [setListMembersOnRoom, rooms]);
+
+  //show name depend on group members
+  const showNameHandler = (roomId) => {
+    let name = "Group";
+
+    if (listRooms.length > 0) {
+      const neededRoom = listRooms.find((room) => room.id === roomId);
+      if (
+        neededRoom &&
+        neededRoom.userGroupList &&
+        neededRoom.userGroupList.length > 2
+      ) {
+        const members = neededRoom.userGroupList.filter(
+          (member) => member.id !== Number(userId)
+        );
+        name = `${members[0].firstname}, ${members[1].firstname},...`;
+      } else if (
+        neededRoom &&
+        neededRoom.userGroupList &&
+        neededRoom.userGroupList.length === 2
+      ) {
+        name =
+          neededRoom.userGroupList[0].id === Number(userId)
+            ? `${neededRoom.userGroupList[1].firstname} ${neededRoom.userGroupList[1].lastname}`
+            : `${neededRoom.userGroupList[0].firstname} ${neededRoom.userGroupList[0].lastname}`;
+      }
+    }
+    return name;
+  };
+
+  const toChatContent = (room, name) => {
     dispatch({ type: "SET ACTIVE ROOM", payload: { ...room } });
-    navigation.navigate("ChatContent");
+    navigation.navigate("ChatContent", { name: name });
   };
 
   const updateSearch = (search) => {
     setTextSearch(search);
+  };
+
+  const toAddGroup = () => {
+    navigation.navigate("AddGroup");
   };
 
   return (
@@ -84,28 +150,38 @@ export default function Chat({ navigation }) {
       {/* List rooms */}
       <View>
         <FlatList
-          data={listRooms}
-          renderItem={(item) => (
-            <TouchableOpacity>
-              <ListItem onPress={toChatContent.bind(this, item.item)}>
-                <Avatar
-                  icon={{ name: "users", type: "font-awesome" }}
-                  rounded
-                  size={50}
-                  source={{
-                    uri: `${item.item.avatar ? item.item.avatar : "dummy"}`,
-                  }}
-                />
-                <ListItem.Content>
-                  <ListItem.Title>
-                    {item.item.roomName ? item.item.roomName : "room"}
-                  </ListItem.Title>
-                  <ListItem.Subtitle>{item.item.roomName}</ListItem.Subtitle>
-                </ListItem.Content>
-                <ListItem.Chevron />
-              </ListItem>
-            </TouchableOpacity>
-          )}
+          data={rooms}
+          renderItem={(item) => {
+            let groupName = item.item.roomName;
+            if (!item.item.roomName) {
+              groupName = showNameHandler(item.item.id);
+            }
+            return (
+              <TouchableOpacity>
+                <ListItem
+                  onPress={toChatContent.bind(this, item.item, groupName)}
+                >
+                  <Avatar
+                    icon={{ name: "users", type: "font-awesome" }}
+                    rounded
+                    size={50}
+                    source={{
+                      uri: `${item.item.avatar ? item.item.avatar : "dummy"}`,
+                    }}
+                  />
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      {item.item.roomName ? item.item.roomName : groupName}
+                    </ListItem.Title>
+                    <ListItem.Subtitle>
+                      {item.item.roomName ? item.item.roomName : "room"}
+                    </ListItem.Subtitle>
+                  </ListItem.Content>
+                  <ListItem.Chevron />
+                </ListItem>
+              </TouchableOpacity>
+            );
+          }}
         />
       </View>
 
@@ -114,8 +190,8 @@ export default function Chat({ navigation }) {
         isOpen={open}
         icon={{ name: "add", color: "#fff" }}
         openIcon={{ name: "close", color: "#fff" }}
-        onOpen={() => setOpen(!open)}
-        onClose={() => setOpen(!open)}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
         color={"#37b24d"}
         style={styles.btnAdd}
       >
@@ -143,7 +219,7 @@ export default function Chat({ navigation }) {
             />
           }
           title="Thêm nhóm chat"
-          onPress={() => console.log("Delete Something")}
+          onPress={() => toAddGroup()}
         />
       </SpeedDial>
     </View>

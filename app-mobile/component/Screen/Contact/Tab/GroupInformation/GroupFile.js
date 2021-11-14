@@ -1,33 +1,68 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Image, Icon } from "react-native-elements";
+import { Icon, ListItem } from "react-native-elements";
 import {
   FlatList,
   Text,
   TouchableOpacity,
   View,
   StyleSheet,
-  ActivityIndicator,
 } from "react-native";
 
 import { FlatGrid } from "react-native-super-grid";
 import { Header } from "react-native-elements/dist/header/Header";
 
-const GroupMedia = ({ navigation }) => {
+const GroupFile = ({ navigation }) => {
   const listMessages = useSelector((state) => state.roomchat.listMessages);
-  const [listMedia, setListMedia] = useState([]);
+  const [listFiles, setListFiles] = useState([]);
 
   useEffect(() => {
-    setListMedia([]);
+    setListFiles([]);
 
     for (let message of listMessages) {
-      if (message.image) {
-        setListMedia((prevState) => {
-          return [...prevState, message.image];
+      if (message.file) {
+        setListFiles((prevState) => {
+          return [...prevState, { id: message.id, file: message.file }];
         });
       }
     }
   }, [listMessages]);
+
+  const getFileName = (str) => {
+    const str1 = str.split("/")[3];
+    const str2 = str1.substring(str1.indexOf("-") + 1);
+    return str2;
+  };
+
+  const getType = (str) => {
+    const str1 = str.split(".")[5];
+    return str1;
+  };
+
+  const getIconType = (url) => {
+    const type = getType(url);
+    let value;
+    switch (type) {
+      case "docx":
+        value = "file-word-o";
+        break;
+      case "pdf":
+        value = "file-pdf-o";
+        break;
+      case "ppt":
+        value = "file-powerpoint-o";
+        break;
+      case "xls":
+      case "csv":
+        value = "file-excel-o";
+        break;
+
+      default:
+        value = "file";
+        break;
+    }
+    return value;
+  };
 
   const backToGroupInformation = () => {
     navigation.navigate("GroupInformation");
@@ -39,7 +74,7 @@ const GroupMedia = ({ navigation }) => {
         statusBarProps={{ barStyle: "light-content" }}
         barStyle="light-content"
         centerComponent={{
-          text: "Hình ảnh/Video",
+          text: "Tập tin",
           style: { color: "#fff" },
         }}
         leftComponent={
@@ -58,27 +93,32 @@ const GroupMedia = ({ navigation }) => {
         }}
       />
 
-      {listMedia.length <= 0 && (
+      {listFiles.length <= 0 && (
         <View style={styles.textContainer}>
-          <Text style={styles.text}>Chưa có hình ảnh/Video</Text>
+          <Text style={styles.text}>Chưa có tập tin</Text>
         </View>
       )}
 
-      {listMedia.length > 0 && (
-        <View style={styles.images}>
-          <FlatGrid
-            itemDimension={130}
-            data={listMedia}
-            style={styles.gridView}
+      {listFiles.length > 0 && (
+        <View>
+          <FlatList
+            data={listFiles}
             renderItem={(item) => {
               return (
-                <View style={styles.imageContainer}>
-                  <Image
-                    style={styles.image}
-                    source={{ uri: item.item }}
-                    PlaceholderContent={<ActivityIndicator />}
-                  />
-                </View>
+                <TouchableOpacity>
+                  <ListItem bottomDivider>
+                    <Icon
+                      name={getIconType(item.item.file)}
+                      type={"font-awesome"}
+                      color="#868e96"
+                    />
+                    <ListItem.Content>
+                      <ListItem.Title>
+                        {getFileName(item.item.file)}
+                      </ListItem.Title>
+                    </ListItem.Content>
+                  </ListItem>
+                </TouchableOpacity>
               );
             }}
           />
@@ -116,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default GroupMedia;
+export default GroupFile;

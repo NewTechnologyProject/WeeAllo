@@ -48,6 +48,23 @@ export const fetchAllRoom = (userId) => (dispatch) => {
       console.log(err);
     });
 };
+
+//Get all friends
+export const fetchAllFriend = (userId) => (dispatch) => {
+  apiService
+    .user()
+    .listFriend(userId)
+    .then((response) => {
+      dispatch({
+        type: "LIST FRIENDS",
+        payload: response.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 //find user by id
 export const findByIdUser = (id) => (dispatch) => {
   apiService
@@ -61,6 +78,7 @@ export const findByIdUser = (id) => (dispatch) => {
     })
     .catch((err) => console.log(err));
 };
+
 //update user by id
 export const updateUserById = (userChat, id) => (dispatch) => {
   apiService

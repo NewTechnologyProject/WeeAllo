@@ -6,6 +6,8 @@ import axios from "axios";
 //const baseApi = "http://192.168.1.17:4000/api/";
 //const baseApi = "http://192.168.43.141:4000/api/";
 const baseApi = "http://192.168.1.8:4000/api/";
+// const baseApi = "http://192.168.1.12:4000/api/";
+
 export default {
   user(url = baseApi + "user/") {
     return {

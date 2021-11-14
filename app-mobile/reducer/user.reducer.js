@@ -79,6 +79,14 @@ export const userReducer = (state = initialState, action) => {
       };
     }
 
+    //Get list friends
+    case "LIST FRIENDS": {
+      return {
+        ...state,
+        listFriends: [...action.payload],
+      };
+    }
+
     default:
       return state;
   }

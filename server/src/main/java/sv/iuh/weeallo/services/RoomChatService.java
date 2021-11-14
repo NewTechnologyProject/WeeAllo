@@ -17,11 +17,14 @@ import java.util.Optional;
 public class RoomChatService {
     private RoomChatRepository roomChatRepository;
     private UserGroupRepository userGroupRepository;
+    private MessageRepository messageRepository;
 
     @Autowired
-    public RoomChatService(RoomChatRepository roomChatRepository, UserGroupRepository userGroupRepository) {
+    public RoomChatService(RoomChatRepository roomChatRepository, UserGroupRepository userGroupRepository,
+                           MessageRepository messageRepository) {
         this.roomChatRepository = roomChatRepository;
         this.userGroupRepository = userGroupRepository;
+        this.messageRepository = messageRepository;
     }
 
     public RoomChat getById(Long roomId) {
@@ -73,7 +76,8 @@ public class RoomChatService {
         try {
             roomChatRepository.deleteById(roomId);
             userGroupRepository.deleteUserGroupByRoomId(roomId);
-        } catch (Exception e) {
+            messageRepository.deleteMessageByRoomId(roomId);
+        }catch (Exception e){
             System.out.println(e.getMessage());
         }
     }

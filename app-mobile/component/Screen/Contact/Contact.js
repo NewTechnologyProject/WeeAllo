@@ -1,12 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  ScrollView,
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import ContactList from "./Tab/ContactList";
 import { Avatar, Badge, Header, ListItem } from "react-native-elements";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import ContactGroupList from "./Tab/ContactGroupList";
 import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
-import * as actions from "../../../action/contact.action"
+import * as actions from "../../../action/contact.action";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 
 const Tab = createMaterialTopTabNavigator();
@@ -32,6 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#37b24d",
   },
 });
+
 export default function Contact({ navigation }) {
   const dispatch = useDispatch();
   const [textSearch, setTextSearch] = useState("");
@@ -39,9 +48,9 @@ export default function Contact({ navigation }) {
   const [listSearchFriend, setListSearch] = useState([]);
   useEffect(() => {
     if (listSearch) {
-      setListSearch(listSearch)
+      setListSearch(listSearch);
     }
-  })
+  });
   const renderStatus = (status) => {
     if (status === 'none') {
       return (
@@ -65,10 +74,14 @@ export default function Contact({ navigation }) {
     }
     else if (status === 'you') {
       return (
-        <Badge containerStyle={{ fontSize: 10 }} value="Tài khoản của bạn" status="success" />
-      )
+        <Badge
+          containerStyle={{ fontSize: 10 }}
+          value="Tài khoản của bạn"
+          status="success"
+        />
+      );
     }
-  }
+  };
   const toDetail = (id) => {
     navigation.navigate('DetailContact', { idDetail: id })
   }
@@ -87,7 +100,7 @@ export default function Contact({ navigation }) {
             cancelButtonTitle=""
             placeholder="Tìm bạn bè..."
             onChangeText={(e) => {
-              setTextSearch(e)
+              setTextSearch(e);
               dispatch(actions.searchContactMobile(1, e));
             }}
             value={textSearch}
@@ -190,11 +203,8 @@ export default function Contact({ navigation }) {
                   </View>
               }
             </ScrollView>
-
           </View>
-
       }
-
     </View>
   );
 }

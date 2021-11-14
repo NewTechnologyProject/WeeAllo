@@ -120,7 +120,7 @@ export default function Profile1({ navigation }) {
             <ListItem
               topDivider
               containerStyle={{
-                marginTop: -5,
+                marginTop: -10,
               }}
             >
               <Icon
@@ -129,10 +129,12 @@ export default function Profile1({ navigation }) {
                 name="sign-out-alt"
                 type="font-awesome-5"
                 color="#447d00"
-                size={20}
+                size={25}
               />
-              <ListItem.Content>
-                <ListItem.Title>{"Đăng xuất"}</ListItem.Title>
+              <ListItem.Content style={{ marginLeft: 21 }}>
+                <ListItem.Title style={{ fontSize: 16 }}>
+                  {"Đăng xuất"}
+                </ListItem.Title>
               </ListItem.Content>
             </ListItem>
           </TouchableOpacity>

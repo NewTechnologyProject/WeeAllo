@@ -48,8 +48,9 @@ export default function Login({ navigation }) {
       );
     } else {
       dispatch(isAuthenticated(user.id));
-      navigation.navigate("TabRoute", { screen: "Tin nhắn" });
+      navigation.navigate("TabRoute", { screen: "Tin Nhắn" });
     }
+    console.log("user id", user.id);
 
     //navigation.navigate("TabRoute");
   };
