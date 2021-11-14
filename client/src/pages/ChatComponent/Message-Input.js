@@ -19,16 +19,7 @@ export const MessageInput = (props) => {
   const userId = localStorage.getItem(SET_USER_AUTHENTICATE);
   const user = useSelector((state) => state.customer.userAuth);
   const today = new Date();
-  const time =
-    today.getFullYear() +
-    "-" +
-    (today.getMonth() + 1) +
-    "-" +
-    today.getDate() +
-    " " +
-    today.getHours() +
-    ":" +
-    today.getMinutes();
+  const time = null;
   const dispatch = useDispatch();
 
   const profile = useSelector((state) => state.customer.userById);
@@ -77,8 +68,8 @@ export const MessageInput = (props) => {
         image: null,
         file: null,
         roomChatId: props.activeRoom,
-        time,
-        userId,
+        time: time,
+        userId: Number(userId),
       };
 
       const messageTextRealTime = {
@@ -86,7 +77,7 @@ export const MessageInput = (props) => {
         content: message,
         image: null,
         file: null,
-        time,
+        time: time,
         roomChatId: {
           id: props.activeRoom,
         },
@@ -110,15 +101,15 @@ export const MessageInput = (props) => {
       image: props.image,
       file: props.file,
       roomChatId: props.activeRoom,
-      time,
-      userId,
+      time: time,
+      userId: Number(userId),
     };
     const messageTextRealTime = {
       status: "send",
       content: message,
       image: props.image,
       file: props.file,
-      time,
+      time: time,
       roomChatId: {
         id: props.activeRoom,
       },

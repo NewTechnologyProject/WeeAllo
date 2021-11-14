@@ -9,30 +9,19 @@ import {
   Text,
   Image,
   Keyboard,
-  Modal,
 } from "react-native";
 
-import {
-  GiftedChat,
-  Bubble,
-  Actions,
-  Composer,
-  Send,
-  renderChatEmpty,
-  MessageImage,
-  renderChatFooter,
-} from "react-native-gifted-chat";
+import { GiftedChat, Composer, Send } from "react-native-gifted-chat";
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../action/roomchat.action";
 import * as action from "../../../../action/message.action";
 
 import EmojiSelector, { Categories } from "react-native-emoji-selector";
-// import DocumentPicker from 'react-native-document-picker'
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
-import ImageViewer from "react-native-image-zoom-viewer";
 import axios from "axios";
 
+const URL = "ws://192.168.1.12:3030";
 export default function ChatContent({ navigation, route }) {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -49,15 +38,40 @@ export default function ChatContent({ navigation, route }) {
   const [image, setImage] = useState();
   const userId = "2";
 
+  LogBox.ignoreLogs(["Warning: ..."]);
+
   if (route.params) {
     const { name } = route.params;
   }
 
-  // const onSend = useCallback((messages = []) => {
-  //   setMessages((previousMessages) =>
-  //     GiftedChat.append(previousMessages, messages)
-  //   );
-  // }, []);
+  //Real time
+  // const [ws, setWs] = useState(new WebSocket(URL));
+  // useEffect(() => {
+  //   ws.onopen = () => {
+  //     console.log("connected");
+  //   };
+
+  //   ws.onmessage = (evt) => {
+  //     const message = JSON.parse(evt.data);
+  //     const gifted_message = {
+  //       _id: message.id,
+  //       text: message.content ? message.content : "",
+  //       createdAt: message.time,
+  //       image: message.image ? message.image : null,
+  //       user: {
+  //         _id: message.userId.id,
+  //         name: `${message.userId.firstname} ${message.userId.lastname}`,
+  //         avatar: message.userId.avatar ? message.userId.avatar : "",
+  //       },
+  //     };
+  //     setMessages((prevState) => [...prevState, gifted_message]);
+  //   };
+
+  //   ws.onclose = () => {
+  //     console.log("disconnected");
+  //     setWs(new WebSocket(URL));
+  //   };
+  // }, [ws]);
 
   const onSend = useCallback((messages = []) => {
     setMessages((previousMessages) =>
@@ -65,10 +79,6 @@ export default function ChatContent({ navigation, route }) {
     );
     sentMessage(messages[0], null, null);
     // handleFile(messages[0]);
-  }, []);
-
-  useEffect(() => {
-    LogBox.ignoreLogs(["Animated: `useNativeDriver`"]);
   }, []);
 
   const sentMessage = (message, file, image) => {
@@ -83,7 +93,9 @@ export default function ChatContent({ navigation, route }) {
     };
     console.log(messageText);
     dispatch(action.addMessage(messageText));
+    // ws.send(JSON.stringify(messageText));
   };
+
   // =======================================KEYBOARD===============================================
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -120,7 +132,7 @@ export default function ChatContent({ navigation, route }) {
             {
               _id: message.id,
               text: message.content ? message.content : "",
-              createdAt: message.time,
+              createdAt: new Date(),
               image: message.image ? message.image : null,
               user: {
                 _id: message.userId.id,
@@ -141,41 +153,9 @@ export default function ChatContent({ navigation, route }) {
     }
   }, [activeRoom]);
 
-  // const backToAllChat = () => {
-  //   navigation.navigate("TabRoute");
-  // };
-
   const toGroupInformation = () => {
     navigation.navigate("GroupInformation");
   };
-
-  // const styles = StyleSheet.create({
-  //   avatar: {
-  //     borderRadius: 1,
-  //   },
-  //   container: {
-  //     flex: 1,
-  //   },
-  //   chatInput: {
-  //     position: "absolute",
-  //     left: 0,
-  //     right: 0,
-  //     bottom: 0,
-  //     backgroundColor: "white",
-  //     height: 55,
-  //     borderWidth: 1,
-  //     borderColor: "white",
-  //     borderTopColor: "#D8D8D8",
-  //     flexDirection: "row",
-  //   },
-  //   footer: {
-  //     position: "absolute",
-  //     backgroundColor: "blue",
-  //     height: 150,
-  //     width: `100%`,
-  //     bottom: 0
-  //   }
-  // });
 
   // =================================INPUT CHAT=========================================
   const renderComposer = (props) => {
