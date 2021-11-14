@@ -12,6 +12,7 @@ import {
   Image,
   Alert,
   ToastAndroid,
+  ActivityIndicator,
 } from "react-native";
 import DatePicker from "react-native-datepicker";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -22,7 +23,6 @@ import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { Header } from "react-native-elements/dist/header/Header";
 import axios from "axios";
-import { Buffer } from "buffer";
 
 export default function EditProfile({ navigation }) {
   const BottomSheet = ({ animation, onCancel }) => {
@@ -92,6 +92,7 @@ export default function EditProfile({ navigation }) {
     );
   };
   const dispatch = useDispatch();
+  var btnDisable = false;
   const imageAvatar = useRef(null);
   const [userProfile, setUserProfile] = useState([]);
   const [userId, setUserId] = useState();
@@ -101,6 +102,7 @@ export default function EditProfile({ navigation }) {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
   const [animationValue, setAnimationValue] = useState(-1000);
   const user = useSelector((state) => state.user.userAuth);
   const profile = useSelector((state) => state.user.userById);
@@ -149,11 +151,28 @@ export default function EditProfile({ navigation }) {
     ToastAndroid.show("Cập nhật thông tin thành công!", ToastAndroid.SHORT);
   }
 
+  function onLoading() {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }
+
   const onUpdate = (e) => {
     e.preventDefault();
-    dispatch(actions.updateUserById(initialFieldValues, userId));
-    //navigation.navigate("Profile1", { screen: "Profile1" });
-    showToast();
+    if (firstname === "" || lastname === "") {
+      Alert.alert("Cảnh báo", "Vui lòng nhập đầy đủ thông tin", [
+        {
+          text: "Xác nhận",
+        },
+      ]);
+    } else {
+      dispatch(actions.updateUserById(initialFieldValues, userId));
+      onLoading();
+      setTimeout(() => {
+        Alert.alert("Cập nhật thông tin thành công ! ");
+      }, 2000);
+    }
   };
 
   const showAnimation = useRef(new Animated.Value(animationValue)).current;
@@ -237,15 +256,40 @@ export default function EditProfile({ navigation }) {
   const backToProfile = () => {
     navigation.navigate("TabRoute");
   };
+  // function onDisable() {
+  //   if (firstname === "" && lastname === "") {
+  //     return (btnDisable = true);
+  //   } else {
+  //     return (btnDisable = false);
+  //   }
+  // }
 
   return (
     <>
+      <Header
+        statusBarProps={{ barStyle: "light-content" }}
+        barStyle="light-content"
+        leftComponent={
+          <Icon
+            name="chevron-left"
+            type="font-awesome-5"
+            color={"green"}
+            size={40}
+            onPress={backToProfile}
+          />
+        }
+      />
+
       <BottomSheet
         onCancel={() => {
           toggleAnimation();
         }}
         animation={showAnimation}
       />
+      <View style={[styles.container2, styles.horizontal]}>
+        <ActivityIndicator animating={loading} size="large" color="#0000ff" />
+      </View>
+
       <View
         style={styles.container}
         onTouchStart={() => {
@@ -257,21 +301,7 @@ export default function EditProfile({ navigation }) {
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <Header
-            statusBarProps={{ barStyle: "light-content" }}
-            barStyle="light-content"
-            leftComponent={
-              <Icon
-                name="chevron-left"
-                type="font-awesome-5"
-                color={"white"}
-                size={40}
-                color="green"
-                onPress={backToProfile}
-              />
-            }
-          />
-          <View style={{ marginTop: -120 }}>
+          <View style={{ marginTop: -380 }}>
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity onPress={() => toggleAnimation()}>
                 <View
@@ -366,7 +396,6 @@ export default function EditProfile({ navigation }) {
                 <Picker.Item label="Nữ" value="Nữ" />
               </Picker>
             </View>
-
             <View style={styles.action}>
               <DatePicker
                 style={{
@@ -400,7 +429,11 @@ export default function EditProfile({ navigation }) {
                 }}
               />
             </View>
-            <TouchableOpacity style={styles.commandButton} onPress={onUpdate}>
+            <TouchableOpacity
+              style={styles.commandButton}
+              //disabled={true}
+              onPress={onUpdate}
+            >
               <Text style={styles.panelButtonTitle1}>Cập nhật</Text>
             </TouchableOpacity>
           </View>
@@ -413,6 +446,24 @@ export default function EditProfile({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  container3: {
+    flex: 1,
+    marginTop: 5,
+  },
+  container2: {
+    //flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 200,
+  },
+  spinnerTextStyle: {
+    color: "#FFF",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
   },
   container1: {
     flex: 1,
