@@ -11,6 +11,9 @@ import DetailContact from "../Screen/Contact/Tab/MyContact/DetailContact";
 import Chat from "../Screen/Chat/Chat";
 import EditProfile from "../Screen/Profile/EditProfile";
 import Profile1 from "../Screen/Profile/Profile1";
+import Scanner from "../Screen/Contact/Tab/Scanner";
+import MyQr from "../Screen/Contact/Tab/MyQr";
+import QrTab from "../Screen/Contact/Tab/QrTab";
 
 export default function MainStack(Stack) {
   return (
@@ -25,6 +28,8 @@ export default function MainStack(Stack) {
       <Stack.Screen name="DeviceContact" component={DeviceContact} />
       <Stack.Screen name="DetailContact" component={DetailContact} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="Scanner" component={Scanner} />
+      <Stack.Screen name="QrTab" component={QrTab} />
     </>
   );
 }

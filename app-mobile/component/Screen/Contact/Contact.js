@@ -8,7 +8,7 @@ import ContactGroupList from "./Tab/ContactGroupList";
 import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
 import * as actions from "../../../action/contact.action"
 import { Icon } from "react-native-elements/dist/icons/Icon";
-// import { QRCode } from 'react-native-custom-qr-codes-expo';
+
 const Tab = createMaterialTopTabNavigator();
 const styles = StyleSheet.create({
   container: {
@@ -37,9 +37,6 @@ export default function Contact({ navigation }) {
   const [textSearch, setTextSearch] = useState("");
   const listSearch = useSelector((state) => state.contact.listSearchMobile);
   const [listSearchFriend, setListSearch] = useState([]);
-  const [change, setChange] = useState(false);
-  const [change1, setChange1] = useState(false);
-  const [change2, setChange2] = useState(false);
   useEffect(() => {
     if (listSearch) {
       setListSearch(listSearch)
@@ -48,9 +45,7 @@ export default function Contact({ navigation }) {
   const renderStatus = (status) => {
     if (status === 'none') {
       return (
-        !change1 ?
-          <Badge containerStyle={{ fontSize: 10 }} value="Chưa là bạn bè" status="error" />
-          : <Badge containerStyle={{ fontSize: 10 }} value="Đã gửi lời mời kết bạn" status="primary" />
+        <Badge containerStyle={{ fontSize: 10 }} value="Chưa là bạn bè" status="error" />
       )
     }
     else if (status === 'friend') {
@@ -60,16 +55,12 @@ export default function Contact({ navigation }) {
     }
     else if (status === 'receive') {
       return (
-        !change2 ?
-          <Badge containerStyle={{ fontSize: 10 }} value="Đã gửi lời mời kết bạn" status="primary" /> :
-          <Badge containerStyle={{ fontSize: 10 }} value="Chưa là bạn bè" status="error" />
+        <Badge containerStyle={{ fontSize: 10 }} value="Đã gửi lời mời kết bạn" status="primary" />
       )
     }
     else if (status === 'send') {
       return (
-        change ? <Badge containerStyle={{ fontSize: 10 }} value="Bạn bè" status="success" />
-          :
-          <Badge containerStyle={{ fontSize: 10 }} value="Đã nhận lời mời kết bạn" status="warning" />
+        <Badge containerStyle={{ fontSize: 10 }} value="Đã nhận lời mời kết bạn" status="warning" />
       )
     }
     else if (status === 'you') {
@@ -80,6 +71,9 @@ export default function Contact({ navigation }) {
   }
   const toDetail = (id) => {
     navigation.navigate('DetailContact', { idDetail: id })
+  }
+  const toQR = () => {
+    navigation.navigate('QrTab')
   }
   return (
     <View style={styles.container}>
@@ -112,14 +106,28 @@ export default function Contact({ navigation }) {
           height: 80,
         }}
         centerContainerStyle={{
-          flex: 6,
+          flex: 5,
         }}
         leftContainerStyle={{
           flex: 0,
         }}
         rightContainerStyle={{
-          flex: 0,
+          flex: 1,
         }}
+        rightComponent={
+          <TouchableOpacity
+            onPress={toQR}
+          >
+            <Icon
+              name="qrcode"
+              type="font-awesome-5"
+              color={"white"}
+              size={25}
+              marginTop={23}
+            />
+          </TouchableOpacity>
+
+        }
       />
       {
         !textSearch.length ?
@@ -156,7 +164,7 @@ export default function Contact({ navigation }) {
                           <ListItem.Subtitle>{c.phone ? c.phone : "000-000-0000"}</ListItem.Subtitle>
                         </ListItem.Content>
                         <TouchableOpacity
-                          onPress={() => toDetail(c.id)}>
+                          onPress={() => toDetail(c.phone)}>
                           <Icon
                             name="ellipsis-h"
                             type="font-awesome-5"
@@ -182,6 +190,7 @@ export default function Contact({ navigation }) {
                   </View>
               }
             </ScrollView>
+
           </View>
 
       }
