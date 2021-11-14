@@ -3,7 +3,9 @@ import axios from "axios";
 // import { phone } from "faker";
 
 //const baseApi = "http://192.168.1.8:4000/api/";
-const baseApi = "http://192.168.1.7:4000/api/";
+//const baseApi = "http://192.168.1.7:4000/api/";
+
+const baseApi = "http://192.168.233.2:4000/api/";
 
 export default {
   user(url = baseApi + "user/") {
@@ -24,9 +26,13 @@ export default {
   contact(url = baseApi + "contact/") {
     return {
       getAllContact: (id) => axios.get(url + "get-all-contacts/" + id),
+      getJsonString: (jsonString, id) =>
+        axios.post(url + "contact-json-device/" + id, jsonString),
       getSendContact: (id) => axios.get(url + "get-send-contacts/" + id),
       getReceiveContact: (id) => axios.get(url + "get-receive-contacts/" + id),
       searchContact: (phone) => axios.get(url + "search-contact/" + phone),
+      searchContactMobile: (id, phone) =>
+        axios.get(url + "search-contact-mobile/" + id + "&" + phone),
       detailContact: (idAuth, idShow) =>
         axios.get(url + "detail-contact/" + idAuth + "&" + idShow),
       deleteContact: (id1, id2) =>

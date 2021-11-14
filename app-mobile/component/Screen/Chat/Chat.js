@@ -1,147 +1,242 @@
-import * as React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
-import { StyleSheet } from "react-native";
-import { ListItem, Avatar, Icon, SpeedDial } from 'react-native-elements'
-import SearchBar from 'react-native-elements/dist/searchbar/SearchBar-ios';
-import { useState } from 'react';
-export default function Chat({ navigation }) {
-    const styles = StyleSheet.create({
-        avatar: {
-            borderRadius: 1
-        }
-    });
-    const [textSearch, setTextSearch] = useState('')
-    const [open, setOpen] = useState(false)
-    const list = [
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn8-1.fna.fbcdn.net/v/t1.6435-9/70992407_2402905143369728_3337010892582682624_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=ad2b24&_nc_ohc=TlHe4q5tX0QAX_PqyOI&_nc_ht=scontent.fsgn8-1.fna&oh=40e20e88ce13b1cebdfd93a4f514578d&oe=619ECDB2',
-            subtitle: 'Quất em đi'
-        },
-        {
-            name: 'Nam Thành Bùi',
-            avatar_url: 'https://scontent.fsgn13-1.fna.fbcdn.net/v/t1.6435-9/71275484_555725115168480_5901479149981138944_n.jpg?_nc_cat=107&ccb=1-5&_nc_sid=ad2b24&_nc_ohc=yG6-UebJjEwAX-X-oyO&_nc_ht=scontent.fsgn13-1.fna&oh=44d94b3baba57e07a640ebd2c85c07c4&oe=61A3DAD7',
-            subtitle: 'Em nhớ anh quá <3'
-        },
-        {
-            name: 'Bùi Thành Nam',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/66426146_187649098913873_5774804080337616896_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=174925&_nc_ohc=wj7mJlm-ZY0AX8UxEX0&_nc_ht=scontent.fsgn8-2.fna&oh=ccc4c1758c2001405a79e4181f39f141&oe=61A20369',
-            subtitle: 'Anh nhớ em k :))'
-        },
-        {
-            name: 'Nam Bùi Thành',
-            avatar_url: 'https://scontent.fsgn4-1.fna.fbcdn.net/v/t1.6435-9/48429385_134897407522376_8759135099208859648_n.jpg?_nc_cat=101&ccb=1-5&_nc_sid=174925&_nc_ohc=LqyPurR1UFYAX8EHzUD&_nc_ht=scontent.fsgn4-1.fna&oh=cda97197288b808bc12d98f63e5bc622&oe=61A0E966',
-            subtitle: 'Em ngại lắm'
-        },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn4-1.fna.fbcdn.net/v/t1.6435-9/46756087_119658695712914_8390071866588397568_n.jpg?_nc_cat=103&ccb=1-5&_nc_sid=174925&_nc_ohc=TrYP_VpZO6YAX_R-ROC&_nc_ht=scontent.fsgn4-1.fna&oh=f3061c30e2c3e85774d7d41315f837fc&oe=61A25529',
-            subtitle: 'Quất em đi'
-        },
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn8-1.fna.fbcdn.net/v/t1.6435-9/70992407_2402905143369728_3337010892582682624_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=ad2b24&_nc_ohc=TlHe4q5tX0QAX_PqyOI&_nc_ht=scontent.fsgn8-1.fna&oh=40e20e88ce13b1cebdfd93a4f514578d&oe=619ECDB2',
-            subtitle: 'Quất em đi'
-        },
-        {
-            name: 'Nam Bùi',
-            avatar_url: 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799',
-            subtitle: 'Đi khách với em k anh'
-        },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn8-1.fna.fbcdn.net/v/t1.6435-9/70992407_2402905143369728_3337010892582682624_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=ad2b24&_nc_ohc=TlHe4q5tX0QAX_PqyOI&_nc_ht=scontent.fsgn8-1.fna&oh=40e20e88ce13b1cebdfd93a4f514578d&oe=619ECDB2',
-            subtitle: 'Quất em đi'
-        },
-        {
-            name: 'Bùi Nam',
-            avatar_url: 'https://scontent.fsgn8-1.fna.fbcdn.net/v/t1.6435-9/70992407_2402905143369728_3337010892582682624_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=ad2b24&_nc_ohc=TlHe4q5tX0QAX_PqyOI&_nc_ht=scontent.fsgn8-1.fna&oh=40e20e88ce13b1cebdfd93a4f514578d&oe=619ECDB2',
-            subtitle: 'Quất em đi'
-        },
-    ]
-    const toContent = () => {
-        navigation.navigate('ChatContent')
+import React, { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  FlatList,
+} from "react-native";
+import {
+  ListItem,
+  Avatar,
+  Icon,
+  SpeedDial,
+  Header,
+} from "react-native-elements";
+
+import * as actions from "../../../action/user.action";
+import {
+  fetchAllMembersToGetName,
+  fetchAllMembers,
+} from "../../../action/roomchat.action";
+import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
+import { set } from "react-hook-form";
+
+export default function Chat({ navigation, route }) {
+  const [textSearch, setTextSearch] = useState("");
+  const [open, setOpen] = useState(false);
+  const [listRooms, setListRooms] = useState([]);
+
+  const userId = "2";
+  const dispatch = useDispatch();
+  const rooms = useSelector((state) => state.user.listRooms);
+
+  const loadRoomsHandler = useCallback(() => {
+    dispatch(actions.fetchAllRoom(userId));
+  }, [userId, actions.fetchAllRoom]);
+
+  useEffect(() => {
+    loadRoomsHandler();
+  }, [loadRoomsHandler, route.params]);
+
+  //Set members on room to get name
+  const setListMembersOnRoom = useCallback(
+    (rooms) => {
+      if (rooms.length > 0) {
+        rooms.map(async (room) => {
+          let members = [];
+
+          const res = await fetchAllMembersToGetName(room.id);
+          const data = res.data;
+
+          members = data;
+
+          const newRoom = { ...room, userGroupList: members };
+          setListRooms((prevState) => {
+            return [...prevState, newRoom];
+          });
+        });
+      }
+    },
+    [fetchAllMembersToGetName]
+  );
+
+  useEffect(() => {
+    setListRooms([]);
+    setListMembersOnRoom(rooms);
+  }, [setListMembersOnRoom, rooms]);
+
+  //show name depend on group members
+  const showNameHandler = (roomId) => {
+    let name = "Group";
+
+    if (listRooms.length > 0) {
+      const neededRoom = listRooms.find((room) => room.id === roomId);
+      if (
+        neededRoom &&
+        neededRoom.userGroupList &&
+        neededRoom.userGroupList.length > 2
+      ) {
+        const members = neededRoom.userGroupList.filter(
+          (member) => member.id !== Number(userId)
+        );
+        name = `${members[0].firstname}, ${members[1].firstname},...`;
+      } else if (
+        neededRoom &&
+        neededRoom.userGroupList &&
+        neededRoom.userGroupList.length === 2
+      ) {
+        name =
+          neededRoom.userGroupList[0].id === Number(userId)
+            ? `${neededRoom.userGroupList[1].firstname} ${neededRoom.userGroupList[1].lastname}`
+            : `${neededRoom.userGroupList[0].firstname} ${neededRoom.userGroupList[0].lastname}`;
+      }
     }
-    const updateSearch = (search) => {
-        setTextSearch(search);
-    };
-    return (
-        <View style={styles.container}>
-            <SearchBar
-                platform='default'
-                cancelButtonTitle=''
-                placeholder="Tìm bạn bè..."
-                onChangeText={setTextSearch}
-                value={textSearch}
-                inputContainerStyle={{
-                    height: 55,
-                    paddingTop: 27
-                }}
-                inputStyle={{
-                    color: 'black'
-                }}
-                placeholderTextColor='black'
+    return name;
+  };
+
+  const toChatContent = (room, name) => {
+    dispatch({ type: "SET ACTIVE ROOM", payload: { ...room } });
+    navigation.navigate("ChatContent", { name: name });
+  };
+
+  const updateSearch = (search) => {
+    setTextSearch(search);
+  };
+
+  const toAddGroup = () => {
+    navigation.navigate("AddGroup");
+  };
+
+  return (
+    <View style={styles.container}>
+      <Header
+        statusBarProps={{ barStyle: "dark-content" }}
+        barStyle="dark-content"
+        style={styles.header}
+        centerComponent={
+          <SearchBar
+            platform="default"
+            cancelButtonTitle=""
+            placeholder="Tìm bạn bè..."
+            onChangeText={setTextSearch}
+            value={textSearch}
+            inputStyle={{
+              color: "#e6fcf5",
+              width: 300,
+            }}
+            placeholderTextColor="#e6fcf5"
+            searchIcon={{ color: "#e6fcf5" }}
+            clearIcon={{ color: "#e6fcf5" }}
+          />
+        }
+        containerStyle={{
+          backgroundColor: "#37b24d",
+          justifyContent: "space-around",
+          height: 80,
+        }}
+        centerContainerStyle={{
+          flex: 6,
+        }}
+        leftContainerStyle={{
+          flex: 0,
+        }}
+        rightContainerStyle={{
+          flex: 0,
+        }}
+      />
+
+      {/* List rooms */}
+      <View>
+        <FlatList
+          data={rooms}
+          renderItem={(item) => {
+            let groupName = item.item.roomName;
+            if (!item.item.roomName) {
+              groupName = showNameHandler(item.item.id);
+            }
+            return (
+              <TouchableOpacity>
+                <ListItem
+                  onPress={toChatContent.bind(this, item.item, groupName)}
+                >
+                  <Avatar
+                    icon={{ name: "users", type: "font-awesome" }}
+                    rounded
+                    size={50}
+                    source={{
+                      uri: `${item.item.avatar ? item.item.avatar : "dummy"}`,
+                    }}
+                  />
+                  <ListItem.Content>
+                    <ListItem.Title>
+                      {item.item.roomName ? item.item.roomName : groupName}
+                    </ListItem.Title>
+                    <ListItem.Subtitle>
+                      {item.item.roomName ? item.item.roomName : "room"}
+                    </ListItem.Subtitle>
+                  </ListItem.Content>
+                  <ListItem.Chevron />
+                </ListItem>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </View>
+
+      {/* Button add */}
+      <SpeedDial
+        isOpen={open}
+        icon={{ name: "add", color: "#fff" }}
+        openIcon={{ name: "close", color: "#fff" }}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+        color={"#37b24d"}
+        style={styles.btnAdd}
+      >
+        <SpeedDial.Action
+          color={"#37b24d"}
+          icon={
+            <Icon
+              name="user-plus"
+              type="font-awesome-5"
+              color="#ffffff"
+              size={15}
             />
-            <ScrollView>
-                {
-                    list.map((l, i) => (
-                        <TouchableOpacity key={i} >
-                            <ListItem.Swipeable onPress={toContent} >
-                                <Avatar rounded size={50} source={{ uri: l.avatar_url }} />
-                                <ListItem.Content>
-                                    <ListItem.Title>{l.name}</ListItem.Title>
-                                    <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
-                                </ListItem.Content>
-                                <ListItem.Chevron />
-                            </ListItem.Swipeable>
-                        </TouchableOpacity>
-                    ))
-                }
-            </ScrollView>
-            <SpeedDial
-                isOpen={open}
-                icon={{ name: 'add', color: '#fff' }}
-                openIcon={{ name: 'close', color: '#fff' }}
-                onOpen={() => setOpen(!open)}
-                onClose={() => setOpen(!open)}
-                color={'#098524'}
-                containerStyle={{
-                    marginBottom: 80,
-                }}
-            >
-                <SpeedDial.Action
-                    color={'#098524'}
-                    icon={<Icon
-                        name='user-plus'
-                        type='font-awesome-5'
-                        color='#ffffff'
-                        size={15}
-                    />}
-                    title="Thêm bạn bè"
-                    onPress={() => console.log('Add Something')}
-                />
-                <SpeedDial.Action
-                    color={'#098524'}
-                    icon={<Icon
-                        name='users'
-                        type='font-awesome-5'
-                        color='#ffffff'
-                        size={15}
-                    />}
-                    title="Thêm nhóm chat"
-                    onPress={() => console.log('Delete Something')}
-                />
-            </SpeedDial>
-        </View>
-    );
+          }
+          title="Thêm bạn bè"
+          onPress={() => console.log("Add Something")}
+        />
+        <SpeedDial.Action
+          color={"#37b24d"}
+          icon={
+            <Icon
+              name="users"
+              type="font-awesome-5"
+              color="#ffffff"
+              size={15}
+            />
+          }
+          title="Thêm nhóm chat"
+          onPress={() => toAddGroup()}
+        />
+      </SpeedDial>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    position: "relative",
+  },
+  btnAdd: { position: "absolute", bottom: 0, right: 0 },
+  avatar: {
+    borderRadius: 1,
+  },
+  search: {
+    backgroundColor: "#37b24d",
+  },
+});

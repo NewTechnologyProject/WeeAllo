@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 export default function ForgotPass({ navigation }) {
   const [phone, setPhone] = React.useState(false);
   const forgotpass = () => {
-    navigation.navigate("ForgotPass");
+    navigation.navigate("ForgotOTP");
   };
   const initialFieldValues = {
     phone: phone,
@@ -73,11 +73,12 @@ export default function ForgotPass({ navigation }) {
       />
       <Input
         placeholder="Nhập số điện thoại"
+        name="phone"
         onChangeText={(e) => setPhone(e)}
         value={phone}
         leftIcon={
           <Icon
-            name="user-alt"
+            name="phone"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}

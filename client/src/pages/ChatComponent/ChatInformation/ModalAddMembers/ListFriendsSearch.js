@@ -41,7 +41,7 @@ const ListFriendSearch = (props) => {
                     ></Avatar>
                   </ListItemAvatar>
                   <ListItemText
-                    primary={friend.firstname}
+                    primary={`${friend.firstname} ${friend.lastname}`}
                     secondary={added ? "Đã thêm vào nhóm" : ""}
                   />
                   {!added && (

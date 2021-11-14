@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
 });
 
 export default function ForgotOTP({ navigation }) {
+  const forgotOTP = () => {
+    navigation.navigate("ForgotNewPass");
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.text}>XÁC THỰC OTP</Text>
@@ -40,7 +43,7 @@ export default function ForgotOTP({ navigation }) {
         name="OTP"
         leftIcon={
           <Icon
-            name="user-alt"
+            name="unlock-alt"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}
@@ -61,7 +64,7 @@ export default function ForgotOTP({ navigation }) {
         titleStyle={{
           color: "white",
         }}
-        onPress={() => login()}
+        onPress={() => forgotOTP()}
       />
     </View>
   );

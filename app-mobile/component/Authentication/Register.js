@@ -176,7 +176,7 @@ export default function Register({ navigation }) {
         errorMessage={phoneerror ? "Số điện thoại sai định dạng" : ""}
         leftIcon={
           <Icon
-            name="file-signature"
+            name="phone"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}
@@ -194,23 +194,12 @@ export default function Register({ navigation }) {
         errorMessage={passworderror ? "Mật khẩu sai định dạng" : ""}
         leftIcon={
           <Icon
+            name="unlock-alt"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}
           />
         }
-        // InputProps={{
-        //   endAdornment: (
-        //     <InputAdornment position="end">
-        //       <IconButton
-        //         edge="end"
-        //         onClick={() => setShowPassword((prev) => !prev)}
-        //       >
-        //         <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-        //       </IconButton>
-        //     </InputAdornment>
-        //   ),
-        // }}
       />
       <Button
         disabled={disable}

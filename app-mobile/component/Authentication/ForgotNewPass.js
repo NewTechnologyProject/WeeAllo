@@ -24,6 +24,9 @@ const styles = StyleSheet.create({
 });
 
 export default function ForgotNewPass({ navigation }) {
+  const forgotnewpass = () => {
+    navigation.navigate("Login");
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.text}>MẬT KHẨU MỚI</Text>
@@ -38,7 +41,7 @@ export default function ForgotNewPass({ navigation }) {
         placeholder="Mật khẩu cũ"
         leftIcon={
           <Icon
-            name="user-alt"
+            name="unlock-alt"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}
@@ -49,7 +52,7 @@ export default function ForgotNewPass({ navigation }) {
         placeholder="Mật khẩu mới"
         leftIcon={
           <Icon
-            name="user-alt"
+            name="unlock-alt"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}
@@ -70,7 +73,7 @@ export default function ForgotNewPass({ navigation }) {
         titleStyle={{
           color: "white",
         }}
-        onPress={() => login()}
+        onPress={() => forgotnewpass()}
       />
     </View>
   );

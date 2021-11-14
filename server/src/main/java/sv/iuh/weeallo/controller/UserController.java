@@ -67,9 +67,12 @@ public class UserController {
             List<UserGroup> listUserGroup = user.getUserGroupList();
             if (listUserGroup.size() > 0) {
                 for (UserGroup ug : listUserGroup) {
-                    listRoom.add(new RoomChat(ug.getRoomChatId().getId(), ug.getRoomChatId().getCreator(),
+                    RoomChat roomChat = new RoomChat(ug.getRoomChatId().getId(), ug.getRoomChatId().getCreator(),
                             ug.getRoomChatId().getRoomName(), ug.getRoomChatId().getCreateAt(),
-                            ug.getRoomChatId().getAvatar()));
+                            ug.getRoomChatId().getAvatar());
+
+
+                    listRoom.add(roomChat);
                 }
             }
         }
@@ -182,4 +185,6 @@ public class UserController {
      public List<UserChat> getAllPhone(){
         return  userService.getAllPhone();
      }
+
+
 }

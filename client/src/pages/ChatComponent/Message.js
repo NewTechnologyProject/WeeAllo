@@ -163,7 +163,11 @@ export default function MessageChat(props) {
   return (
     <div style={{ height: "100%" }}>
       <Grid container spacing={0} style={{ height: "100%" }}>
-        <Grid container spacing={0} style={{ height: "100%" }}>
+        <Grid
+          container
+          spacing={0}
+          style={{ height: "100%", position: "relative" }}
+        >
           <Grid
             item
             xs={12}
@@ -213,7 +217,14 @@ export default function MessageChat(props) {
             )}
           </Grid>
 
-          <Grid style={{ marginTop: 300, position: "absolute" }}>
+          <Grid
+            style={{
+              marginTop: 300,
+              position: "absolute",
+              left: 10,
+              bottom: 100,
+            }}
+          >
             {emojiStatus === true ? (
               <Picker
                 onEmojiClick={onEmojiClick}
