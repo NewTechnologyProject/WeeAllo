@@ -40,9 +40,10 @@ const theme = {
     },
   },
 };
-export default function Contact() {
+export default function Contact({ route }) {
   const [textSearch, setTextSearch] = useState("");
   const [index, setIndex] = useState(0);
+
   return (
     <View style={styles.container}>
       <Header

@@ -9,11 +9,16 @@ import * as actions from "../../../../action/roomchat.action";
 
 export default function ChatContent({ navigation, route }) {
   const [isVisible, setIsVisible] = useState(false);
+
   const dispatch = useDispatch();
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [messages, setMessages] = useState([]);
   const userId = "2";
+
+  if (route.params) {
+    const { name } = route.params;
+  }
 
   // const onSend = useCallback((messages = []) => {
   //   setMessages((previousMessages) =>
@@ -78,13 +83,14 @@ export default function ChatContent({ navigation, route }) {
       flexDirection: "row",
     },
   });
+
   return (
     <View style={styles.container}>
       <Header
         statusBarProps={{ barStyle: "light-content" }}
         barStyle="light-content"
         centerComponent={{
-          text: activeRoom.roomName,
+          text: `${activeRoom.roomName ? activeRoom.roomName : "Group"}`,
           style: { color: "#fff" },
         }}
         leftComponent={

@@ -2,9 +2,7 @@ import axios from "axios";
 // import { Feedback } from "@material-ui/icons";
 // import { phone } from "faker";
 
-const baseApi = "http://192.168.1.4:4000/api/";
-//const baseApi = "http://192.168.1.17:4000/api/";
-// const baseApi = "http://192.168.1.8:4000/api/";
+const baseApi = "http://192.168.1.12:4000/api/";
 
 export default {
   user(url = baseApi + "user/") {

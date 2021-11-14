@@ -16,7 +16,6 @@ const initialState = {
   register: null,
   updateUser: null,
   // login: null,
-
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -93,6 +92,14 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         listRooms: [...action.payload],
+      };
+    }
+
+    //Get list friends
+    case "LIST FRIENDS": {
+      return {
+        ...state,
+        listFriends: [...action.payload],
       };
     }
 

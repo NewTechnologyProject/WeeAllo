@@ -1,23 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  BottomSheet,
-  Icon,
-  Input,
-  ListItem,
-  Avatar,
-  Badge,
-} from "react-native-elements";
+import { Icon, ListItem, Avatar } from "react-native-elements";
 import {
   FlatList,
-  SectionList,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   StyleSheet,
-  Button,
-  Alert,
 } from "react-native";
 
 import { Header } from "react-native-elements/dist/header/Header";
@@ -28,6 +17,10 @@ const GroupMembers = ({ navigation }) => {
 
   const backToGroupInformation = () => {
     navigation.navigate("GroupInformation");
+  };
+
+  const toAddMember = () => {
+    navigation.navigate("AddMember");
   };
 
   return (
@@ -55,24 +48,26 @@ const GroupMembers = ({ navigation }) => {
         }}
       />
 
-      <ListItem
-        containerStyle={{
-          marginTop: -5,
-        }}
-      >
-        <Icon
-          reverse={true}
-          reverseColor="#12b886"
-          name="plus"
-          type="font-awesome-5"
-          color="#e6fcf5"
-          size={20}
-        />
+      <TouchableOpacity onPress={toAddMember}>
+        <ListItem
+          containerStyle={{
+            marginTop: -5,
+          }}
+        >
+          <Icon
+            reverse={true}
+            reverseColor="#12b886"
+            name="plus"
+            type="font-awesome-5"
+            color="#e6fcf5"
+            size={20}
+          />
 
-        <ListItem.Content>
-          <ListItem.Title>{"Thêm thành viên"}</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
+          <ListItem.Content>
+            <ListItem.Title>{"Thêm thành viên"}</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+      </TouchableOpacity>
 
       <Text
         style={{ padding: 10 }}

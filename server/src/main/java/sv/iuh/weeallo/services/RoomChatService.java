@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import sv.iuh.weeallo.models.Message;
 import sv.iuh.weeallo.models.RoomChat;
 import sv.iuh.weeallo.models.UserGroup;
+import sv.iuh.weeallo.repository.MessageRepository;
 import sv.iuh.weeallo.repository.RoomChatRepository;
 import sv.iuh.weeallo.repository.UserGroupRepository;
 
@@ -16,11 +17,14 @@ import java.util.Optional;
 public class RoomChatService {
     private RoomChatRepository roomChatRepository;
     private UserGroupRepository userGroupRepository;
+    private MessageRepository messageRepository;
 
     @Autowired
-    public RoomChatService(RoomChatRepository roomChatRepository, UserGroupRepository userGroupRepository) {
+    public RoomChatService(RoomChatRepository roomChatRepository, UserGroupRepository userGroupRepository,
+                           MessageRepository messageRepository) {
         this.roomChatRepository = roomChatRepository;
         this.userGroupRepository = userGroupRepository;
+        this.messageRepository = messageRepository;
     }
 
     public RoomChat getById(Long roomId) {
@@ -72,6 +76,7 @@ public class RoomChatService {
         try{
             roomChatRepository.deleteById(roomId);
             userGroupRepository.deleteUserGroupByRoomId(roomId);
+            messageRepository.deleteMessageByRoomId(roomId);
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

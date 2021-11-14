@@ -4,9 +4,12 @@ import ChatContent from "../Screen/Chat/ChatScreen/ChatContent";
 import GroupInformation from "../Screen/Contact/Tab/GroupInformation/GroupInformation";
 import GroupMembers from "../Screen/Contact/Tab/GroupInformation/GroupMembers";
 import GroupMedia from "../Screen/Contact/Tab/GroupInformation/GroupMedia";
+import GroupFile from "../Screen/Contact/Tab/GroupInformation/GroupFile";
 import DeviceContact from "../Screen/Contact/Tab/MyContact/DeviceContact";
 import Login from "../Authentication/Login";
 import TabRoute from "./TabRoute";
+import AddGroup from "../Screen/Contact/Tab/AddGroup/AddGroup";
+import addMember from "../Screen/Contact/Tab/addMember/addMember";
 
 export default function MainStack(Stack) {
   return (
@@ -16,9 +19,12 @@ export default function MainStack(Stack) {
       <Stack.Screen name="GroupInformation" component={GroupInformation} />
       <Stack.Screen name="GroupMembers" component={GroupMembers} />
       <Stack.Screen name="GroupMedia" component={GroupMedia} />
+      <Stack.Screen name="GroupFile" component={GroupFile} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="MyContact" component={MyContact} />
       <Stack.Screen name="DeviceContact" component={DeviceContact} />
+      <Stack.Screen name="AddGroup" component={AddGroup} />
+      <Stack.Screen name="AddMember" component={addMember} />
     </>
   );
 }

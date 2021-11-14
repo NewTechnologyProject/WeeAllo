@@ -46,3 +46,19 @@ export const fetchAllRoom = (userId) => (dispatch) => {
       console.log(err);
     });
 };
+
+//Get all friends
+export const fetchAllFriend = (userId) => (dispatch) => {
+  apiService
+    .user()
+    .listFriend(userId)
+    .then((response) => {
+      dispatch({
+        type: "LIST FRIENDS",
+        payload: response.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};

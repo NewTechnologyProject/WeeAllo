@@ -30,7 +30,7 @@ const ListFriendSearch = (props) => {
                       src={"dummy.js"}
                     ></Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={friend.firstname} />
+                  <ListItemText primary={`${friend.firstname} ${friend.lastname}`} />
                   <ListItemSecondaryAction>
                     <Checkbox
                       edge="end"

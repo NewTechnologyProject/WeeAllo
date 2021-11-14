@@ -17,4 +17,9 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query("SELECT m FROM Message m WHERE m.userId = :userId ORDER BY m.id DESC ")
     List<Message> findMessagesByUser(@Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from message where room_chat_id=:roomId ", nativeQuery = true)
+    void deleteMessageByRoomId(@Param("roomId") Long roomId);
 }

@@ -16,12 +16,25 @@ import Register from "../Authentication/Register";
 import ForgotPass from "../Authentication/ForgotPass";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChatContent from "../Screen/Chat/ChatScreen/ChatContent";
+import { set } from "react-hook-form";
 
 // #098524
 
-export default function TabRoute({ navigation }) {
+export default function TabRoute({ navigation, route }) {
   const [index, setIndex] = useState(0);
   const [getValue, setGetValue] = useState(null);
+  const [load, setLoad] = useState(13);
+
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("focus", () => {
+  //     setLoad(12);
+  //   });
+
+  //   return unsubscribe;
+  // }, [navigation]);
+
+  // console.log(load);
+
   // useEffect(() => {
   //     AsyncStorage.getItem("user_authenticated").then((value) => {
   //         setGetValue(value);
@@ -65,6 +78,7 @@ export default function TabRoute({ navigation }) {
           },
         }}
       />
+
       <Tab.Screen
         name="Danh bạ"
         component={Contact}
