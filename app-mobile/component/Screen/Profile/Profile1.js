@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 
 export default function Profile1({ navigation }) {
   const dispatch = useDispatch();
-  const [userProfile, setUserProfile] = useState([]);
+  const [userProfile, setUserProfile] = useState();
   const [image, setImage] = useState(null);
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
@@ -41,19 +41,20 @@ export default function Profile1({ navigation }) {
   const profile = useSelector((state) => state.user.userById);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
-    dispatch(actions.findByIdUser(user));
+    dispatch(actions.findByIdUser(1));
   }, []);
+  console.log(user)
   useEffect(() => {
-    if (profile != undefined || profile != null) {
+    if (profile !== null) {
       setUserProfile(profile);
     }
   }, [profile]);
   useEffect(() => {
-    if (userProfile !== undefined) {
+    if (userProfile !== null) {
       //setUserId(userProfile.id);
-      setImage(userProfile.avartar);
-      setFirstName(userProfile.firstname);
-      setLastName(userProfile.lastname);
+      setImage(userProfile ? userProfile.avartar : "");
+      setFirstName(userProfile ? userProfile.firstname : "");
+      setLastName(userProfile ? userProfile.lastname : "");
       //   setPhone(userProfile.phone);
       //   setGender(userProfile.gender);
       //   setDate(userProfile.birthday);
@@ -97,12 +98,12 @@ export default function Profile1({ navigation }) {
               <Avatar
                 rounded
                 source={{
-                  uri: image,
+                  uri: userProfile ? userProfile.avartar : "",
                 }}
                 size="large"
               />
               <ListItem.Content>
-                <ListItem.Title>{firstname + " " + lastname}</ListItem.Title>
+                <ListItem.Title>{userProfile ? userProfile.firstname + " " + userProfile.lastname : ""}</ListItem.Title>
                 <Text>Sửa thông tin cá nhân</Text>
               </ListItem.Content>
               <Icon

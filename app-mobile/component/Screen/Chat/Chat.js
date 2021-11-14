@@ -28,7 +28,7 @@ export default function Chat({ navigation, route }) {
   const [open, setOpen] = useState(false);
   const [listRooms, setListRooms] = useState([]);
 
-  const userId = "2";
+  const userId = "1";
   const dispatch = useDispatch();
   const rooms = useSelector((state) => state.user.listRooms);
 
@@ -195,7 +195,7 @@ export default function Chat({ navigation, route }) {
         color={"#37b24d"}
         style={styles.btnAdd}
       >
-        <SpeedDial.Action
+        {/* <SpeedDial.Action
           color={"#37b24d"}
           icon={
             <Icon
@@ -207,7 +207,7 @@ export default function Chat({ navigation, route }) {
           }
           title="Thêm bạn bè"
           onPress={() => console.log("Add Something")}
-        />
+        /> */}
         <SpeedDial.Action
           color={"#37b24d"}
           icon={

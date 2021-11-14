@@ -15,7 +15,7 @@ const addMember = ({ navigation }) => {
   const [chosenMembers, setChosenMembers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const userId = "2";
+  const userId = "1";
   const dispatch = useDispatch();
   const listFriends = useSelector((state) => state.user.listFriends);
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);

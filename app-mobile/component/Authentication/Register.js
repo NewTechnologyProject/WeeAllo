@@ -41,34 +41,37 @@ export default function Register({ navigation }) {
   const [passworderror, setPassWordError] = React.useState(false);
 
   // const register = (e) => {
-  const initialFieldValues = {
-    phone: phone,
-    firstname: firstname,
-    email: null,
-    lastname: lastname,
-    password: password,
-    isActive: "false",
-    createAt: null,
-    updateAt: null,
-    avartar:
-      "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png",
-    coverImage: null,
-    status: null,
-    contactList: null,
-    contactList1: null,
-    toDoUserList: null,
-    messageList: null,
-    userGroupList: null,
-  };
+
 
   const handleSubmit = (e) => {
-    console.log(initialFieldValues.phone);
-    dispatch(actions.register(initialFieldValues));
-    onSignInSubmit(e);
-    setTimeout(() => {
-      setDisable(true);
-      navigation.navigate("RegisterOTP");
-    }, 8000);
+    // console.log(initialFieldValues.phone);
+    if (validate) {
+      const initialFieldValues = {
+        phone: phone,
+        firstname: firstname,
+        email: null,
+        lastname: lastname,
+        password: password,
+        isActive: "false",
+        createAt: null,
+        updateAt: null,
+        avartar:
+          "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png",
+        coverImage: null,
+        status: null,
+        contactList: null,
+        contactList1: null,
+        toDoUserList: null,
+        messageList: null,
+        userGroupList: null,
+      };
+      dispatch(actions.register(initialFieldValues));
+    }
+    // onSignInSubmit(e);
+    // setTimeout(() => {
+    //   setDisable(true);
+    //   navigation.navigate("RegisterOTP");
+    // }, 8000);
   };
 
   const validate = () => {
@@ -121,11 +124,11 @@ export default function Register({ navigation }) {
         window.confirmationResult = confirmationResult;
         console.log("OTP đã gởi");
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
   return (
     <View style={styles.container}>
-      <div id="sign-in-button"></div>
+      <View id="sign-in-button"></View>
       <Text style={styles.text}>ĐĂNG KÝ</Text>
       <Avatar
         size={60}

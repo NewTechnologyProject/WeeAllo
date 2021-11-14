@@ -53,8 +53,6 @@ public class Message implements Serializable {
             UserChat userId) {
         this.id = id;
         this.status = status;
-        this.file = file;
-        this.time = time;
         this.content = content;
         this.time = time;
         this.image = image;

@@ -47,7 +47,7 @@ export default function ChatContent({ navigation, route }) {
   const [link, setLink] = useState();
   const [file, setFile] = useState();
   const [image, setImage] = useState();
-  const userId = "2";
+  const userId = 1;
 
   if (route.params) {
     const { name } = route.params;
@@ -79,7 +79,7 @@ export default function ChatContent({ navigation, route }) {
       file,
       roomChatId: activeRoom.id,
       time: new Date(),
-      userId: 2,
+      userId: 1,
     };
     console.log(messageText);
     dispatch(action.addMessage(messageText));
@@ -136,10 +136,18 @@ export default function ChatContent({ navigation, route }) {
   }, [listMessages]);
 
   useEffect(() => {
+    let fetchchat;
     if (activeRoom) {
-      dispatch(actions.fetchAllMessages(activeRoom.id));
+      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(activeRoom.id)), 1000);
     }
+    return () => clearInterval(fetchchat);
+
   }, [activeRoom]);
+  // useEffect(() => {
+  //   if (activeRoom) {
+  //     dispatch(actions.fetchAllMessages(activeRoom.id));
+  //   }
+  // }, [activeRoom]);
 
   // const backToAllChat = () => {
   //   navigation.navigate("TabRoute");
@@ -196,7 +204,7 @@ export default function ChatContent({ navigation, route }) {
             type="font-awesome-5"
             color={"#868e96"}
             size={25}
-            onPress={() => setStatusEmoji(!statusEmoji)}
+            onPress={() => { setStatusEmoji(!statusEmoji), Keyboard.dismiss() }}
             style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
           />
           <Composer {...props} />
@@ -275,7 +283,7 @@ export default function ChatContent({ navigation, route }) {
     });
     axios
       .post(
-        "http://192.168.43.141:4000/api/storage/uploadFile?key=file",
+        "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
         formData
       )
       .then((response) => {
@@ -302,7 +310,7 @@ export default function ChatContent({ navigation, route }) {
     console.log("fromdta", formData);
     axios
       .post(
-        "http://192.168.43.141:4000/api/storage/uploadFile?key=file",
+        "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
         formData
       )
       .then((response) => {
@@ -341,7 +349,7 @@ export default function ChatContent({ navigation, route }) {
     if (!result.cancelled) {
       axios
         .post(
-          "http://192.168.43.141:4000/api/storage/uploadFile?key=file",
+          "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
           formData
         )
         .then((response) => {
@@ -466,11 +474,11 @@ export default function ChatContent({ navigation, route }) {
         onLongPress={onLongPress}
         renderAvatarOnTop={true}
         renderUsernameOnMessage={true} //show username
-        renderChatEmpty={renderChatEmpty}
+        //renderChatEmpty={renderChatEmpty}
         renderComposer={renderComposer}
-        // renderChatFooter={renderChatFooter}
-        // renderMessageImage={renderMessageImage}
-        // inverted={false}
+      // renderChatFooter={renderChatFooter}
+      // renderMessageImage={renderMessageImage}
+      // inverted={false}
       />
       {statusEmoji === true ? (
         <EmojiSelector

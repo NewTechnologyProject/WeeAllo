@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 export default function ContactGroupList({ navigation, route }) {
   const [listRooms, setListRooms] = useState([]);
 
-  const userId = "2";
+  const userId = "1";
   const dispatch = useDispatch();
   const rooms = useSelector((state) => state.user.listRooms);
 
@@ -137,7 +137,7 @@ export default function ContactGroupList({ navigation, route }) {
 
           <Text
             style={{ padding: 10 }}
-          >{`Nhóm đang tham gia (${rooms.length})`}</Text>
+          >{`Nhóm đang tham gia `}</Text>
 
           {rooms.map((room) => {
             if (room.creator) {

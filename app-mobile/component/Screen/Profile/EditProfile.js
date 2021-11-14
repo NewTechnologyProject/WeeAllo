@@ -118,7 +118,7 @@ export default function EditProfile({ navigation }) {
     };
   }, []);
   useEffect(() => {
-    dispatch(actions.findByIdUser(user));
+    dispatch(actions.findByIdUser(1));
   }, []);
   useEffect(() => {
     if (profile != undefined || profile != null) {
@@ -137,7 +137,6 @@ export default function EditProfile({ navigation }) {
     }
   }, [userProfile]);
   //console.log("userid", userId);
-
   const initialFieldValues = {
     firstname: firstname,
     lastname: lastname,
@@ -209,7 +208,7 @@ export default function EditProfile({ navigation }) {
     if (!result.cancelled) {
       axios
         .post(
-          "http://192.168.1.129:4000/api/storage/uploadFile?key=file",
+          "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
           formData
         )
         .then((response) => {
@@ -243,7 +242,7 @@ export default function EditProfile({ navigation }) {
     if (!result.cancelled) {
       axios
         .post(
-          "http://192.168.1.129:4000/api/storage/uploadFile?key=file",
+          "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
           formData
         )
         .then((response) => {

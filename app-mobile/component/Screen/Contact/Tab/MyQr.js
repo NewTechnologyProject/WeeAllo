@@ -36,7 +36,6 @@ export default function MyQr() {
                     />
                 </View>
             </ViewShot>
-            <Button title="a" onPress={onSave} />
         </View>
     );
 }

@@ -112,9 +112,12 @@ export default function MessageChat(props) {
   };
 
   useEffect(() => {
+    let fetchchat;
     if (props.activeRoom) {
-      dispatch(actions.fetchAllMessages(props.activeRoom.id));
+      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(props.activeRoom.id)), 1000);
     }
+    return () => clearInterval(fetchchat);
+
   }, [props.activeRoom]);
 
   useEffect(() => {
