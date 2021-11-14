@@ -1,10 +1,13 @@
 import React from "react";
 import { SectionList, StyleSheet, Text, View } from "react-native";
-
 import { Avatar, Icon, Tab } from "react-native-elements";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { Input } from "react-native-elements/dist/input/Input";
 import imagePath from "../../constants/imagePath";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as action from "../../action/user.action";
 import firebase from "firebase";
 const styles = StyleSheet.create({
   container: {
@@ -24,46 +27,40 @@ const styles = StyleSheet.create({
   // }
 });
 
-export default function ForgotPass({ navigation }) {
-  const [phone, setPhone] = React.useState(false);
-  const forgotpass = () => {
-    navigation.navigate("ForgotOTP");
-  };
+export default function RegisterOTP({ navigation }) {
+  const [disable, setDisable] = React.useState(false);
+  const dispatch = useDispatch();
+  const [otp, setOtp] = React.useState("");
   const initialFieldValues = {
-    phone: phone,
+    otp: otp,
   };
-  const configureCaptcha = () => {
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      "sign-in-button",
-      {
-        size: "invisible",
-        callback: (response) => {
-          onSignInSubmit();
-          console.log("Recaptca varified");
-        },
-        defaultCountry: "IN",
-      }
-    );
+  const registerOTP = (e) => {
+    onSubmitOTP();
+    setTimeout(() => {
+      setDisable(true);
+      navigation.navigate("Login");
+    }, 8000);
   };
-  const onSignInSubmit = () => {
-    //e.preventDefault();
-    configureCaptcha();
-    const phoneNumber = "+84" + initialFieldValues.phone;
-    console.log(phoneNumber);
-    const appVerifier = window.recaptchaVerifier;
-    firebase
-      .auth()
-      .signInWithPhoneNumber(phoneNumber, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        console.log("OTP đã gởi");
-      })
-      .catch((error) => {});
+  const onSubmitOTP = (e) => {
+    // e.preventDefault();
+    const code = initialFieldValues.otp;
+    console.log(code);
+    if (code.length) {
+      window.confirmationResult.confirm(code).then((result) => {
+        //    const user = result.user;
+        //    console.log(JSON.stringify(user));
+        //     dispatch(actions.register(values));
+        setTimeout(() => {
+          navigation.navigate("Login");
+        }, 2000);
+      });
+    } else {
+      //   console.log("hihi");
+    }
   };
   return (
     <View style={styles.container}>
-      <div id="sign-in-button"></div>
-      <Text style={styles.text}>QUÊN MẬT KHẨU</Text>
+      <Text style={styles.text}>XÁC THỰC OTP</Text>
       <Avatar
         size={60}
         source={imagePath.icLogo}
@@ -72,22 +69,21 @@ export default function ForgotPass({ navigation }) {
         }}
       />
       <Input
-        placeholder="Nhập số điện thoại"
-        name="phone"
-        onChangeText={(e) => setPhone(e)}
-        value={phone}
+        placeholder="OTP"
+        name="OTP"
+        onChangeText={(e) => setOtp(e)}
+        value={otp}
         leftIcon={
           <Icon
-            name="phone"
+            name="user-alt"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}
           />
         }
       />
-
       <Button
-        title="Xác nhận"
+        title="XÁC NHẬN"
         type="outline"
         containerStyle={{
           backgroundColor: "#098524",
@@ -99,7 +95,7 @@ export default function ForgotPass({ navigation }) {
         titleStyle={{
           color: "white",
         }}
-        onPress={() => forgotpass()}
+        onPress={() => registerOTP()}
       />
     </View>
   );

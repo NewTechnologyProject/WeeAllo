@@ -1,4 +1,12 @@
 import * as React from "react";
+
+import Register from "../Authentication/Register";
+
+import RegisterOTP from "../Authentication/RegisterOTP";
+import ForgotPass from "../Authentication/ForgotPass";
+import ForgotOTP from "../Authentication/ForgotOTP";
+import ForgotNewPass from "../Authentication/ForgotNewPass";
+
 import MyContact from "../Screen/Contact/Tab/MyContact/MyContact";
 import ChatContent from "../Screen/Chat/ChatScreen/ChatContent";
 import GroupInformation from "../Screen/Contact/Tab/GroupInformation/GroupInformation";
@@ -23,6 +31,12 @@ export default function MainStack(Stack) {
     <>
       <Stack.Screen name="TabRoute" component={TabRoute} />
       <Stack.Screen name="ChatContent" component={ChatContent} />
+      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="RegisterOTP" component={RegisterOTP} />
+      <Stack.Screen name="ForgotPass" component={ForgotPass} />
+      <Stack.Screen name="ForgotOTP" component={ForgotOTP} />
+      <Stack.Screen name="ForgotNewPass" component={ForgotNewPass} />
+
       <Stack.Screen name="GroupInformation" component={GroupInformation} />
       <Stack.Screen name="GroupMembers" component={GroupMembers} />
       <Stack.Screen name="GroupMedia" component={GroupMedia} />

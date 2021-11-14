@@ -15,8 +15,6 @@ export const userlogout = () => {
 
 export const ACTION_TYPES = {
   LOGIN: "LOGIN",
-  FINDUSERBYID: "FINDUSERBYID",
-  UPDATEBYIDUSER: "UPDATEBYIDUSER",
 };
 export const login = (phone, pass) => (dispatch) => {
   apiService
@@ -33,6 +31,29 @@ export const login = (phone, pass) => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
+export const register = (userChat) => (dispatch) => {
+  apiService
+    .user()
+    .addUser(userChat)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.REGISTER,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const forgotpass = (phone, newpass) => (dispatch) => {
+  apiService
+    .user()
+    .forgotpass(phone, newpass)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.FORGOTPASS,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
 // Get all rooms
 export const fetchAllRoom = (userId) => (dispatch) => {
   apiService
@@ -87,6 +108,7 @@ export const updateUserById = (userChat, id) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: ACTION_TYPES.UPDATEBYIDUSER,
+
         payload: response.data,
       });
     })
