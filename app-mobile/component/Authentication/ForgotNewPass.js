@@ -5,7 +5,6 @@ import { Avatar, Icon, Tab } from "react-native-elements";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { Input } from "react-native-elements/dist/input/Input";
 import imagePath from "../../constants/imagePath";
-import firebase from "firebase";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -24,46 +23,10 @@ const styles = StyleSheet.create({
   // }
 });
 
-export default function ForgotPass({ navigation }) {
-  const [phone, setPhone] = React.useState(false);
-  const forgotpass = () => {
-    navigation.navigate("ForgotPass");
-  };
-  const initialFieldValues = {
-    phone: phone,
-  };
-  const configureCaptcha = () => {
-    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-      "sign-in-button",
-      {
-        size: "invisible",
-        callback: (response) => {
-          onSignInSubmit();
-          console.log("Recaptca varified");
-        },
-        defaultCountry: "IN",
-      }
-    );
-  };
-  const onSignInSubmit = () => {
-    //e.preventDefault();
-    configureCaptcha();
-    const phoneNumber = "+84" + initialFieldValues.phone;
-    console.log(phoneNumber);
-    const appVerifier = window.recaptchaVerifier;
-    firebase
-      .auth()
-      .signInWithPhoneNumber(phoneNumber, appVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResult = confirmationResult;
-        console.log("OTP đã gởi");
-      })
-      .catch((error) => {});
-  };
+export default function ForgotNewPass({ navigation }) {
   return (
     <View style={styles.container}>
-      <div id="sign-in-button"></div>
-      <Text style={styles.text}>QUÊN MẬT KHẨU</Text>
+      <Text style={styles.text}>MẬT KHẨU MỚI</Text>
       <Avatar
         size={60}
         source={imagePath.icLogo}
@@ -72,9 +35,18 @@ export default function ForgotPass({ navigation }) {
         }}
       />
       <Input
-        placeholder="Nhập số điện thoại"
-        onChangeText={(e) => setPhone(e)}
-        value={phone}
+        placeholder="Mật khẩu cũ"
+        leftIcon={
+          <Icon
+            name="user-alt"
+            type="font-awesome-5"
+            color={"#098524"}
+            style={{ paddingRight: 15 }}
+          />
+        }
+      />
+      <Input
+        placeholder="Mật khẩu mới"
         leftIcon={
           <Icon
             name="user-alt"
@@ -98,7 +70,7 @@ export default function ForgotPass({ navigation }) {
         titleStyle={{
           color: "white",
         }}
-        onPress={() => forgotpass()}
+        onPress={() => login()}
       />
     </View>
   );
