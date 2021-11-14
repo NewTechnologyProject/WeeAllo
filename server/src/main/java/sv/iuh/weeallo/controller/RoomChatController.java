@@ -44,7 +44,7 @@ public class RoomChatController {
                 UserChat user = sliceUser(message.getUserId());
 
                 newListMessages.add(new Message(message.getId(), message.getStatus(), message.getContent(),
-                        message.getTime(), message.getImage(),message.getFile(), roomChat, user));
+                        message.getTime(), message.getImage(), message.getFile(), roomChat, user));
             }
         }
         Collections.sort(newListMessages, Comparator.comparing(Message::getId));

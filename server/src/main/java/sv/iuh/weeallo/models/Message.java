@@ -36,7 +36,7 @@ public class Message implements Serializable {
     @Column(name = "image")
     private String image;
     @Column(name = "time")
-    private String time;
+    private Date time;
     @Column(name = "content")
     private String content;
     @JoinColumn(name = "roomChatId", referencedColumnName = "id")
@@ -49,7 +49,8 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(Long id, String status, String content, String time, String image,String file, RoomChat roomChatId, UserChat userId) {
+    public Message(Long id, String status, String content, Date time, String image, String file, RoomChat roomChatId,
+            UserChat userId) {
         this.id = id;
         this.status = status;
         this.file = file;
@@ -59,7 +60,7 @@ public class Message implements Serializable {
         this.image = image;
         this.roomChatId = roomChatId;
         this.userId = userId;
-        this.file=file;
+        this.file = file;
     }
 
     public String getContent() {
@@ -122,14 +123,14 @@ public class Message implements Serializable {
         this.image = image;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

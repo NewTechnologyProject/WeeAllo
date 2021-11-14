@@ -23,9 +23,11 @@ export default {
   contact(url = baseApi + "contact/") {
     return {
       getAllContact: (id) => axios.get(url + "get-all-contacts/" + id),
+      getJsonString: (jsonString, id) => axios.post(url + "contact-json-device/" + id, jsonString),
       getSendContact: (id) => axios.get(url + "get-send-contacts/" + id),
       getReceiveContact: (id) => axios.get(url + "get-receive-contacts/" + id),
       searchContact: (phone) => axios.get(url + "search-contact/" + phone),
+      searchContactMobile: (id, phone) => axios.get(url + "search-contact-mobile/" + id + "&" + phone),
       detailContact: (idAuth, idShow) =>
         axios.get(url + "detail-contact/" + idAuth + "&" + idShow),
       deleteContact: (id1, id2) =>

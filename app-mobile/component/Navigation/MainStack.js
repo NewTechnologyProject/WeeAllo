@@ -10,6 +10,10 @@ import Login from "../Authentication/Login";
 import TabRoute from "./TabRoute";
 import AddGroup from "../Screen/Contact/Tab/AddGroup/AddGroup";
 import addMember from "../Screen/Contact/Tab/addMember/addMember";
+import DetailContact from "../Screen/Contact/Tab/MyContact/DetailContact";
+import Chat from "../Screen/Chat/Chat";
+import EditProfile from "../Screen/Profile/EditProfile";
+import Profile1 from "../Screen/Profile/Profile1";
 
 export default function MainStack(Stack) {
   return (
@@ -25,6 +29,8 @@ export default function MainStack(Stack) {
       <Stack.Screen name="DeviceContact" component={DeviceContact} />
       <Stack.Screen name="AddGroup" component={AddGroup} />
       <Stack.Screen name="AddMember" component={addMember} />
+      <Stack.Screen name="DetailContact" component={DetailContact} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
     </>
   );
 }

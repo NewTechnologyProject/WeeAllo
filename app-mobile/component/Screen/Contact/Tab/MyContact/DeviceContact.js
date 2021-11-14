@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, RefreshControl, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Header } from 'react-native-elements/dist/header/Header';
-import { Button, Icon, ListItem, SearchBar } from 'react-native-elements'
+import { Badge, Button, Icon, ListItem, SearchBar } from 'react-native-elements'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import imagePath from '../../../../../constants/imagePath';
 import * as actions from "../../../../../action/contact.action"
@@ -40,13 +40,18 @@ export default function DeviceContact({ navigation, route }) {
     const listDevice = useSelector((state) => state.contact.listDeviceContact);
     const [refreshing, setRefreshing] = useState(false);
     const [contactDevice, setContactDevice] = useState([]);
+    const [change, setChange] = useState(false);
+    const [change1, setChange1] = useState(false);
+    const [change2, setChange2] = useState(false);
+    const [animate, setAnimate] = useState(false);
     const backToAllChat = () => {
         navigation.navigate('TabRoute')
+        setNull()
+    }
+    const toDetail = (id) => {
+        navigation.navigate('DetailContact', { idDetail: id })
     }
     const [contacts, setContacts] = useState([])
-    useEffect(() => {
-
-    })
     useEffect(() => {
         (async () => {
             const { status } = await Contacts.requestPermissionsAsync();
@@ -60,10 +65,11 @@ export default function DeviceContact({ navigation, route }) {
                 }
             }
         })();
-    });
+    }, []);
     const getContactInDevice = () => {
         if (contacts) {
             dispatch(actions.getJsonString(contacts, 1));
+            wait(3000).then(() => setAnimate(false));
         }
     }
     const onRefresh = React.useCallback(() => {
@@ -88,10 +94,44 @@ export default function DeviceContact({ navigation, route }) {
             setContactDevice(listDevice)
         }
     }, [listDevice])
-    console.log(contactDevice)
+    const setNull = () => {
+        setContactDevice([])
+    }
+    const renderStatus = (status) => {
+        if (status === 'none') {
+            return (
+                !change1 ?
+                    <Badge containerStyle={{ fontSize: 10 }} value="Chưa là bạn bè" status="error" />
+                    : <Badge containerStyle={{ fontSize: 10 }} value="Đã gửi lời mời kết bạn" status="primary" />
+            )
+        }
+        else if (status === 'friend') {
+            return (
+                <Badge containerStyle={{ fontSize: 10 }} value="Bạn bè" status="success" />
+            )
+        }
+        else if (status === 'receive') {
+            return (
+                !change2 ?
+                    <Badge containerStyle={{ fontSize: 10 }} value="Đã gửi lời mời kết bạn" status="primary" /> :
+                    <Badge containerStyle={{ fontSize: 10 }} value="Chưa là bạn bè" status="error" />
+            )
+        }
+        else if (status === 'send') {
+            return (
+                change ? <Badge containerStyle={{ fontSize: 10 }} value="Bạn bè" status="success" />
+                    :
+                    <Badge containerStyle={{ fontSize: 10 }} value="Đã nhận lời mời kết bạn" status="warning" />
+            )
+        }
+        else if (status === 'you') {
+            return (
+                <Badge containerStyle={{ fontSize: 10 }} value="Tài khoản của bạn" status="success" />
+            )
+        }
+    }
     return (
         <View >
-
             <Header
                 statusBarProps={{ barStyle: 'light-content' }}
                 barStyle="light-content"
@@ -162,8 +202,20 @@ export default function DeviceContact({ navigation, route }) {
                                     <Avatar rounded size={50} source={{ uri: c.avartar }} />
                                     <ListItem.Content>
                                         <ListItem.Title>{c.firstname && c.lastname ? c.firstname + " " + c.lastname : "Noname"}</ListItem.Title>
+                                        <Text style={{ paddingTop: 5, paddingBottom: 5 }}>{renderStatus(c.status)}</Text>
                                         <ListItem.Subtitle>{c.phone ? c.phone : "000-000-0000"}</ListItem.Subtitle>
                                     </ListItem.Content>
+                                    <TouchableOpacity
+                                        onPress={() => toDetail(c.id)}>
+                                        <Icon
+                                            name="ellipsis-h"
+                                            type="font-awesome-5"
+                                            color={"#868e96"}
+                                            size={20}
+
+                                        />
+                                    </TouchableOpacity>
+
                                 </ListItem>
                             </TouchableOpacity>
 
@@ -174,7 +226,9 @@ export default function DeviceContact({ navigation, route }) {
                             />
                             <Text style={{ textAlign: 'center' }}>Kiểm tra danh bạ của bạn xem các tài khoản đã tham gia WeeAllo</Text>
                             <Button type="outline" title="KIỂM TRA DANH BẠ"
-                                onPress={getContactInDevice}
+                                onPress={() => {
+                                    getContactInDevice();
+                                }}
                                 containerStyle={{
                                     paddingTop: 20,
                                     paddingRight: 10
@@ -193,9 +247,11 @@ export default function DeviceContact({ navigation, route }) {
                                     }
                                 }
                             />
+
                         </View>
                 }
             </ScrollView>
+            <ActivityIndicator size="large" color="#00ff00" animating={animate} />
         </View>
     );
 }

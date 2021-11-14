@@ -1,5 +1,5 @@
 import React from "react";
-import { SectionList, StyleSheet, Text, View, Alert } from "react-native";
+import { StyleSheet, Text, View, Alert } from "react-native";
 import { Avatar, Icon, Tab } from "react-native-elements";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { Input } from "react-native-elements/dist/input/Input";
@@ -48,8 +48,9 @@ export default function Login({ navigation }) {
       );
     } else {
       dispatch(isAuthenticated(user.id));
-      navigation.navigate("TabRoute");
+      navigation.navigate("TabRoute", { screen: "Tin Nhắn" });
     }
+    console.log("user id", user.id);
 
     //navigation.navigate("TabRoute");
   };

@@ -15,6 +15,8 @@ export const userlogout = () => {
 
 export const ACTION_TYPES = {
   LOGIN: "LOGIN",
+  FINDUSERBYID: "FINDUSERBYID",
+  UPDATEBYIDUSER: "UPDATEBYIDUSER",
 };
 export const login = (phone, pass) => (dispatch) => {
   apiService
@@ -61,4 +63,32 @@ export const fetchAllFriend = (userId) => (dispatch) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+//find user by id
+export const findByIdUser = (id) => (dispatch) => {
+  apiService
+    .user()
+    .findByIdUser(id)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.FINDUSERBYID,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+//update user by id
+export const updateUserById = (userChat, id) => (dispatch) => {
+  apiService
+    .user()
+    .updateByIdUser(userChat, id)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.UPDATEBYIDUSER,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
 };

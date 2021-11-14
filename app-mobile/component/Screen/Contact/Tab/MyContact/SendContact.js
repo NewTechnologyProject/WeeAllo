@@ -48,7 +48,9 @@ export default function SendContact({ navigation, route }) {
         dispatch(actions.fetchSendContact(1));
         wait(2000).then(() => setRefreshing(false));
     }, []);
+    const onAccept = () => {
 
+    }
     return (
         <View style={styles.container}>
             <ScrollView
@@ -63,33 +65,49 @@ export default function SendContact({ navigation, route }) {
                 {
                     allSendContact.length ?
                         allSendContact.map((c, i) => (
-                            <ListItem.Swipeable key={i}
+                            <ListItem key={i}
                             >
                                 <Avatar rounded size={50} source={{ uri: c.avartar }} />
                                 <ListItem.Content >
                                     <ListItem.Title>{c.firstname + " " + c.lastname}</ListItem.Title>
                                     <ListItem.Subtitle>{"Đã gửi lời mời kết bạn !"}</ListItem.Subtitle>
                                 </ListItem.Content>
-                                <Button type="outline" title="Hủy lời mời"
-                                    containerStyle={{
-                                        paddingTop: 5,
-                                        paddingRight: 5
-                                    }}
-                                    buttonStyle={{
-                                        height: 35,
-                                        width: 90,
-                                        borderColor: "#8B0016",
-                                        borderRadius: 30,
-                                        backgroundColor: '#8B0016',
-                                    }}
-                                    titleStyle={
-                                        {
-                                            fontSize: 13,
-                                            color: '#ffffff'
+                                <View>
+                                    <Button type="outline" title="Hủy lời mời"
+                                        containerStyle={{
+                                            paddingTop: 5,
+                                            paddingRight: 5
+                                        }}
+                                        buttonStyle={{
+                                            height: 35,
+                                            width: 90,
+                                            borderColor: "#8B0016",
+                                            borderRadius: 30,
+                                            backgroundColor: '#8B0016',
+                                        }}
+                                        titleStyle={
+                                            {
+                                                fontSize: 13,
+                                                color: '#ffffff'
+                                            }
                                         }
-                                    }
-                                />
-                            </ListItem.Swipeable>
+                                        onPress={() => {
+                                            dispatch(actions.deleteSendContact(1, c.id))
+                                            Alert.alert(
+                                                "Bạn bè",
+                                                "Đã hủy lời mời kết bạn đến " + c.firstname + " " + c.lastname,
+                                                [
+                                                    {
+                                                        text: "Xác nhận",
+                                                        style: "default"
+                                                    },
+                                                ]
+                                            );
+                                        }}
+                                    />
+                                </View>
+
+                            </ListItem>
                         ))
                         :
                         <View style={{ alignItems: 'center' }}>

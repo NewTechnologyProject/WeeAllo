@@ -28,52 +28,52 @@ public class RoomChatService {
     }
 
     public RoomChat getById(Long roomId) {
-        RoomChat roomChat =null;
+        RoomChat roomChat = null;
         Optional<RoomChat> roomObj = roomChatRepository.findById(roomId);
 
-        if(roomObj.isPresent()){
+        if (roomObj.isPresent()) {
             roomChat = roomObj.get();
         }
 
         return roomChat;
     }
 
-    //Get lít messages
-    public List<Message> getAllMessages(Long roomId){
-        RoomChat roomChat =null;
+    // Get lít messages
+    public List<Message> getAllMessages(Long roomId) {
+        RoomChat roomChat = null;
         Optional<RoomChat> roomObj = roomChatRepository.findById(roomId);
         List<Message> listMessage = new ArrayList<Message>();
 
-        if(roomObj.isPresent()){
+        if (roomObj.isPresent()) {
             roomChat = roomObj.get();
         }
 
-        if(roomChat != null){
+        if (roomChat != null) {
             return roomChat.getMessageList();
         }
 
         return null;
     }
 
-    //Add room chat
-    public RoomChat addRoom(RoomChat roomChat){
+    // Add room chat
+    public RoomChat addRoom(RoomChat roomChat) {
         return roomChatRepository.save(roomChat);
     }
 
-    //Get all members in room
-    public List<UserGroup> getAllMembers (Long roomId){
+    // Get all members in room
+    public List<UserGroup> getAllMembers(Long roomId) {
         List<UserGroup> userGroups = new ArrayList<UserGroup>();
         RoomChat room = getById(roomId);
 
-        if(room != null){
+        if (room != null) {
             userGroups = room.getUserGroupList();
         }
 
         return userGroups;
     }
 
-    public void deleteRoomChatById (Long roomId){
-        try{
+    public void deleteRoomChatById(Long roomId) {
+        try {
             roomChatRepository.deleteById(roomId);
             userGroupRepository.deleteUserGroupByRoomId(roomId);
             messageRepository.deleteMessageByRoomId(roomId);
@@ -82,9 +82,8 @@ public class RoomChatService {
         }
     }
 
-    public void updateRoomChatCreator (Long roomId, Long creator){
+    public void updateRoomChatCreator(Long roomId, Long creator) {
         roomChatRepository.updateRoomChatCreator(roomId, creator);
     }
-
 
 }

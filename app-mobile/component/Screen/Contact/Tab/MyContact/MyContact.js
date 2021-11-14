@@ -1,19 +1,12 @@
 import * as React from "react";
 import {
-  ScrollView,
-  SectionList,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
-import { StyleSheet, Button, Alert } from "react-native";
+import { StyleSheet } from "react-native";
 import { Header } from "react-native-elements/dist/header/Header";
-import { BottomSheet, Icon, Input } from "react-native-elements";
-import { ListItem, Avatar, Badge } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import { useState } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import ContactGroupList from "../ContactGroupList";
 import ReceiveContact from "./ReceiveContact";
 import SendContact from "./SendContact";
 
@@ -39,20 +32,6 @@ export default function MyContact({ navigation, route }) {
       flexDirection: "row",
     },
   });
-  const list = [
-    {
-      name: "Nam Bùi",
-      avatar_url:
-        "https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799",
-      subtitle: "Đi khách với em k anh",
-    },
-    {
-      name: "Nam Bùi",
-      avatar_url:
-        "https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/84716000_238082947203821_6433588429308559360_n.jpg?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vwNfbOyKw_oAX_A7PE-&_nc_ht=scontent.fsgn8-2.fna&oh=a19307606ed7a1ddfc5332c564b8254a&oe=619E2799",
-      subtitle: "Đi khách với em k anh",
-    },
-  ];
   const [isVisible, setIsVisible] = useState(false);
   const backToAllChat = () => {
     navigation.navigate("TabRoute");
