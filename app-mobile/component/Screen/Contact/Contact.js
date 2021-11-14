@@ -8,6 +8,7 @@ import ContactGroupList from "./Tab/ContactGroupList";
 import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
 import * as actions from "../../../action/contact.action"
 import { Icon } from "react-native-elements/dist/icons/Icon";
+// import { QRCode } from 'react-native-custom-qr-codes-expo';
 const Tab = createMaterialTopTabNavigator();
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#37b24d",
   },
 });
-export default function Contact() {
+export default function Contact({ navigation }) {
   const dispatch = useDispatch();
   const [textSearch, setTextSearch] = useState("");
   const listSearch = useSelector((state) => state.contact.listSearchMobile);
@@ -77,226 +78,8 @@ export default function Contact() {
       )
     }
   }
-  const renderButton = (status, id, lastname, firstname) => {
-    if (status === 'none') {
-      return (
-        !change1 ?
-          <TouchableOpacity
-            onPress={() => {
-              setChange1(true)
-              dispatch(actions.addContact(1, id))
-              Alert.alert(
-                "Bạn bè",
-                "Đã gửi lời mời kết bạn đến " + firstname + " " + lastname,
-                [
-                  {
-                    text: "Xác nhận",
-                    style: "default"
-                  },
-                ]
-              );
-            }
-            }
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name="user"
-                type="font-awesome-5"
-                color={"#868e96"}
-                size={20}
-              />
-              <Icon
-                name="plus"
-                type="font-awesome-5"
-                color={"#868e96"}
-                size={10}
-              />
-            </View>
-          </TouchableOpacity> :
-          <TouchableOpacity
-            onPress={() => {
-              setChange1(!change1)
-              dispatch(actions.deleteSendContact(1, id))
-              Alert.alert(
-                "Bạn bè",
-                "Đã hủy lời mời đã gửi đến " + firstname + " " + lastname,
-                [
-                  {
-                    text: "Xác nhận",
-                    style: "default"
-                  },
-                ]
-              );
-            }
-            }
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name="user"
-                type="font-awesome-5"
-                color={"#045BD3"}
-                size={20}
-              />
-              <Icon
-                name="arrow-right"
-                type="font-awesome-5"
-                color={"#045BD3"}
-                size={10}
-              />
-            </View>
-          </TouchableOpacity>
-      )
-    }
-    else if (status === 'friend') {
-      return (
-        <TouchableOpacity>
-          <View style={{ flexDirection: 'row' }}>
-            <Icon
-              name="user"
-              type="font-awesome-5"
-              color={"#37b24d"}
-              size={20}
-            />
-            <Icon
-              name="check"
-              type="font-awesome-5"
-              color={"#37b24d"}
-              size={10}
-            />
-          </View>
-        </TouchableOpacity>
-      )
-    }
-    else if (status === 'receive') {
-      return (
-        !change2 ?
-          <TouchableOpacity
-            onPress={() => {
-              setChange2(true)
-              dispatch(actions.deleteSendContact(1, id))
-              Alert.alert(
-                "Bạn bè",
-                "Đã hủy lời mời kết bạn đến " + firstname + " " + lastname,
-                [
-                  {
-                    text: "Xác nhận",
-                    style: "default"
-                  },
-                ]
-              );
-            }
-            }
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name="user"
-                type="font-awesome-5"
-                color={"#045BD3"}
-                size={20}
-              />
-              <Icon
-                name="arrow-right"
-                type="font-awesome-5"
-                color={"#045BD3"}
-                size={10}
-              />
-            </View>
-          </TouchableOpacity> :
-          <TouchableOpacity
-            onPress={() => {
-              setChange2(false)
-              dispatch(actions.addContact(1, id))
-              Alert.alert(
-                "Bạn bè",
-                "Đã gửi lời mời kết bạn đến " + firstname + " " + lastname,
-                [
-                  {
-                    text: "Xác nhận",
-                    style: "default"
-                  },
-                ]
-              );
-            }
-            }
-          >
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name="user"
-                type="font-awesome-5"
-                color={"#868e96"}
-                size={20}
-              />
-              <Icon
-                name="plus"
-                type="font-awesome-5"
-                color={"#868e96"}
-                size={10}
-              />
-            </View>
-          </TouchableOpacity>
-      )
-    }
-    else if (status === 'send') {
-      return (
-        change ?
-          <TouchableOpacity>
-            <View style={{ flexDirection: 'row' }}>
-              <Icon
-                name="user"
-                type="font-awesome-5"
-                color={"#37b24d"}
-                size={20}
-              />
-              <Icon
-                name="check"
-                type="font-awesome-5"
-                color={"#37b24d"}
-                size={10}
-              />
-            </View>
-          </TouchableOpacity> :
-          <TouchableOpacity
-            onPress={() => {
-              setChange(true)
-              dispatch(actions.acceptContact(id, 1))
-              Alert.alert(
-                "Bạn bè",
-                "Đã trở thành bạn bè với " + firstname + " " + lastname,
-                [
-                  {
-                    text: "Xác nhận",
-                    style: "default"
-                  },
-                ]
-              );
-            }
-            }
-          >
-            <View style={{ flexDirection: 'row' }}
-
-            >
-              <Icon
-                name="user"
-                type="font-awesome-5"
-                color={"#B43104"}
-                size={20}
-              />
-              <Icon
-                name="arrow-left"
-                type="font-awesome-5"
-                color={"#B43104"}
-                size={10}
-
-              />
-            </View>
-          </TouchableOpacity>
-      )
-    }
-    else if (status === 'you') {
-      return (
-        <></>
-      )
-    }
+  const toDetail = (id) => {
+    navigation.navigate('DetailContact', { idDetail: id })
   }
   return (
     <View style={styles.container}>
@@ -372,7 +155,16 @@ export default function Contact() {
                           <Text style={{ paddingTop: 5, paddingBottom: 5 }}>{renderStatus(c.status)}</Text>
                           <ListItem.Subtitle>{c.phone ? c.phone : "000-000-0000"}</ListItem.Subtitle>
                         </ListItem.Content>
-                        {renderButton(c.status, c.id, c.lastname, c.firstname)}
+                        <TouchableOpacity
+                          onPress={() => toDetail(c.id)}>
+                          <Icon
+                            name="ellipsis-h"
+                            type="font-awesome-5"
+                            color={"#868e96"}
+                            size={20}
+
+                          />
+                        </TouchableOpacity>
                       </ListItem>
                     </TouchableOpacity>
                   )) :
@@ -389,9 +181,9 @@ export default function Contact() {
                     <Text>Không tìm thấy kết quả</Text>
                   </View>
               }
-
             </ScrollView>
           </View>
+
       }
 
     </View>

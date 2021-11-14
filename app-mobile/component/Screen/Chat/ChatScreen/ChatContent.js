@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon } from "react-native-elements";
-import { View, StyleSheet, LogBox, TouchableOpacity, Text, Image, Keyboard } from "react-native";
+import { View, StyleSheet, LogBox, TouchableOpacity, Text, Image, Keyboard, Modal } from "react-native";
 
-import { GiftedChat, Bubble, Actions, Composer, Send, renderChatEmpty } from "react-native-gifted-chat";
+import { GiftedChat, Bubble, Actions, Composer, Send, renderChatEmpty, MessageImage, renderChatFooter } from "react-native-gifted-chat";
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../action/roomchat.action";
 import * as action from "../../../../action/message.action";
@@ -11,6 +11,8 @@ import * as action from "../../../../action/message.action";
 import EmojiSelector, { Categories } from "react-native-emoji-selector";
 // import DocumentPicker from 'react-native-document-picker'
 import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from "expo-image-picker";
+import ImageViewer from 'react-native-image-zoom-viewer'
 import axios from "axios";
 
 export default function ChatContent({ navigation, route }) {
@@ -22,22 +24,29 @@ export default function ChatContent({ navigation, route }) {
   const [customText, setCustomText] = useState(null);
   const [statusEmoji, setStatusEmoji] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [link, setLink] = useState();
+  const [statusSend, setStatusSend] = useState(false);
   const userId = "2";
 
   const onSend = useCallback((messages = []) => {
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, messages)
     );
-    sentMessage(messages[0]);
+    sentMessage(messages[0], null, null);
     // handleFile(messages[0]);
   }, []);
 
-  const sentMessage = (message) => {
+  useEffect(() => {
+    LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+  }, [])
+
+
+  const sentMessage = (message, file, image) => {
     const messageText = {
       status: "send",
       content: message.text,
-      image: null,
-      file: null,
+      image,
+      file,
       roomChatId: activeRoom.id,
       time: new Date(),
       userId: 2,
@@ -83,6 +92,8 @@ export default function ChatContent({ navigation, route }) {
               _id: message.id,
               text: message.content ? message.content : "",
               createdAt: message.time,
+              image: message.image ? message.image : null,
+              file: message.file ? message.file : null,
               user: {
                 _id: message.userId.id,
                 name: `${message.userId.firstname} ${message.userId.lastname}`,
@@ -152,85 +163,93 @@ export default function ChatContent({ navigation, route }) {
             style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
           />
           <Composer {...props} />
-          <Icon
-            name="image"
-            type="font-awesome-5"
-            color={"#868e96"}
-            size={25}
-            style={{ marginTop: 0, marginLeft: 10, marginRight: 10 }}
-          />
-          <Icon
-            name="paperclip"
-            type="font-awesome-5"
-            color={"#868e96"}
-            size={25}
-            style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
-            onPress={pickDocument}
-          />
+          <TouchableOpacity onPress={pickImage}
+            style={{ marginTop: 0, marginLeft: 10, marginRight: 10 }}>
+            <Icon
+              name="image"
+              type="font-awesome-5"
+              color={"#868e96"}
+              size={25}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={pickDocument}>
+            <Icon
+              name="paperclip"
+              type="font-awesome-5"
+              color={"#868e96"}
+              size={25}
+            />
+          </TouchableOpacity>
         </View >
       )
     }  //Text not empty
-    return (
-      <View style={{ flexDirection: 'row', justiftyContent: "center", alignItems: "center" }}>
-        <Icon
-          name="laugh"
-          type="font-awesome-5"
-          color={"#868e96"}
-          size={25}
-          onPress={() => { setStatusEmoji(!statusEmoji); console.log(statusEmoji) }}
-          style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
-        />
-        <Composer {...props} />
-        <Send {...props} style={{ marginTop: 10, marginLeft: 10, marginRight: 10, marginRight: 10, marginLeft: 10 }}>
+    if (props.text.trim())
+      return (
+        <View style={{ flexDirection: 'row', justiftyContent: "center", alignItems: "center" }}>
           <Icon
-            name="paper-plane"
+            name="laugh"
             type="font-awesome-5"
-            color={"#0084ff"}
-            size={30}
-            style={{ marginBottom: 10, marginLeft: 10, marginRight: 10 }}
-          /></Send>
-      </View >
-    )
+            color={"#868e96"}
+            size={25}
+            onPress={() => { setStatusEmoji(!statusEmoji); console.log(statusEmoji) }}
+            style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
+          />
+          <Composer {...props} />
+          <Send {...props} style={{ marginTop: 10, marginLeft: 10, marginRight: 10, marginRight: 10, marginLeft: 10 }}>
+            <Icon
+              name="paper-plane"
+              type="font-awesome-5"
+              color={"#0084ff"}
+              size={30}
+              style={{ marginBottom: 10, marginLeft: 10, marginRight: 10 }}
+            /></Send>
+        </View >
+      )
   }
 
   // ======================================DOCUMENT============================
-  const [file, setFile] = useState();
 
   const pickDocument = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
-    console.log(result.uri);
     console.log(result);
     const formData = new FormData();
-    formData.append("file", result);
-    // axios
-    //   .post("http://192.168.43.141:4000/api/storage/uploadFile?key=file", formData)
-    //   .then((err, response) => {
-    //     console.log(err);
-    //     setFile(response.data);
-    //     console.log("file", response.data);
-    //   });
-    dispatch(action.upFile(formData));
-  };
-
-  const handleFile = (message) => {
-    // const imageA = e.target.files[0];
-    const messageText = {
-      status: "send",
-      content: message.text,
-      image: null,
-      file: null,
-      roomChatId: activeRoom.id,
-      time: new Date(),
-      userId: 2,
-    };
-    const formData = new FormData();
-    // formData.append("file", messageText);
+    formData.append("file", {
+      uri: result.uri,
+      type: result.mimeType,
+      name: result.name
+    });
     axios
-      .post("http://localhost:4000/api/messages/chat", messageText)
+      .post("http://192.168.43.141:4000/api/storage/uploadFile?key=file", formData)
       .then((response) => {
-        setSFile(response.data);
+        // setFile(response.data);
+        console.log("===> file ===>", response.data);
+        // console.log("fileeeee", file);
+        sentMessage({}, response.data, null);
+      });
+
+  };
+  // ======================================IMAGE============================
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({});
+    console.log(result);
+    setLink(result.uri);
+    const imageType = result.uri.split(".")[1];
+    const formData = new FormData();
+    formData.append("file", {
+      uri: result.uri,
+      type: `image/${imageType}`,
+      name: `photo.${result.type}`
+    });
+    console.log("fromdta", formData);
+    axios
+      .post("http://192.168.43.141:4000/api/storage/uploadFile?key=file", formData)
+      .then((response) => {
+        // setImage(response.data);
+        console.log("===> IMAGE ===>", response.data);
+        sentMessage({}, null, response.data);
       });
   };
+
 
   //====================================ON LONG PRESS BUBBLE====================
   const onLongPress = (context, message) => {
@@ -272,8 +291,27 @@ export default function ChatContent({ navigation, route }) {
       </Text>
     </View>
   }
-  // ==================================SCREEN CHAT===================================
+
+
+  const renderChatFooter = () => {
+    if (link) {
+      return (
+        <View>
+          <Text>Image loaded:</Text>
+          <TouchableOpacity onPress={() => setLink()}>
+            <Image
+              source={{ uri: link }}
+              style={{ height: 75, width: 75 }}
+            />
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  };
+  // ==================================SCREEN CHAT====================================================================================
   return (
+
     <View style={styles.container}>
       <Header
         statusBarProps={{ barStyle: "light-content" }}
@@ -322,8 +360,10 @@ export default function ChatContent({ navigation, route }) {
         onLongPress={onLongPress}
         renderAvatarOnTop={true}
         renderUsernameOnMessage={true} //show username
-        renderComposer={renderComposer}
         renderChatEmpty={renderChatEmpty}
+        renderComposer={renderComposer}
+        renderChatFooter={renderChatFooter}
+      // renderMessageImage={renderMessageImage}
       // inverted={false}
       />
       {statusEmoji === true ? (
