@@ -23,9 +23,11 @@ export default function ChatContent({ navigation, route }) {
   const [messages, setMessages] = useState([]);
   const [customText, setCustomText] = useState(null);
   const [statusEmoji, setStatusEmoji] = useState(false);
+  const [statusImage, setStatusImage] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [link, setLink] = useState();
-  const [statusSend, setStatusSend] = useState(false);
+  const [file, setFile] = useState();
+  const [image, setImage] = useState();
   const userId = "2";
 
   const onSend = useCallback((messages = []) => {
@@ -93,7 +95,6 @@ export default function ChatContent({ navigation, route }) {
               text: message.content ? message.content : "",
               createdAt: message.time,
               image: message.image ? message.image : null,
-              file: message.file ? message.file : null,
               user: {
                 _id: message.userId.id,
                 name: `${message.userId.firstname} ${message.userId.lastname}`,
@@ -121,26 +122,33 @@ export default function ChatContent({ navigation, route }) {
     navigation.navigate("GroupInformation");
   };
 
-  const styles = StyleSheet.create({
-    avatar: {
-      borderRadius: 1,
-    },
-    container: {
-      flex: 1,
-    },
-    chatInput: {
-      position: "absolute",
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "white",
-      height: 55,
-      borderWidth: 1,
-      borderColor: "white",
-      borderTopColor: "#D8D8D8",
-      flexDirection: "row",
-    },
-  });
+  // const styles = StyleSheet.create({
+  //   avatar: {
+  //     borderRadius: 1,
+  //   },
+  //   container: {
+  //     flex: 1,
+  //   },
+  //   chatInput: {
+  //     position: "absolute",
+  //     left: 0,
+  //     right: 0,
+  //     bottom: 0,
+  //     backgroundColor: "white",
+  //     height: 55,
+  //     borderWidth: 1,
+  //     borderColor: "white",
+  //     borderTopColor: "#D8D8D8",
+  //     flexDirection: "row",
+  //   },
+  //   footer: {
+  //     position: "absolute",
+  //     backgroundColor: "blue",
+  //     height: 150,
+  //     width: `100%`,
+  //     bottom: 0
+  //   }
+  // });
 
   // =================================INPUT CHAT=========================================
   const renderComposer = props => {
@@ -152,18 +160,11 @@ export default function ChatContent({ navigation, route }) {
             type="font-awesome-5"
             color={"#868e96"}
             size={25}
-            onPress={() => {
-              Keyboard.addListener(
-                'keyboardDidHide',
-                () => {
-                  setKeyboardVisible(false); // or some other action
-                }
-              ), setStatusEmoji(!statusEmoji)
-            }}
+            onPress={() => setStatusEmoji(!statusEmoji)}
             style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
           />
           <Composer {...props} />
-          <TouchableOpacity onPress={pickImage}
+          <TouchableOpacity onPress={() => setStatusImage(!statusImage)}
             style={{ marginTop: 0, marginLeft: 10, marginRight: 10 }}>
             <Icon
               name="image"
@@ -191,7 +192,7 @@ export default function ChatContent({ navigation, route }) {
             type="font-awesome-5"
             color={"#868e96"}
             size={25}
-            onPress={() => { setStatusEmoji(!statusEmoji); console.log(statusEmoji) }}
+            onPress={() => setStatusEmoji(!statusEmoji)}
             style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
           />
           <Composer {...props} />
@@ -229,10 +230,13 @@ export default function ChatContent({ navigation, route }) {
 
   };
   // ======================================IMAGE============================
+
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({});
     console.log(result);
     setLink(result.uri);
+    console.log("link", link);
     const imageType = result.uri.split(".")[1];
     const formData = new FormData();
     formData.append("file", {
@@ -245,10 +249,50 @@ export default function ChatContent({ navigation, route }) {
       .post("http://192.168.43.141:4000/api/storage/uploadFile?key=file", formData)
       .then((response) => {
         // setImage(response.data);
-        console.log("===> IMAGE ===>", response.data);
+        console.log("===> IMAGE ===>", image);
         sentMessage({}, null, response.data);
       });
   };
+
+  const wait = (timeout) => {
+    return
+    new Promise((resolve) => setTimeout(resolve, timeout))
+  }
+
+  // ===============================OPEN  CAMERA========================
+  const openCamera = async () => {
+    // Ask the user for the permission to access the camera
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync();
+    const formData = new FormData();
+    const imageUri = result.uri.replace("file:/data", "file:///data");
+    const imageType = result.uri.split(".")[1];
+
+    formData.append("file", {
+      uri: imageUri,
+      type: `image/${imageType}`,
+      name: `photo.${imageType}`,
+    });
+
+    if (!result.cancelled) {
+      axios
+        .post(
+          "http://192.168.43.141:4000/api/storage/uploadFile?key=file",
+          formData
+        )
+        .then((response) => {
+          sentMessage({}, null, response.data);
+          setStatusImage(false)
+        });
+    }
+  };
+
 
 
   //====================================ON LONG PRESS BUBBLE====================
@@ -292,6 +336,7 @@ export default function ChatContent({ navigation, route }) {
     </View>
   }
 
+  // ==========================CHAT FOOTER ====================================
 
   const renderChatFooter = () => {
     if (link) {
@@ -311,7 +356,6 @@ export default function ChatContent({ navigation, route }) {
   };
   // ==================================SCREEN CHAT====================================================================================
   return (
-
     <View style={styles.container}>
       <Header
         statusBarProps={{ barStyle: "light-content" }}
@@ -362,7 +406,7 @@ export default function ChatContent({ navigation, route }) {
         renderUsernameOnMessage={true} //show username
         renderChatEmpty={renderChatEmpty}
         renderComposer={renderComposer}
-        renderChatFooter={renderChatFooter}
+      // renderChatFooter={renderChatFooter}
       // renderMessageImage={renderMessageImage}
       // inverted={false}
       />
@@ -373,17 +417,80 @@ export default function ChatContent({ navigation, route }) {
           columns={9}
         />
       ) : (
-        <View style={{}} />
+        <View />
+      )}
+
+      {statusImage ? (
+        <View style={styles.footer}>
+          <TouchableOpacity style={styles.panelButton} onPress={openCamera}>
+            <Text style={styles.panelButtonTitle}>Chụp ảnh mới</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.panelButton} onPress={pickImage}>
+            <Text style={styles.panelButtonTitle}>
+              Chọn ảnh từ thiết bị
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.panelButton}
+            onPress={() => setStatusImage(false)}
+          >
+            <Text style={styles.panelButtonTitle}>Hủy</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View />
       )}
     </View>
   );
 }
 const styles = StyleSheet.create({
+  avatar: {
+    borderRadius: 1,
+  },
   container: {
     flex: 1,
   },
-
-  sendingContainer: {
-    marginRight: 25
-  }
+  chatInput: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "white",
+    height: 55,
+    borderWidth: 1,
+    borderColor: "white",
+    borderTopColor: "#D8D8D8",
+    flexDirection: "row",
+  },
+  footer: {
+    // position: "absolute",
+    backgroundColor: "white",
+    height: `auto`,
+    width: `100%`,
+    bottom: 0
+  },
+  panelTitle: {
+    fontSize: 27,
+    height: 35,
+  },
+  panelSubtitle: {
+    fontSize: 14,
+    color: "gray",
+    height: 30,
+    marginBottom: 10,
+  },
+  panelButton: {
+    padding: 13,
+    borderRadius: 10,
+    backgroundColor: "white",
+    marginVertical: 7,
+    width: 210,
+  },
+  panelButtonTitle: {
+    fontSize: 17,
+    fontWeight: "bold",
+    color: "#0099FF",
+    // color: "white"
+  },
 });
