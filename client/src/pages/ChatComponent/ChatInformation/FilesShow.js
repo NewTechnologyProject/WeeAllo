@@ -13,8 +13,6 @@ import classes from "./FilesShow.module.css";
 const FilesShow = (props) => {
   const { listFiles: files } = props;
 
-  console.log(files);
-
   const getFileName = (str) => {
     const str1 = str.split("/")[3];
     const str2 = str1.substring(str1.indexOf("-") + 1);
@@ -36,20 +34,14 @@ const FilesShow = (props) => {
         <List component="div" disablePadding>
           <Grid container>
             {files &&
-              files.map((file) => (
-                <Grid
-                  item
-                  xs={12}
-                  padding={1}
-                  className={classes.item}
-                  key={file.key}
-                >
+              files.map((file, i) => (
+                <Grid item xs={12} padding={1} className={classes.item} key={i}>
                   <FileIcon
                     extension={getType(file.url)}
                     {...defaultStyles[getType(file.url)]}
                     className={classes.icon}
                   />
-                  <a href={file.url} className={classes.text}>
+                  <a href={file.url} className={classes.text} target="_blank">
                     {getFileName(file.url)}
                   </a>
                 </Grid>

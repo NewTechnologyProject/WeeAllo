@@ -20,6 +20,7 @@ export default function ChatInfomation(props) {
   const [listFiles, setListFiles] = useState({ files: [], media: [] });
   const [needLoadMembers, setNeedLoadMembers] = useState({ name: "new" });
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const newMessage = useSelector((state) => state.message.message);
 
   const getListMembers = useCallback((roomId) => {
     fetchAllMembers(roomId)
@@ -30,6 +31,26 @@ export default function ChatInfomation(props) {
         console.log(error);
       });
   }, []);
+
+  const getFilesAndMedia = (message) => {
+    if (message.file) {
+      setListFiles((prevState) => {
+        return {
+          files: [...prevState.files, { key: message.id, url: message.file }],
+          media: [...prevState.media],
+        };
+      });
+    }
+
+    if (message.image) {
+      setListFiles((prevState) => {
+        return {
+          files: [...prevState.files],
+          media: [...prevState.media, { key: message.id, url: message.image }],
+        };
+      });
+    }
+  };
 
   useEffect(() => {
     if (needLoadMembers) {
@@ -42,32 +63,16 @@ export default function ChatInfomation(props) {
       setListFiles({ files: [], media: [] });
 
       listMessages.map((message) => {
-        if (message.file) {
-          setListFiles((prevState) => {
-            return {
-              files: [
-                ...prevState.files,
-                { key: message.id, url: message.file },
-              ],
-              media: [...prevState.media],
-            };
-          });
-        }
-
-        if (message.image) {
-          setListFiles((prevState) => {
-            return {
-              files: [...prevState.files],
-              media: [
-                ...prevState.media,
-                { key: message.id, url: message.image },
-              ],
-            };
-          });
-        }
+        getFilesAndMedia(message);
       });
     }
   }, [props.activeRoom, listMessages]);
+
+  useEffect(() => {
+    if (newMessage) {
+      getFilesAndMedia(newMessage);
+    }
+  }, [newMessage]);
 
   const needLoadHandler = (newMembers) => {
     setNeedLoadMembers(newMembers);
@@ -124,9 +129,11 @@ export default function ChatInfomation(props) {
               <GroupChatMember
                 handleClick={handleClick}
                 creator={props.activeRoom.creator}
+                roomId={props.activeRoom.id}
                 members={listMembers}
                 open={open}
                 onOpenModal={openModalHandler}
+                onNeedLoad={needLoadHandler}
               />
             )}
 

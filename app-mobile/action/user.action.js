@@ -17,6 +17,7 @@ export const ACTION_TYPES = {
   LOGIN: "LOGIN",
   FINDUSERBYID: "FINDUSERBYID",
   UPDATEBYIDUSER: "UPDATEBYIDUSER",
+  REGISTER: 'REGISTER'
 };
 export const login = (phone, pass) => (dispatch) => {
   apiService
@@ -87,6 +88,18 @@ export const updateUserById = (userChat, id) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: ACTION_TYPES.UPDATEBYIDUSER,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const register = (userChat) => (dispatch) => {
+  apiService
+    .user()
+    .addUser(userChat)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.REGISTER,
         payload: response.data,
       });
     })

@@ -48,7 +48,7 @@ const Functions = (props) => {
   };
 
   const outGroupChat = () => {
-    if (props.members.length <= 2) {
+    if (props.members.length <= 1) {
       removeGroupChat();
     } else {
       if (Number(userId) === props.creator) {

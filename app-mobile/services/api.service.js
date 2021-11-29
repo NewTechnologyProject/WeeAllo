@@ -2,7 +2,8 @@ import axios from "axios";
 // import { Feedback } from "@material-ui/icons";
 // import { phone } from "faker";
 
-const baseApi = "http://192.168.1.12:4000/api/";
+const baseApi = "http://192.168.1.14:4000/api/";
+const SOCKET_URL = "ws://192.168.1.14:3030";
 
 export default {
   user(url = baseApi + "user/") {
@@ -23,11 +24,13 @@ export default {
   contact(url = baseApi + "contact/") {
     return {
       getAllContact: (id) => axios.get(url + "get-all-contacts/" + id),
-      getJsonString: (jsonString, id) => axios.post(url + "contact-json-device/" + id, jsonString),
+      getJsonString: (jsonString, id) =>
+        axios.post(url + "contact-json-device/" + id, jsonString),
       getSendContact: (id) => axios.get(url + "get-send-contacts/" + id),
       getReceiveContact: (id) => axios.get(url + "get-receive-contacts/" + id),
       searchContact: (phone) => axios.get(url + "search-contact/" + phone),
-      searchContactMobile: (id, phone) => axios.get(url + "search-contact-mobile/" + id + "&" + phone),
+      searchContactMobile: (id, phone) =>
+        axios.get(url + "search-contact-mobile/" + id + "&" + phone),
       detailContact: (idAuth, idShow) =>
         axios.get(url + "detail-contact/" + idAuth + "&" + idShow),
       deleteContact: (id1, id2) =>
@@ -82,3 +85,5 @@ export default {
     };
   },
 };
+
+export { SOCKET_URL };

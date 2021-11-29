@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { useState } from "react";
 import { Text, View, ScrollVie, StyleSheet } from "react-native";
 import { Button } from "react-native-elements/dist/buttons/Button";
@@ -12,22 +13,26 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ChangePassword from "./ChangePassword";
 import Profile1 from "./Profile1";
+
 export default function Profile({ navigation }) {
   const Tab = createMaterialTopTabNavigator();
   const SET_USER_AUTHENTICATE = "user_authenticated";
   const user = useSelector((state) => state.user.userAuth);
   const [getValue, setGetValue] = React.useState("");
+  const [textSearch, setTextSearch] = useState("");
+  const [index, setIndex] = useState(0);
   const dispatch = useDispatch();
+
   const logout = () => {
     dispatch(actions.userlogout);
     console.log("id", user.id);
     navigation.navigate("Login");
   };
+
   const navigateEdit = () => {
     navigation.navigate("EditProfile");
   };
-  const [textSearch, setTextSearch] = useState("");
-  const [index, setIndex] = useState(0);
+
   return (
     <View style={styles.container}>
       <Header
@@ -63,6 +68,7 @@ export default function Profile({ navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

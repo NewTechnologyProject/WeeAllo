@@ -206,7 +206,7 @@ export default function DeviceContact({ navigation, route }) {
                                         <ListItem.Subtitle>{c.phone ? c.phone : "000-000-0000"}</ListItem.Subtitle>
                                     </ListItem.Content>
                                     <TouchableOpacity
-                                        onPress={() => toDetail(c.id)}>
+                                        onPress={() => toDetail(c.phone)}>
                                         <Icon
                                             name="ellipsis-h"
                                             type="font-awesome-5"

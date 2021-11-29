@@ -21,7 +21,7 @@ const GroupInformation = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const listMembers = useSelector((state) => state.roomchat.listMembers);
-  const userId = "2";
+  const userId = "1";
 
   useEffect(() => {
     dispatch(fetchAllMembers(activeRoom.id));
@@ -71,8 +71,6 @@ const GroupInformation = ({ navigation, route }) => {
       .then((response) => {
         console.log("removed");
         backToChat();
-        // props.onNeedLoad(props.roomId);
-        // props.onSetActiveRoomNull();
       })
       .catch((error) => {
         console.log(error);

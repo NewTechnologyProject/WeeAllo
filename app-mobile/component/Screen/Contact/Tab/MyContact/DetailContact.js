@@ -80,9 +80,9 @@ export default function DetailContact({ navigation, route, props }) {
             setDetailContact(detail);
         }
     }, [detail]);
-    console.log(detailContact)
+    console.log(idDetail)
     useEffect(() => {
-        dispatch(actions.detailContact(1, idDetail));
+        dispatch(actions.findUserByPhone(idDetail, 1));
     }, [])
     const renderButton = (status, id, lastname, firstname) => {
         if (status === 'none') {
@@ -608,6 +608,7 @@ export default function DetailContact({ navigation, route, props }) {
             )
         }
     }
+    console.log(detailContact)
     const renderStatus = (status) => {
         if (status === 'none') {
             return (

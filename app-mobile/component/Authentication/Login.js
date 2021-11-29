@@ -64,6 +64,12 @@ export default function Login({ navigation }) {
 
     console.log("Done.");
   };
+  const register = () => {
+    navigation.navigate("Register");
+  };
+  const forgot = () => {
+    navigation.navigate("ForgotPass");
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.text}>ĐĂNG NHẬP</Text>
@@ -116,6 +122,22 @@ export default function Login({ navigation }) {
           color: "white",
         }}
         onPress={() => login()}
+      />
+      <Button
+        title="Đăng ký"
+        onPress={() => register()}
+        titleStyle={{
+          color: "#039BE5",
+        }}
+        type="clear"
+      />
+      <Button
+        title="Quên mật khẩu"
+        onPress={() => forgot()}
+        titleStyle={{
+          color: "#039BE5",
+        }}
+        type="clear"
       />
     </View>
   );

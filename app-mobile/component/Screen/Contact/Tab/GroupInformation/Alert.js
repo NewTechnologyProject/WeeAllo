@@ -4,7 +4,17 @@ import { Overlay, Button } from "react-native-elements";
 import { Text, View, StyleSheet } from "react-native";
 
 const Alert = (props) => {
-  const { visible, toggleOverlay, func } = props;
+  const { visible, toggleOverlay, func, memberId } = props;
+
+  const executeFunction = (func) => {
+    if (func) {
+      if (memberId) {
+        func.function(memberId);
+      } else {
+        func.function();
+      }
+    }
+  };
 
   return (
     <Overlay
@@ -15,18 +25,21 @@ const Alert = (props) => {
       <View style={styles.container}>
         {func && func.key === 1 && <Text>Bạn có chắc muốn rời nhóm?</Text>}
         {func && func.key === 2 && <Text>Bạn có chắc muốn xóa nhóm?</Text>}
+        {func && func.key === 3 && (
+          <Text>Bạn có chắc muốn mời thành viên này ra khỏi nhóm?</Text>
+        )}
         <View style={styles.btns}>
           <Button
             type="clear"
             buttonStyle={styles.btn}
             titleStyle={styles.title}
             title={"Đồng ý"}
-            onPress={func ? func.function : () => {}}
+            onPress={executeFunction.bind(this, func)}
           />
           <Button
             type="clear"
             buttonStyle={styles.btn}
-            titleStyle={styles.title}
+            titleStyle={{ color: "#868e96" }}
             title={"Hủy"}
             onPress={toggleOverlay.bind(this, func)}
           />

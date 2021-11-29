@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Icon, ListItem, Avatar } from "react-native-elements";
+import { Icon, ListItem, Avatar, BottomSheet } from "react-native-elements";
 import {
   FlatList,
   Text,
@@ -9,11 +9,25 @@ import {
   StyleSheet,
 } from "react-native";
 
+import { deleteUserGroup } from "../../../../../action/usergroup.action";
+import { fetchAllMembers } from "../../../../../action/roomchat.action";
+import Alert from "./Alert";
 import { Header } from "react-native-elements/dist/header/Header";
 
 const GroupMembers = ({ navigation }) => {
+  const userId = "1";
+  const [open, setOpen] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [func, setFunc] = useState(null);
+  const [memberId, setMemberId] = useState(null);
   const listMembers = useSelector((state) => state.roomchat.listMembers);
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
+  const dispatch = useDispatch();
+
+  const toggleOverlay = (item) => {
+    setVisible(!visible);
+    setFunc(item);
+  };
 
   const backToGroupInformation = () => {
     navigation.navigate("GroupInformation");
@@ -23,8 +37,36 @@ const GroupMembers = ({ navigation }) => {
     navigation.navigate("AddMember");
   };
 
+  const onPressBottomSheet = (id) => {
+    setMemberId(id);
+    setOpen(true);
+  };
+
+  const onCloseBottomSheet = () => {
+    setOpen(false);
+  };
+
+  const removeMember = (memberId) => {
+    deleteUserGroup(activeRoom.id, memberId)
+      .then((response) => {
+        dispatch(fetchAllMembers(activeRoom.id));
+        setOpen(false);
+        setVisible(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <View style={styles.container}>
+      <Alert
+        visible={visible}
+        toggleOverlay={toggleOverlay}
+        func={func}
+        memberId={memberId}
+      />
+
       <Header
         statusBarProps={{ barStyle: "light-content" }}
         barStyle="light-content"
@@ -87,36 +129,60 @@ const GroupMembers = ({ navigation }) => {
               data={listMembers}
               renderItem={(item) => {
                 return (
-                  <ListItem.Swipeable key={item.index}>
-                    <Avatar
-                      rounded
-                      icon={{ name: "user", type: "font-awesome" }}
-                      size={50}
-                      source={{
-                        uri: `${
-                          item.item.avatar ? item.item.avatar : "dummy.js"
-                        }`,
-                      }}
-                    />
-                    <ListItem.Content>
-                      <ListItem.Title>{`${item.item.firstname} ${item.item.lastname}`}</ListItem.Title>
-                      <ListItem.Subtitle>{`${
-                        activeRoom.creator === item.item.id ? "Trưởng nhóm" : ""
-                      }`}</ListItem.Subtitle>
-                    </ListItem.Content>
-                    <Icon
-                      name="comment-dots"
-                      type="font-awesome-5"
-                      color="gray"
-                      size={20}
-                    />
-                  </ListItem.Swipeable>
+                  <TouchableOpacity
+                    onPress={
+                      activeRoom.creator !== item.item.id &&
+                      Number(userId) === activeRoom.creator
+                        ? onPressBottomSheet.bind(this, item.item.id)
+                        : () => {}
+                    }
+                  >
+                    <ListItem key={item.index}>
+                      <Avatar
+                        rounded
+                        icon={{ name: "user", type: "font-awesome" }}
+                        size={50}
+                        source={{
+                          uri: `${
+                            item.item.avatar ? item.item.avatar : "dummy.js"
+                          }`,
+                        }}
+                      />
+                      <ListItem.Content>
+                        <ListItem.Title>{`${item.item.firstname} ${item.item.lastname}`}</ListItem.Title>
+                        <ListItem.Subtitle>{`${
+                          activeRoom.creator === item.item.id
+                            ? "Trưởng nhóm"
+                            : ""
+                        }`}</ListItem.Subtitle>
+                      </ListItem.Content>
+                    </ListItem>
+                  </TouchableOpacity>
                 );
               }}
             />
           </View>
         )}
       </View>
+
+      <BottomSheet isVisible={open}>
+        <ListItem
+          onPress={toggleOverlay.bind(this, { key: 3, function: removeMember })}
+        >
+          <ListItem.Content>
+            <ListItem.Title style={{ color: "#e03131" }}>
+              Mời ra nhóm
+            </ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+
+        {/* Cancel */}
+        <ListItem onPress={onCloseBottomSheet}>
+          <ListItem.Content>
+            <ListItem.Title style={{ color: "#868e96" }}>Cancel</ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+      </BottomSheet>
     </View>
   );
 };

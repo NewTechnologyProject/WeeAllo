@@ -1,5 +1,4 @@
 import React, { PureComponent, useEffect, Fragment } from "react";
-import PropTypes from "prop-types";
 import InputBase from "@material-ui/core/InputBase";
 import { useState } from "react";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
@@ -9,6 +8,7 @@ import Divider from "@material-ui/core/Divider";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "src/actions/create-new-message.action";
 import * as actionuser from "src/actions/customer.action";
+import apiService from "../../services/api.service";
 
 /**
  *  New Message Input
@@ -65,22 +65,12 @@ export const MessageInput = (props) => {
       const messageText = {
         status: "send",
         content: message,
-        image: null,
-        file: null,
-        roomChatId: props.activeRoom,
-        time: time,
-        userId: Number(userId),
-      };
-
-      const messageTextRealTime = {
-        status: "send",
-        content: message,
-        image: null,
-        file: null,
-        time: time,
+        image: props.image,
+        file: props.file,
         roomChatId: {
           id: props.activeRoom,
         },
+        time: today,
         userId: {
           id: Number(user),
           firstname: userProfile.firstname,
@@ -88,8 +78,18 @@ export const MessageInput = (props) => {
           avartar: userProfile.avartar,
         },
       };
-      props.onSubmitMessage(messageTextRealTime);
-      dispatch(actions.addMessage(messageText));
+      // dispatch(actions.addMessage(messageText));
+      apiService
+        .message()
+        .addMessage(messageText)
+        .then((response) => {
+          dispatch({
+            type: "ADDMESSAGE",
+            payload: response.data,
+          });
+          props.onSubmitMessage(response.data);
+        })
+        .catch((err) => console.log(err));
       setMessage("");
     }
   };
@@ -100,27 +100,29 @@ export const MessageInput = (props) => {
       content: message,
       image: props.image,
       file: props.file,
-      roomChatId: props.activeRoom,
-      time: time,
-      userId: Number(userId),
-    };
-    const messageTextRealTime = {
-      status: "send",
-      content: message,
-      image: props.image,
-      file: props.file,
-      time: time,
       roomChatId: {
         id: props.activeRoom,
       },
+      time: today,
       userId: {
         id: Number(user),
         firstname: userProfile.firstname,
         lastname: userProfile.lastname,
+        avartar: userProfile.avartar,
       },
     };
-    props.onSubmitMessage(messageTextRealTime);
-    dispatch(actions.addMessage(messageText));
+    // dispatch(actions.addMessage(messageText));
+    apiService
+      .message()
+      .addMessage(messageText)
+      .then((response) => {
+        dispatch({
+          type: "ADDMESSAGE",
+          payload: response.data,
+        });
+        props.onSubmitMessage(response.data);
+      })
+      .catch((err) => console.log(err));
     setMessage("");
   };
 

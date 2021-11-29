@@ -1,14 +1,12 @@
-import { Icon } from "@iconify/react";
 import GroupIcon from "@material-ui/icons/Group";
 // material
 import { alpha, styled } from "@material-ui/core/styles";
 import { Card, Typography } from "@material-ui/core";
 // utils
-import { fShortenNumber } from "../../../utils/formatNumber";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "src/actions/usergroup.action";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import * as actions from "src/actions/customer.action";
+import React, { useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -40,29 +38,43 @@ const IconWrapperStyle = styled("div")(({ theme }) => ({
 
 export default function AppNewUsers() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.customer.userAuth);
-  //const group = useSelector((state) => state.usergroup.countGroup);
-  const [data, setData] = useState([]);
+  const userId = useSelector((state) => state.customer.userAuth);
+  const listRooms = useSelector((state) => state.customer.listRooms);
+  const navigate = useNavigate();
+
+  const loadRoomsHandler = useCallback(() => {
+    dispatch(actions.fetchAllRoom(userId));
+  }, [userId, actions.fetchAllRoom]);
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:4000/api/usergroups/groups/${user}`)
-      .then((res) => {
-        console.log(res.data);
-        setData(res.data);
-      })
-      .catch((error) => {
-        console.log("err", error);
-      });
-  }, []);
+    loadRoomsHandler();
+  }, [loadRoomsHandler]);
+
+  const changePage = () => {
+    navigate("/dashboard/groups", { replace: true });
+  };
+
+  const getTotalGroupChat = (list) => {
+    let total = 0;
+    for (let room of list) {
+      if (room.creator) {
+        total++;
+      }
+    }
+    return total;
+  };
+
   return (
-    <RootStyle>
+    <RootStyle style={{ cursor: "pointer" }} onClick={changePage}>
       <IconWrapperStyle>
         <GroupIcon />
       </IconWrapperStyle>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         Số lượng nhóm chat
       </Typography>
-      <Typography variant="h3">{data === undefined ? "0" : data}</Typography>
+      <Typography variant="h3">
+        {listRooms && listRooms.length > 0 ? getTotalGroupChat(listRooms) : 0}
+      </Typography>
     </RootStyle>
   );
 }

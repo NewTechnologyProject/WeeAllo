@@ -15,7 +15,7 @@ import {
 import { addUserGroup } from "../../../../../action/usergroup.action";
 
 const AddGroup = ({ navigation }) => {
-  const userId = "2";
+  const userId = "1";
   const dispatch = useDispatch();
   const listFriends = useSelector((state) => state.user.listFriends);
   const [groupName, setGroupName] = useState("");
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   list: { flex: 1, width: "100%" },
   spinnerTextStyle: {
-    color: "#FFF",
+    color: "#fff",
   },
 });
 
