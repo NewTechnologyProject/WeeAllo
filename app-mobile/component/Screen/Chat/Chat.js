@@ -40,6 +40,7 @@ export default function Chat({ navigation, route }) {
     loadRoomsHandler();
   }, [loadRoomsHandler, route.params]);
 
+
   //Set members on room to get name
   const setListMembersOnRoom = useCallback(
     (rooms) => {
