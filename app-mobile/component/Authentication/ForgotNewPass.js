@@ -6,9 +6,29 @@ import { Button } from "react-native-elements/dist/buttons/Button";
 import { Input } from "react-native-elements/dist/input/Input";
 import imagePath from "../../constants/imagePath";
 const styles = StyleSheet.create({
+  borderStyleBase: {
+    width: 30,
+    height: 45,
+  },
+
+  borderStyleHighLighted: {
+    borderColor: "#03DAC6",
+  },
+
+  underlineStyleBase: {
+    width: 40,
+    height: 55,
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    color: "black",
+  },
+
+  underlineStyleHighLighted: {
+    borderColor: "#03DAC6",
+  },
   container: {
     flex: 1,
-    top: "30%",
+    top: "15%",
     padding: 40,
     alignItems: "center",
   },
@@ -18,14 +38,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
-  // img: {
-  //     textAlign: 'center',
-  // }
 });
 
 export default function ForgotNewPass({ navigation }) {
-  const forgotnewpass = () => {
-    navigation.navigate("Login");
+  const [newPass, setNewPass] = React.useState("");
+  const [confirmPass, setConfirmPass] = React.useState("");
+  // const initialFieldValues = {
+  //   newpass : newpass,
+  //   confirmPass:confirmPass,
+  // }
+  const handleForgot = () => {
+    const confirm = confirmPass;
+    dispatch(actions.forgotpass(phone, confirm));
   };
   return (
     <View style={styles.container}>
@@ -38,10 +62,14 @@ export default function ForgotNewPass({ navigation }) {
         }}
       />
       <Input
-        placeholder="Mật khẩu cũ"
+        type="text"
+        placeholder="Mật khẩu mới"
+        name="newpass"
+        onChangeText={(e) => setNewPass(e)}
+        value={newPass}
         leftIcon={
           <Icon
-            name="unlock-alt"
+            name="key"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}
@@ -49,10 +77,14 @@ export default function ForgotNewPass({ navigation }) {
         }
       />
       <Input
-        placeholder="Mật khẩu mới"
+        type="text"
+        placeholder="Xác nhận mật khẩu "
+        name="newpass"
+        onChangeText={(e) => setConfirmPass(e)}
+        value={confirmPass}
         leftIcon={
           <Icon
-            name="unlock-alt"
+            name="key"
             type="font-awesome-5"
             color={"#098524"}
             style={{ paddingRight: 15 }}
@@ -73,7 +105,7 @@ export default function ForgotNewPass({ navigation }) {
         titleStyle={{
           color: "white",
         }}
-        onPress={() => forgotnewpass()}
+        onPress={() => handleForgot()}
       />
     </View>
   );
