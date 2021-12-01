@@ -1,5 +1,7 @@
 import React, { useState, Fragment, useCallback, useEffect } from "react";
 
+import { deleteUserGroup } from "src/actions/usergroup.action";
+import Alert from "./alert/alert";
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -10,9 +12,49 @@ import { Avatar } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import IconButton from "@material-ui/core/IconButton";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import Popper from "@material-ui/core/Popper";
+import PopupState, { bindToggle, bindPopper } from "material-ui-popup-state";
+import Fade from "@material-ui/core/Fade";
+import Paper from "@material-ui/core/Paper";
 import classes from "./GroupChatMembers.module.css";
 
 const GroupChatMember = (props) => {
+  const [open, setOpen] = useState(false);
+  const [memberId, setMemberId] = useState(null);
+
+  const userId = localStorage.getItem("user_authenticated");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const removeMember = (memberId) => {
+    deleteUserGroup(props.roomId, memberId)
+      .then((response) => {
+        props.onNeedLoad(memberId);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const showRemoveAlert = (id) => {
+    handleClickOpen();
+    setMemberId(id);
+  };
+
+  const contentRemove = {
+    title: "Bạn có chắc muốn mời thành viên này ra khỏi nhóm chat?",
+    function: removeMember,
+  };
+
   return (
     <List component="nav" aria-labelledby="nested-list-subheader">
       <ListItem button onClick={props.handleClick}>
@@ -59,10 +101,69 @@ const GroupChatMember = (props) => {
                     primary={`${user.firstname} ${user.lastname}`}
                     secondary={user.id === props.creator ? "Trưởng nhóm" : ""}
                   />
+
+                  {/* Actions */}
+                  {!(user.id === props.creator) &&
+                    Number(userId) === props.creator && (
+                      <ListItemSecondaryAction>
+                        <PopupState
+                          variant="popper"
+                          popupId="demo-popup-popper"
+                        >
+                          {(popupState) => (
+                            <Fragment>
+                              <IconButton {...bindToggle(popupState)}>
+                                <MoreVertIcon fontSize="small" />
+                              </IconButton>
+
+                              <Popper
+                                {...bindPopper(popupState)}
+                                transition
+                                placement="bottom-end"
+                              >
+                                {({ TransitionProps }) => (
+                                  <Fade {...TransitionProps} timeout={100}>
+                                    <Paper>
+                                      <List
+                                        component="div"
+                                        disablePadding
+                                        className={classes["choice-titles"]}
+                                      >
+                                        <ListItem
+                                          className={classes["choice-title"]}
+                                          button
+                                          onClick={showRemoveAlert.bind(
+                                            this,
+                                            user.id
+                                          )}
+                                        >
+                                          <ListItemText
+                                            primary="Mời ra nhóm"
+                                            primaryTypographyProps={{
+                                              fontSize: 14,
+                                            }}
+                                          />
+                                        </ListItem>
+                                      </List>
+                                    </Paper>
+                                  </Fade>
+                                )}
+                              </Popper>
+                            </Fragment>
+                          )}
+                        </PopupState>
+                      </ListItemSecondaryAction>
+                    )}
                 </ListItem>
               );
             })}
         </List>
+        <Alert
+          open={open}
+          onClose={handleClose}
+          content={contentRemove}
+          memberId={memberId}
+        />
       </Collapse>
     </List>
   );

@@ -6,7 +6,9 @@ import configureStore from "./reducer/store";
 import { Provider, useSelector } from "react-redux";
 const store = configureStore();
 export default function App() {
-  LogBox.ignoreAllLogs(true)
+  //Ignore all warning
+  LogBox.ignoreAllLogs();
+
   return (
     <Provider store={store}>
       <View style={styles.container}>

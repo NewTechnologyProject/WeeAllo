@@ -6,8 +6,14 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 
 const Alert = (props) => {
+  const { memberId } = props;
+
   const execute = () => {
-    props.content.function();
+    if (memberId) {
+      props.content.function(memberId);
+    } else {
+      props.content.function();
+    }
     props.onClose();
   };
 

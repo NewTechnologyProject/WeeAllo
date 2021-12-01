@@ -13,6 +13,7 @@ import { Icon } from "react-native-elements";
 import { ListItem, Avatar } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../action/user.action";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const styles = StyleSheet.create({
   container: {},
   sectionHeader: {
@@ -41,14 +42,16 @@ export default function Profile1({ navigation }) {
   const profile = useSelector((state) => state.user.userById);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
-    dispatch(actions.findByIdUser(1));
-  }, []);
-  console.log(user)
+    dispatch(actions.findByIdUser(user));
+  }, [user]);
+  //console.log("userauth", user);
   useEffect(() => {
     if (profile !== null) {
       setUserProfile(profile);
     }
   }, [profile]);
+  //console.log("userbyid", profile);
+
   useEffect(() => {
     if (userProfile !== null) {
       //setUserId(userProfile.id);
@@ -60,9 +63,17 @@ export default function Profile1({ navigation }) {
       //   setDate(userProfile.birthday);
     }
   }, [userProfile]);
-  const logout = () => {
-    dispatch(actions.userlogout);
-    console.log("id", user.id);
+  const logout = async () => {
+    try {
+      await dispatch(actions.userlogout());
+    } catch (err) {
+      console.log("err", err);
+    }
+    // try {
+    //   await AsyncStorage.removeItem("user_authenticated");
+    // } catch (exception) {
+    //   console.log("err", exception);
+    // }
     navigation.navigate("Login");
   };
   const changeEdit = () => {
@@ -103,8 +114,12 @@ export default function Profile1({ navigation }) {
                 size="large"
               />
               <ListItem.Content>
-                <ListItem.Title>{userProfile ? userProfile.firstname + " " + userProfile.lastname : ""}</ListItem.Title>
-                <Text>Sửa thông tin cá nhân</Text>
+                <ListItem.Title>
+                  {userProfile
+                    ? userProfile.firstname + " " + userProfile.lastname
+                    : ""}
+                </ListItem.Title>
+                <Text>Cập nhật thông tin cá nhân</Text>
               </ListItem.Content>
               <Icon
                 style={{}}

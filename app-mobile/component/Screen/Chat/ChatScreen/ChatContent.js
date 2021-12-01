@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Icon } from "react-native-elements";
+import { Icon, ListItem } from "react-native-elements";
 import {
   View,
   StyleSheet,
@@ -9,67 +9,113 @@ import {
   Text,
   Image,
   Keyboard,
-  Modal,
 } from "react-native";
-
-import {
-  GiftedChat,
-  Bubble,
-  Actions,
-  Composer,
-  Send,
-  renderChatEmpty,
-  MessageImage,
-  renderChatFooter,
-} from "react-native-gifted-chat";
+import { io } from "socket.io-client";
+import { GiftedChat, Composer, Send } from "react-native-gifted-chat";
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../action/roomchat.action";
 import * as action from "../../../../action/message.action";
-
 import EmojiSelector, { Categories } from "react-native-emoji-selector";
-// import DocumentPicker from 'react-native-document-picker'
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
-import ImageViewer from "react-native-image-zoom-viewer";
-import axios from "axios";
+import { SOCKET_URL } from "../../../../services/api.service";
+import { uploadAvatar } from "../../../../action/roomchat.action";
+import Spinner from "react-native-loading-spinner-overlay";
+import apiService from "../../../../services/api.service";
 
+const URL = SOCKET_URL;
 export default function ChatContent({ navigation, route }) {
-  const [isVisible, setIsVisible] = useState(false);
-
   const dispatch = useDispatch();
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const listMembers = useSelector((state) => state.roomchat.listMembers);
+  const [receiverId, setReceiverId] = useState([]);
   const [messages, setMessages] = useState([]);
   const [customText, setCustomText] = useState(null);
   const [statusEmoji, setStatusEmoji] = useState(false);
   const [statusImage, setStatusImage] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [link, setLink] = useState();
-  const [file, setFile] = useState();
-  const [image, setImage] = useState();
-  const userId = 1;
+  const [loading, setLoading] = useState(false);
+  // ----------------------------------------------------------------------
+  //RealTime
+  const socket = useRef();
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  // ----------------------------------------------------------------------
+  const profile = useSelector((state) => state.user.userById);
+  const userId = "1";
+
+  LogBox.ignoreLogs(["Warning: ..."]);
+
+  useEffect(() => {
+    if (activeRoom) {
+      dispatch(actions.fetchAllMessages(activeRoom.id));
+    }
+  }, [activeRoom]);
+
+  useEffect(() => {
+    if (activeRoom) {
+      dispatch(actions.fetchAllMembers(activeRoom.id));
+    }
+  }, [activeRoom]);
+
+  useEffect(() => {
+    if (listMembers.length > 0) {
+      console.log(listMembers);
+      setReceiverId([]);
+      for (let member of listMembers) {
+        if (member.id !== Number(userId))
+          setReceiverId((prevState) => [...prevState, { userId: member.id }]);
+      }
+    }
+  }, [listMembers]);
+
+  // ----------------------------------------------------------------------
+  //RealTime
+  useEffect(() => {
+    socket.current = io(URL);
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage(data.message);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (arrivalMessage && arrivalMessage.roomChatId.id === activeRoom.id) {
+      //Add message
+      const gifted_message = {
+        _id: arrivalMessage.id,
+        text: arrivalMessage.content ? arrivalMessage.content : "",
+        createdAt: new Date(),
+        image: arrivalMessage.image ? arrivalMessage.image : null,
+        file: arrivalMessage.file ? arrivalMessage.file : null,
+        user: {
+          _id: arrivalMessage.userId.id,
+          name: `${arrivalMessage.userId.firstname} ${arrivalMessage.userId.lastname}`,
+          avatar: arrivalMessage.userId.avatar
+            ? arrivalMessage.userId.avatar
+            : "",
+        },
+      };
+
+      setMessages((prevState) => [gifted_message, ...prevState]);
+    }
+  }, [arrivalMessage, activeRoom]);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   if (route.params) {
     const { name } = route.params;
   }
 
-  // const onSend = useCallback((messages = []) => {
-  //   setMessages((previousMessages) =>
-  //     GiftedChat.append(previousMessages, messages)
-  //   );
-  // }, []);
-
-  const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
+  const onSend = (messages = []) => {
     sentMessage(messages[0], null, null);
-    // handleFile(messages[0]);
-  }, []);
-
-  useEffect(() => {
-    LogBox.ignoreLogs(["Animated: `useNativeDriver`"]);
-  }, []);
+  };
 
   const sentMessage = (message, file, image) => {
     const messageText = {
@@ -77,13 +123,53 @@ export default function ChatContent({ navigation, route }) {
       content: message.text,
       image,
       file,
-      roomChatId: activeRoom.id,
+      roomChatId: {
+        id: activeRoom.id,
+      },
       time: new Date(),
-      userId: 1,
+      userId: {
+        id: Number(userId),
+        firstname: "Huy",
+        lastname: "Le",
+      },
     };
-    console.log(messageText);
-    dispatch(action.addMessage(messageText));
+
+    apiService
+      .message()
+      .addMessage(messageText)
+      .then((response) => {
+        //Ad to chat screen
+        const gifted_message = {
+          _id: response.data.id,
+          text: response.data.content ? response.data.content : "",
+          createdAt: new Date(),
+          image: response.data.image ? response.data.image : null,
+          file: response.data.file ? response.data.file : null,
+          user: {
+            _id: response.data.userId.id,
+            name: `${response.data.userId.firstname} ${response.data.userId.lastname}`,
+            avatar: response.data.userId.avatar
+              ? response.data.userId.avatar
+              : "",
+          },
+        };
+        setMessages((prevState) => [gifted_message, ...prevState]);
+
+        // ----------------------------------------------------------------------
+        //RealTime
+        // ws.send(JSON.stringify(messageRealTime));
+        socket.current.emit("sendMessage", {
+          senderId: Number(userId),
+          receiverId,
+          message: messageText,
+        });
+        // ---------------------------------------------------------------------
+      })
+      .catch((err) => console.log(err));
+
+    setLoading(false);
   };
+
   // =======================================KEYBOARD===============================================
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -110,18 +196,18 @@ export default function ChatContent({ navigation, route }) {
   });
 
   // =======================================GET MESSAGES=============================================
-
   useEffect(() => {
     setMessages([]);
     if (listMessages.length > 0) {
-      listMessages.map((message) =>
+      listMessages.map((message, i) =>
         setMessages((prevState) => {
           return [
             {
-              _id: message.id,
+              _id: i,
               text: message.content ? message.content : "",
-              createdAt: message.time,
+              createdAt: new Date(),
               image: message.image ? message.image : null,
+              file: message.file ? message.file : null,
               user: {
                 _id: message.userId.id,
                 name: `${message.userId.firstname} ${message.userId.lastname}`,
@@ -135,55 +221,9 @@ export default function ChatContent({ navigation, route }) {
     }
   }, [listMessages]);
 
-  useEffect(() => {
-    let fetchchat;
-    if (activeRoom) {
-      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(activeRoom.id)), 1000);
-    }
-    return () => clearInterval(fetchchat);
-
-  }, [activeRoom]);
-  // useEffect(() => {
-  //   if (activeRoom) {
-  //     dispatch(actions.fetchAllMessages(activeRoom.id));
-  //   }
-  // }, [activeRoom]);
-
-  // const backToAllChat = () => {
-  //   navigation.navigate("TabRoute");
-  // };
-
   const toGroupInformation = () => {
     navigation.navigate("GroupInformation");
   };
-
-  // const styles = StyleSheet.create({
-  //   avatar: {
-  //     borderRadius: 1,
-  //   },
-  //   container: {
-  //     flex: 1,
-  //   },
-  //   chatInput: {
-  //     position: "absolute",
-  //     left: 0,
-  //     right: 0,
-  //     bottom: 0,
-  //     backgroundColor: "white",
-  //     height: 55,
-  //     borderWidth: 1,
-  //     borderColor: "white",
-  //     borderTopColor: "#D8D8D8",
-  //     flexDirection: "row",
-  //   },
-  //   footer: {
-  //     position: "absolute",
-  //     backgroundColor: "blue",
-  //     height: 150,
-  //     width: `100%`,
-  //     bottom: 0
-  //   }
-  // });
 
   // =================================INPUT CHAT=========================================
   const renderComposer = (props) => {
@@ -204,7 +244,9 @@ export default function ChatContent({ navigation, route }) {
             type="font-awesome-5"
             color={"#868e96"}
             size={25}
-            onPress={() => { setStatusEmoji(!statusEmoji), Keyboard.dismiss() }}
+            onPress={() => {
+              setStatusEmoji(!statusEmoji), Keyboard.dismiss();
+            }}
             style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}
           />
           <Composer {...props} />
@@ -229,7 +271,9 @@ export default function ChatContent({ navigation, route }) {
           </TouchableOpacity>
         </View>
       );
-    } //Text not empty
+    }
+
+    //Text not empty
     if (props.text.trim())
       return (
         <View
@@ -271,7 +315,6 @@ export default function ChatContent({ navigation, route }) {
   };
 
   // ======================================DOCUMENT============================
-
   const pickDocument = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
     console.log(result);
@@ -281,25 +324,20 @@ export default function ChatContent({ navigation, route }) {
       type: result.mimeType,
       name: result.name,
     });
-    axios
-      .post(
-        "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
-        formData
-      )
-      .then((response) => {
-        // setFile(response.data);
-        console.log("===> file ===>", response.data);
-        // console.log("fileeeee", file);
-        sentMessage({}, response.data, null);
-      });
+
+    uploadAvatar(formData).then((response) => {
+      sentMessage({}, response.data, null);
+    });
   };
   // ======================================IMAGE============================
-
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({});
-    console.log(result);
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5,
+    });
     setLink(result.uri);
-    console.log("link", link);
     const imageType = result.uri.split(".")[1];
     const formData = new FormData();
     formData.append("file", {
@@ -307,17 +345,11 @@ export default function ChatContent({ navigation, route }) {
       type: `image/${imageType}`,
       name: `photo.${result.type}`,
     });
-    console.log("fromdta", formData);
-    axios
-      .post(
-        "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
-        formData
-      )
-      .then((response) => {
-        // setImage(response.data);
-        console.log("===> IMAGE ===>", image);
-        sentMessage({}, null, response.data);
-      });
+
+    setLoading(true);
+    uploadAvatar(formData).then((response) => {
+      sentMessage({}, null, response.data);
+    });
   };
 
   const wait = (timeout) => {
@@ -335,7 +367,12 @@ export default function ChatContent({ navigation, route }) {
       return;
     }
 
-    const result = await ImagePicker.launchCameraAsync();
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.5,
+    });
     const formData = new FormData();
     const imageUri = result.uri.replace("file:/data", "file:///data");
     const imageType = result.uri.split(".")[1];
@@ -346,17 +383,9 @@ export default function ChatContent({ navigation, route }) {
       name: `photo.${imageType}`,
     });
 
-    if (!result.cancelled) {
-      axios
-        .post(
-          "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
-          formData
-        )
-        .then((response) => {
-          sentMessage({}, null, response.data);
-          setStatusImage(false);
-        });
-    }
+    uploadAvatar(formData).then((response) => {
+      sentMessage({}, null, response.data);
+    });
   };
 
   //====================================ON LONG PRESS BUBBLE====================
@@ -384,7 +413,7 @@ export default function ChatContent({ navigation, route }) {
     );
   };
 
-  // ================================SCREEN CHAT EMPTY
+  // ================================SCREEN CHAT EMPTY==========================
   const renderChatEmpty = () => {
     return (
       <View
@@ -408,9 +437,85 @@ export default function ChatContent({ navigation, route }) {
       </View>
     );
   };
+  // ==================================================================
+
+  const getFileName = (str) => {
+    if (str) {
+      const str1 = str.split("/")[3];
+      const str2 = str1.substring(str1.indexOf("-") + 1);
+      return str2;
+    }
+    return;
+  };
+
+  const getType = (str) => {
+    const str1 = str.split(".")[5];
+    return str1;
+  };
+
+  const getIconType = (url) => {
+    if (url) {
+      const type = getType(url);
+      let value;
+      switch (type) {
+        case "docx":
+          value = "file-word-o";
+          break;
+        case "pdf":
+          value = "file-pdf-o";
+          break;
+        case "ppt":
+          value = "file-powerpoint-o";
+          break;
+        case "xls":
+        case "csv":
+          value = "file-excel-o";
+          break;
+
+        default:
+          value = "file";
+          break;
+      }
+      return value;
+    }
+    return;
+  };
+
+  // ==========================CUSTOM VIEW====================================
+  const renderCustomView = (props) => {
+    if (props?.currentMessage?.file) {
+      return (
+        <TouchableOpacity>
+          <View style={styles.messageFile}>
+            <Icon
+              name={getIconType(props?.currentMessage?.file)}
+              type={"font-awesome"}
+              color={
+                props?.currentMessage?.user?._id === Number(userId)
+                  ? "#fff"
+                  : "#000"
+              }
+            />
+            <Text
+              style={{
+                marginHorizontal: 10,
+                color:
+                  props?.currentMessage?.user?._id === Number(userId)
+                    ? "#fff"
+                    : "#000",
+              }}
+            >
+              {getFileName(props?.currentMessage?.file)}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    } else {
+      return;
+    }
+  };
 
   // ==========================CHAT FOOTER ====================================
-
   const renderChatFooter = () => {
     if (link) {
       return (
@@ -424,9 +529,19 @@ export default function ChatContent({ navigation, route }) {
     }
     return null;
   };
-  // ==================================SCREEN CHAT====================================================================================
+
+  // ========================SCREEN CHAT=================================
   return (
     <View style={styles.container}>
+      <Spinner
+        //visibility of Overlay Loading Spinner
+        visible={loading}
+        //Text with the Spinner
+        textContent={"Loading..."}
+        //Text style of the Spinner Text
+        textStyle={styles.spinnerTextStyle}
+      />
+
       <Header
         statusBarProps={{ barStyle: "light-content" }}
         barStyle="light-content"
@@ -474,11 +589,12 @@ export default function ChatContent({ navigation, route }) {
         onLongPress={onLongPress}
         renderAvatarOnTop={true}
         renderUsernameOnMessage={true} //show username
-        //renderChatEmpty={renderChatEmpty}
         renderComposer={renderComposer}
-      // renderChatFooter={renderChatFooter}
-      // renderMessageImage={renderMessageImage}
-      // inverted={false}
+        //renderChatEmpty={renderChatEmpty}
+        // renderChatFooter={renderChatFooter}
+        // renderMessageImage={renderMessageImage}
+        // inverted={false}
+        renderCustomView={renderCustomView}
       />
       {statusEmoji === true ? (
         <EmojiSelector
@@ -559,6 +675,14 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "bold",
     color: "#0099FF",
-    // color: "white"
+  },
+  spinnerTextStyle: {
+    color: "#fff",
+  },
+  messageFile: {
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });

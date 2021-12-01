@@ -23,6 +23,8 @@ import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { Header } from "react-native-elements/dist/header/Header";
 import axios from "axios";
+import { useForm } from "react-hook-form";
+// import * as yup from "yup";
 
 export default function EditProfile({ navigation }) {
   const BottomSheet = ({ animation, onCancel }) => {
@@ -92,6 +94,11 @@ export default function EditProfile({ navigation }) {
     );
   };
   const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, isDirty, isValid },
+  } = useForm({ mode: "onChange" });
   var btnDisable = false;
   const imageAvatar = useRef(null);
   const [userProfile, setUserProfile] = useState([]);
@@ -102,10 +109,12 @@ export default function EditProfile({ navigation }) {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [phone, setPhone] = useState("");
+  const [enable, setEnable] = useState(true);
   const [loading, setLoading] = useState(false);
   const [animationValue, setAnimationValue] = useState(-1000);
   const user = useSelector((state) => state.user.userAuth);
   const profile = useSelector((state) => state.user.userById);
+
   useEffect(() => {
     async () => {
       if (Platform.OS !== "web") {
@@ -117,14 +126,17 @@ export default function EditProfile({ navigation }) {
       }
     };
   }, []);
+
   useEffect(() => {
-    dispatch(actions.findByIdUser(1));
+    dispatch(actions.findByIdUser(user));
   }, []);
+
   useEffect(() => {
     if (profile != undefined || profile != null) {
       setUserProfile(profile);
     }
   }, [profile]);
+
   useEffect(() => {
     if (userProfile !== undefined) {
       setUserId(userProfile.id);
@@ -136,7 +148,9 @@ export default function EditProfile({ navigation }) {
       setDate(userProfile.birthday);
     }
   }, [userProfile]);
+
   //console.log("userid", userId);
+
   const initialFieldValues = {
     firstname: firstname,
     lastname: lastname,
@@ -146,6 +160,7 @@ export default function EditProfile({ navigation }) {
     avartar: image,
     //coverImage: "",
   };
+
   function showToast() {
     ToastAndroid.show("Cập nhật thông tin thành công!", ToastAndroid.SHORT);
   }
@@ -158,9 +173,15 @@ export default function EditProfile({ navigation }) {
   }
 
   const onUpdate = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     if (firstname === "" || lastname === "") {
       Alert.alert("Cảnh báo", "Vui lòng nhập đầy đủ thông tin", [
+        {
+          text: "Xác nhận",
+        },
+      ]);
+    } else if (firstname.length > 20 || lastname.length > 20) {
+      Alert.alert("Cảnh báo", "Họ và tên tối đa 30 kí tự", [
         {
           text: "Xác nhận",
         },
@@ -175,6 +196,7 @@ export default function EditProfile({ navigation }) {
   };
 
   const showAnimation = useRef(new Animated.Value(animationValue)).current;
+
   const toggleAnimation = () => {
     const val = animationValue === 0 ? -1000 : 0;
     Animated.timing(showAnimation, {
@@ -208,7 +230,7 @@ export default function EditProfile({ navigation }) {
     if (!result.cancelled) {
       axios
         .post(
-          "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
+          "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
           formData
         )
         .then((response) => {
@@ -242,7 +264,7 @@ export default function EditProfile({ navigation }) {
     if (!result.cancelled) {
       axios
         .post(
-          "http://192.168.1.8:4000/api/storage/uploadFile?key=file",
+          "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
           formData
         )
         .then((response) => {
@@ -262,6 +284,7 @@ export default function EditProfile({ navigation }) {
   //     return (btnDisable = false);
   //   }
   // }
+  console.log("userAuth", user);
 
   return (
     <>
@@ -349,8 +372,10 @@ export default function EditProfile({ navigation }) {
                 autoCorrect={false}
                 placeholderTextColor="#666666"
                 style={styles.textInput}
+                name="firstname"
                 value={firstname}
                 onChangeText={(text) => setFirstName(text)}
+                maxLength={20}
               />
             </View>
             <View style={styles.action}>
@@ -358,10 +383,12 @@ export default function EditProfile({ navigation }) {
               <TextInput
                 placeholder="Tên"
                 autoCorrect={false}
+                name="lastname"
                 placeholderTextColor="#666666"
                 style={styles.textInput}
                 value={lastname}
                 onChangeText={(text) => setLastName(text)}
+                maxLength={20}
               />
             </View>
             <View style={styles.action}>
@@ -430,7 +457,8 @@ export default function EditProfile({ navigation }) {
             </View>
             <TouchableOpacity
               style={styles.commandButton}
-              //disabled={true}
+              type="submit"
+              //disabled={!isValid || !isDirty}
               onPress={onUpdate}
             >
               <Text style={styles.panelButtonTitle1}>Cập nhật</Text>

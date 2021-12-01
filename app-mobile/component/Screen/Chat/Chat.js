@@ -175,7 +175,7 @@ export default function Chat({ navigation, route }) {
                       {item.item.roomName ? item.item.roomName : groupName}
                     </ListItem.Title>
                     <ListItem.Subtitle>
-                      {item.item.roomName ? item.item.roomName : "room"}
+                      {/* {item.item.roomName ? item.item.roomName : "room"} */}
                     </ListItem.Subtitle>
                   </ListItem.Content>
                   <ListItem.Chevron />
@@ -196,19 +196,6 @@ export default function Chat({ navigation, route }) {
         color={"#37b24d"}
         style={styles.btnAdd}
       >
-        {/* <SpeedDial.Action
-          color={"#37b24d"}
-          icon={
-            <Icon
-              name="user-plus"
-              type="font-awesome-5"
-              color="#ffffff"
-              size={15}
-            />
-          }
-          title="Thêm bạn bè"
-          onPress={() => console.log("Add Something")}
-        /> */}
         <SpeedDial.Action
           color={"#37b24d"}
           icon={

@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 
 import * as actions from "src/actions/roomchat.action";
 import { Avatar } from "@material-ui/core";
@@ -12,52 +11,38 @@ import MessageContent from "./MessageContent";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
-import SendIcon from "@material-ui/icons/Send";
 import ChildCareIcon from "@material-ui/icons/ChildCare";
 import ImageIcon from "@material-ui/icons/Image";
-import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import { MessageInput } from "./Message-Input";
-import InputBase from "@material-ui/core/InputBase";
 import classes from "./Message.module.css";
-//import MessageInput from "./Message-Input";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Scrollbar from "src/components/Scrollbar";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import axios from "axios";
-
-// import Menu from "@material-ui/core/Menu";
-
-// const SORT_OPTIONS = [
-//   { value: "latest", label: "Latest" },
-//   { value: "popular", label: "Popular" },
-//   { value: "oldest", label: "Oldest" },
-// ];
+import { io } from "socket.io-client";
 
 // ----------------------------------------------------------------------
 
 const URL = "ws://localhost:3030";
+
 export default function MessageChat(props) {
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const newMessage = useSelector((state) => state.message.message);
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const [listMembers, setListMembers] = useState([]);
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [emojiStatus, setEmojiStatus] = useState(false);
-
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
-
-  const file = useRef(null);
-  const image = useRef(null);
   const [img, setImg] = useState();
   const [sFile, setSFile] = useState();
-
+  const socket = useRef();
+  const file = useRef(null);
+  const image = useRef(null);
+  const userId = localStorage.getItem("user_authenticated");
   //RealTime
-  const [name, setName] = useState("Ichlas");
   const [messages, setMessage] = useState([]);
-  const [ws, setWs] = useState(new WebSocket(URL));
+  // const [ws, setWs] = useState(new WebSocket(URL));
   //Scroll
   const messagesEndRef = useRef(null);
 
@@ -112,12 +97,11 @@ export default function MessageChat(props) {
   };
 
   useEffect(() => {
-    let fetchchat;
-    if (props.activeRoom) {
-      fetchchat = setInterval(() => dispatch(actions.fetchAllMessages(props.activeRoom.id)), 1000);
-    }
-    return () => clearInterval(fetchchat);
-
+    dispatch(actions.fetchAllMessages(props.activeRoom.id));
+    actions
+      .fetchAllMembers(props.activeRoom.id)
+      .then((res) => setListMembers(res.data))
+      .catch((error) => console.log(error));
   }, [props.activeRoom]);
 
   useEffect(() => {
@@ -126,42 +110,60 @@ export default function MessageChat(props) {
     }
   }, [listMessages]);
 
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
+  // ----------------------------------------------------------------------
   //Real time
   useEffect(() => {
-    ws.onopen = () => {
-      console.log("connected");
-    };
+    socket.current = io(URL);
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage(data.message);
+    });
+  }, []);
 
-    ws.onmessage = (evt) => {
-      const message = JSON.parse(evt.data);
-      addMessage(message);
-    };
+  useEffect(() => {
+    if (
+      arrivalMessage &&
+      arrivalMessage.roomChatId.id === props.activeRoom.id
+    ) {
+      addMessage(arrivalMessage);
 
-    ws.onclose = () => {
-      console.log("disconnected");
-      setWs(new WebSocket(URL));
-    };
-  }, [ws]);
+      dispatch({
+        type: "ADDMESSAGE",
+        payload: arrivalMessage,
+      });
+    }
+  }, [arrivalMessage, props.activeRoom]);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   const addMessage = (message) => {
     setMessage((prevArray) => [...prevArray, message]);
   };
 
   const submitMessage = (messageString) => {
-    ws.send(JSON.stringify(messageString));
+    // ----------------------------------------------------------------------
+    //Real time
+    let receiverId = [];
+    for (let member of listMembers) {
+      if (member.id !== Number(userId))
+        receiverId = [...receiverId, { userId: member.id }];
+    }
+    socket.current.emit("sendMessage", {
+      senderId: Number(userId),
+      receiverId,
+      message: messageString,
+    });
+    // ----------------------------------------------------------------------
+
     addMessage(messageString);
     setImg();
     setSFile();
   };
-
-  console.log(messages);
 
   return (
     <div style={{ height: "100%" }}>

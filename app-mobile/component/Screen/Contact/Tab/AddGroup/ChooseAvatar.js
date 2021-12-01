@@ -47,9 +47,6 @@ const ChooseAvatar = (props) => {
     let localUri = result.uri;
     let filename = localUri.split("/").pop();
 
-    // Infer the type of the image
-    // let match = /\.(\w+)$/.exec(filename);
-    // let type = match ? `image/${match[1]}` : `image`;
     let type = mime.getType(result.uri);
 
     const avatarObj = { type: type, uri: localUri, name: filename };

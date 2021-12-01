@@ -22,3 +22,26 @@
 .button {
   width: 100%;
 }
+
+.button-icon {
+  color: #ff6b6b;
+}
+
+.button-icon:hover {
+  color: #e03131;
+  background-color: #fff5f5;
+}
+
+.popover {
+  background-color: #ff6b6b;
+}
+
+.choice-titles {
+  background-color: #fff;
+  padding: 5px 0px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.choice-title {
+  padding: 5px 10px;
+}
