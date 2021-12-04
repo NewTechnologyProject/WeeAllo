@@ -32,7 +32,6 @@ export default function MyContact({ navigation, route }) {
       flexDirection: "row",
     },
   });
-  const [isVisible, setIsVisible] = useState(false);
   const backToAllChat = () => {
     navigation.navigate("TabRoute");
   };

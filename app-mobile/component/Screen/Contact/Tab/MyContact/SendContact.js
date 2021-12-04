@@ -32,11 +32,12 @@ export default function SendContact({ navigation, route }) {
     const sendContact = useSelector((state) => state.contact.listSend);
     const [refreshing, setRefreshing] = useState(false);
     const [allSendContact, setAllSendContact] = useState([])
+    const user = useSelector((state) => state.user.userAuth);
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
     }
     useEffect(() => {
-        dispatch(actions.fetchSendContact(1));
+        dispatch(actions.fetchSendContact(user));
     }, []);
     useEffect(() => {
         if (sendContact) {
@@ -45,7 +46,7 @@ export default function SendContact({ navigation, route }) {
     }, [sendContact])
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        dispatch(actions.fetchSendContact(1));
+        dispatch(actions.fetchSendContact(user));
         wait(2000).then(() => setRefreshing(false));
     }, []);
     const onAccept = () => {
@@ -92,7 +93,7 @@ export default function SendContact({ navigation, route }) {
                                             }
                                         }
                                         onPress={() => {
-                                            dispatch(actions.deleteSendContact(1, c.id))
+                                            dispatch(actions.deleteSendContact(user, c.id))
                                             Alert.alert(
                                                 "Bạn bè",
                                                 "Đã hủy lời mời kết bạn đến " + c.firstname + " " + c.lastname,
