@@ -37,12 +37,14 @@ export default function ContactList({ navigation }) {
   const allContact = useSelector((state) => state.contact.listcontact);
   const [refreshing, setRefreshing] = useState(false);
   const [contact, setContact] = useState([]);
+  const user = useSelector((state) => state.user.userAuth);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+  console.log(user);
   useEffect(() => {
-    dispatch(actions.fetchAllContact(1));
-  }, []);
+    dispatch(actions.fetchAllContact(user));
+  }, [user]);
   useEffect(() => {
     if (allContact) {
       setContact(allContact);
@@ -53,13 +55,12 @@ export default function ContactList({ navigation }) {
   };
 
   const toDevice = () => {
-    dispatch(actions.getJsonString([], 1));
+    dispatch(actions.getJsonString([], user));
     navigation.navigate("DeviceContact");
   };
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    dispatch(actions.fetchAllContact(1));
+    dispatch(actions.fetchAllContact(user));
     wait(2000).then(() => setRefreshing(false));
   }, []);
 

@@ -32,11 +32,12 @@ export default function ReceiveContact({ navigation }) {
     const receiveContact = useSelector((state) => state.contact.listReceive);
     const [refreshing, setRefreshing] = useState(false);
     const [allReceiveContact, setAllReceiveContact] = useState([])
+    const user = useSelector((state) => state.user.userAuth);
     const wait = (timeout) => {
         return new Promise(resolve => setTimeout(resolve, timeout));
     }
     useEffect(() => {
-        dispatch(actions.fetchReceiveContact(1));
+        dispatch(actions.fetchReceiveContact(user));
     }, []);
     useEffect(() => {
         if (receiveContact) {
@@ -45,7 +46,7 @@ export default function ReceiveContact({ navigation }) {
     }, [receiveContact])
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        dispatch(actions.fetchReceiveContact(1));
+        dispatch(actions.fetchReceiveContact(user));
         wait(2000).then(() => setRefreshing(false));
     }, []);
     return (
@@ -87,7 +88,7 @@ export default function ReceiveContact({ navigation }) {
                                                 }
                                             }
                                             onPress={() => {
-                                                dispatch(actions.acceptContact(c.id, 1))
+                                                dispatch(actions.acceptContact(c.id, user))
                                                 Alert.alert(
                                                     "Bạn bè",
                                                     "Đã trở thành bạn bè với " + c.firstname + " " + c.lastname,
@@ -119,7 +120,7 @@ export default function ReceiveContact({ navigation }) {
                                                 }
                                             }
                                             onPress={() => {
-                                                dispatch(actions.deleteReceiveContact(1, c.id))
+                                                dispatch(actions.deleteReceiveContact(user, c.id))
                                                 Alert.alert(
                                                     "Bạn bè",
                                                     "Đã từ chối trở thành bạn bè với " + c.firstname + " " + c.lastname,

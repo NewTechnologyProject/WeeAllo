@@ -28,7 +28,6 @@ const URL = "ws://localhost:3030";
 export default function MessageChat(props) {
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
-  const newMessage = useSelector((state) => state.message.message);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [listMembers, setListMembers] = useState([]);
   const [chosenEmoji, setChosenEmoji] = useState(null);

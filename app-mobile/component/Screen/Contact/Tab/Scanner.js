@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Linking } from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Button, Icon } from 'react-native-elements';
-
-export default function Scanner({ navigation }) {
+import { Dialog } from 'react-native-elements';
+import { withNavigationFocus } from "react-navigation";
+const Scanner = ({ navigation }) => {
     const [hasPermission, setHasPermission] = useState(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [isActive, setIsActive] = useState(false);
+    const [visible1, setVisible1] = useState(false);
+    const [link, setLink] = useState('');
     useEffect(() => {
         (async () => {
             const { status } = await Camera.requestPermissionsAsync();
             setHasPermission(status === 'granted');
         })();
     }, []);
+    const toggleDialog1 = () => {
+        setVisible1(!visible1);
+    };
     if (hasPermission === null) {
         return <View />;
     }
@@ -21,7 +27,22 @@ export default function Scanner({ navigation }) {
         return <Text>No access to camera</Text>;
     }
     const handleBarCodeScanned = ({ type, data }) => {
-        navigation.navigate('DetailContact', { idDetail: data })
+        let regex = /^[0]{1}\d{9}$/
+        setIsActive(true);
+        if (regex.test(data)) {
+            navigation.navigate('DetailContact', { idDetail: data })
+        } else {
+            let re = /^(https?: \/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})$/
+            if (re.test(data)) {
+                toggleDialog1()
+                setLink(data)
+                console.log(data)
+            }
+            else {
+                Alert.alert("Kết quả tìm thấy: " + data)
+            }
+
+        }
     };
 
     return (
@@ -49,7 +70,44 @@ export default function Scanner({ navigation }) {
                         }}>
                     </TouchableOpacity>
                 </View>
+                <View>
+                    {isActive && <Button
+                        containerStyle={{
+                            paddingBottom: 15,
+                            paddingRight: 10,
+                            alignContent: 'center',
+                            alignItems: 'center'
+                        }}
+                        buttonStyle={{
+                            height: 50,
+                            width: 140,
+                            borderRadius: 30,
+                            borderColor: "#EEEEEE",
+                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        }}
+                        titleStyle={
+                            {
+                                fontSize: 13,
+                                color: 'white'
+                            }
+                        }
+                        title={'Quét lại 1 lần nữa'} onPress={() => setIsActive(false)} />}
+                </View>
             </Camera>
+
+
+            <Dialog
+                isVisible={visible1}
+                onBackdropPress={toggleDialog1}
+            >
+                <Dialog.Title title="Đây là một liên kết" />
+                <Text>Chọn liên kết để đi đến trang này:</Text>
+                <TouchableOpacity onPress={() => Linking.openURL(link)}>
+                    <Text style={{ color: 'blue' }}>
+                        {link}
+                    </Text>
+                </TouchableOpacity>
+            </Dialog>
         </View>
     );
 }
@@ -77,3 +135,4 @@ const styles = StyleSheet.create({
         color: 'white',
     },
 });
+export default withNavigationFocus(Scanner)

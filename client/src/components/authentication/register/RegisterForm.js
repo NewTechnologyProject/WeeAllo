@@ -44,17 +44,15 @@ export default function RegisterForm() {
   const [registerComponent, setRegisterComponent] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [agree, setAgree] = React.useState(false);
-  const [user, setUser] = useState([])
+  const [user, setUser] = useState([]);
   useEffect(() => {
-    dispatch(actions.fecthAllPhone())
+    dispatch(actions.fecthAllPhone());
   }, []);
-  let check = useSelector(state => state.customer.listphone);
+  let check = useSelector((state) => state.customer.listphone);
   useEffect(() => {
-    if (check !== undefined) (
-      setUser(check)
-    )
-  }, [check])
-  console.log(user)
+    if (check !== undefined) setUser(check);
+  }, [check]);
+  console.log(user);
   const initialFieldValues = {
     firstname: "",
     lastname: "",
@@ -64,7 +62,8 @@ export default function RegisterForm() {
     isActive: "false",
     createAt: null,
     updateAt: null,
-    avartar: "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png",
+    avartar:
+      "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png",
     coverImage: null,
     status: null,
     contactList: null,
@@ -78,7 +77,7 @@ export default function RegisterForm() {
     let temp = { ...errors };
     if ("firstname" in fieldValues) {
       temp.firstname =
-        /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*\s*[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*$/.test(
+        /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*$/.test(
           fieldValues.firstname
         )
           ? ""
@@ -90,7 +89,7 @@ export default function RegisterForm() {
 
     if ("lastname" in fieldValues) {
       temp.lastname =
-        /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*\s*[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*$/.test(
+        /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*$/.test(
           fieldValues.lastname
         )
           ? ""
@@ -103,20 +102,23 @@ export default function RegisterForm() {
       let err = 0;
       user.map((user) => {
         if (user.phone.toLowerCase() === fieldValues.phone.toLowerCase()) {
-          err = err + 1
+          err = err + 1;
         }
-      })
-      if (fieldValues.phone === '') {
-        temp.phone = fieldValues.phone ? "" : "Số điện thoại không được để trống"
-      } if (fieldValues.phone !== '') {
+      });
+      if (fieldValues.phone === "") {
+        temp.phone = fieldValues.phone
+          ? ""
+          : "Số điện thoại không được để trống";
+      }
+      if (fieldValues.phone !== "") {
         temp.phone = /^[0]{1}\d{9}$/.test(fieldValues.phone)
           ? ""
           : "Số điện thoại không được để rỗng và gồm 10 kí tự số.";
       }
       if (err >= 1) {
-        err < 1 ? temp.phone = "" : temp.phone = "Số điện thoại đã tồn tại"
+        err < 1 ? (temp.phone = "") : (temp.phone = "Số điện thoại đã tồn tại");
       }
-      console.log(err)
+      console.log(err);
       setErrors({
         ...temp,
       });

@@ -75,15 +75,17 @@ export default function DetailContact({ navigation, route, props }) {
     const [change1, setChange1] = useState(1);
     const [change2, setChange2] = useState(false);
     const { idDetail } = route.params;
+    const user = useSelector((state) => state.user.userAuth);
     useEffect(() => {
         if (detail !== undefined) {
             setDetailContact(detail);
         }
     }, [detail]);
+    console.log("Detaile", user)
     console.log(idDetail)
     useEffect(() => {
-        dispatch(actions.findUserByPhone(idDetail, 1));
-    }, [])
+        dispatch(actions.findUserByPhone(idDetail, user));
+    }, [user])
     const renderButton = (status, id, lastname, firstname) => {
         if (status === 'none') {
             return (
@@ -109,7 +111,7 @@ export default function DetailContact({ navigation, route, props }) {
                             }
                             onPress={() => {
                                 setChange(true)
-                                dispatch(actions.addContact(1, id))
+                                dispatch(actions.addContact(user, id))
                                 Alert.alert(
                                     "Bạn bè",
                                     "Đã gửi lời mời kết bạn đến " + firstname + " " + lastname,
@@ -145,7 +147,7 @@ export default function DetailContact({ navigation, route, props }) {
                             }
                             onPress={() => {
                                 setChange(!change)
-                                dispatch(actions.deleteSendContact(1, id))
+                                dispatch(actions.deleteSendContact(user, id))
                                 Alert.alert(
                                     "Bạn bè",
                                     "Đã hủy lời mời đã gửi đến " + firstname + " " + lastname,
@@ -202,7 +204,7 @@ export default function DetailContact({ navigation, route, props }) {
                                             style={[styles.button, styles.buttonClose]}
                                             onPress={() => {
                                                 setModalVisible(!modalVisible)
-                                                dispatch(actions.deleteAllContact(1, id));
+                                                dispatch(actions.deleteAllContact(user, id));
                                                 setChange1(3)
                                                 Alert.alert(
                                                     "Bạn bè",
@@ -253,7 +255,7 @@ export default function DetailContact({ navigation, route, props }) {
                         }
                         onPress={() => {
                             setChange1(4)
-                            dispatch(actions.addContact(1, id))
+                            dispatch(actions.addContact(user, id))
                             Alert.alert(
                                 "Bạn bè",
                                 "Đã gửi lời mời kết bạn đến " + firstname + " " + lastname,
@@ -291,7 +293,7 @@ export default function DetailContact({ navigation, route, props }) {
                         }
                         onPress={() => {
                             setChange1(3)
-                            dispatch(actions.deleteSendContact(1, id))
+                            dispatch(actions.deleteSendContact(user, id))
                             Alert.alert(
                                 "Bạn bè",
                                 "Đã hủy lời mời kết bạn đến " + firstname + " " + lastname,
@@ -332,7 +334,7 @@ export default function DetailContact({ navigation, route, props }) {
                             }
                             onPress={() => {
                                 setChange(false)
-                                dispatch(actions.deleteSendContact(1, id))
+                                dispatch(actions.deleteSendContact(user, id))
                                 Alert.alert(
                                     "Bạn bè",
                                     "Đã hủy lời mời kết bạn đến " + firstname + " " + lastname,
@@ -367,7 +369,7 @@ export default function DetailContact({ navigation, route, props }) {
                         }
                         onPress={() => {
                             setChange(true)
-                            dispatch(actions.addContact(1, id))
+                            dispatch(actions.addContact(user, id))
                             Alert.alert(
                                 "Bạn bè",
                                 "Đã gửi lời mời kết bạn đến " + firstname + " " + lastname,
@@ -407,7 +409,7 @@ export default function DetailContact({ navigation, route, props }) {
                             }
                             onPress={() => {
                                 setChange1(2)
-                                dispatch(actions.acceptContact(id, 1))
+                                dispatch(actions.acceptContact(user, 1))
                                 Alert.alert(
                                     "Bạn bè",
                                     "Đã trở thành bạn bè với " + firstname + " " + lastname,
@@ -441,7 +443,7 @@ export default function DetailContact({ navigation, route, props }) {
                             }
                             onPress={() => {
                                 setChange1(3)
-                                //dispatch(actions.deleteReceiveContact(1, id))
+                                dispatch(actions.deleteReceiveContact(user, id))
                                 Alert.alert(
                                     "Bạn bè",
                                     "Đã từ chối trở thành bạn bè với " + firstname + " " + lastname,
@@ -496,7 +498,7 @@ export default function DetailContact({ navigation, route, props }) {
                                             style={[styles.button, styles.buttonClose]}
                                             onPress={() => {
                                                 setModalVisible(!modalVisible)
-                                                dispatch(actions.deleteAllContact(1, id));
+                                                dispatch(actions.deleteAllContact(user, id));
                                                 setChange1(3)
                                                 Alert.alert(
                                                     "Bạn bè",
@@ -547,7 +549,7 @@ export default function DetailContact({ navigation, route, props }) {
                         }
                         onPress={() => {
                             setChange1(4)
-                            dispatch(actions.addContact(1, id))
+                            dispatch(actions.addContact(user, id))
                             Alert.alert(
                                 "Bạn bè",
                                 "Đã gửi lời mời kết bạn đến " + firstname + " " + lastname,
@@ -585,7 +587,7 @@ export default function DetailContact({ navigation, route, props }) {
                         }
                         onPress={() => {
                             setChange1(3)
-                            dispatch(actions.deleteSendContact(1, id))
+                            dispatch(actions.deleteSendContact(user, id))
                             Alert.alert(
                                 "Bạn bè",
                                 "Đã hủy lời mời kết bạn đến " + firstname + " " + lastname,

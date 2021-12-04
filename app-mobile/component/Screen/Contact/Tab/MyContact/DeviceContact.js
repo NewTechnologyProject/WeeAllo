@@ -44,6 +44,7 @@ export default function DeviceContact({ navigation, route }) {
     const [change1, setChange1] = useState(false);
     const [change2, setChange2] = useState(false);
     const [animate, setAnimate] = useState(false);
+    const user = useSelector((state) => state.user.userAuth);
     const backToAllChat = () => {
         navigation.navigate('TabRoute')
         setNull()

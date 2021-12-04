@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class ContactService {
@@ -189,16 +190,19 @@ public class ContactService {
     }
     public List<UserChat> listDeviceContact(String jsonString,Long userAuth) {
         List<UserChat> list = new ArrayList<>();
+        System.out.println(jsonString);
         JsonArray jsonArraySend = new JsonParser().parse(jsonString).getAsJsonArray();
         for (JsonElement ls : jsonArraySend) {
             JsonObject jsonObjectSend = ls.getAsJsonObject();
-            JsonArray phone = jsonObjectSend.get("phoneNumbers").getAsJsonArray();
-            JsonObject jsonObject = (JsonObject) phone.get(0);
-            String phoneNumber = jsonObject.get("number").getAsString();
-            String phoneNum = phoneNumber.replaceAll("\\+" + "84", "0");
-            UserChat u = findByPhone(phoneNum,userAuth);
-            if(u!=null){
-                list.add(u);
+            if(jsonObjectSend.has("phoneNumbers")){
+                JsonArray phone = jsonObjectSend.get("phoneNumbers").getAsJsonArray();
+                JsonObject jsonObject = (JsonObject) phone.get(0);
+                String phoneNumber = jsonObject.get("number").getAsString();
+                String phoneNum = phoneNumber.replaceAll("\\+" + "84", "0");
+                UserChat u = findByPhone(phoneNum,userAuth);
+                if(u!=null){
+                    list.add(u);
+                }
             }
         }
         return list;
