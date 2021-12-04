@@ -27,7 +27,7 @@ export default function App(props) {
             <MessageRight
               key={i}
               message={message.content}
-              //timestamp={message.time}
+              // timestamp={message.time}
               img={message.image}
               file={message.file}
               displayName={`${message.userId.firstname} ${message.userId.lastname}`}
@@ -38,14 +38,11 @@ export default function App(props) {
           Number(userId) !== message.userId.id &&
           Number(message.roomChatId.id) === props.activeRoom
         ) {
-
           return (
-
-
             <MessageLeft
               key={i}
               message={message.content}
-              //timestamp={message.time}
+              // timestamp={message.time}
               file={message.file}
               img={message.image}
               photoURL={message.userId.avartar}

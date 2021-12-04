@@ -62,12 +62,9 @@ try {
     appId: "1:901919772342:web:24a4881f61fcacf70c2017",
     measurementId: "G-6WM7TLPPPQ",
   });
-} catch (err) {
-  // ignore app already initialized error in snack
-}
+} catch (err) {}
 
 export default function ForgotPass({ navigation }) {
-  const [newPass, setNewPass] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
   const [errorOtp, setErrorOtp] = React.useState("");
   const [code, setCode] = React.useState("");
@@ -89,8 +86,13 @@ export default function ForgotPass({ navigation }) {
     : undefined;
   const [phone, setPhone] = React.useState("");
   const [phoneerror, setPhoneError] = React.useState(false);
-  const { state } = useLocation();
-  const { phoneotp } = state;
+  const showToastWithGravity = () => {
+    ToastAndroid.showWithGravity(
+      "Thay đổi mật khẩu thành công ! Đăng nhập ngay",
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER
+    );
+  };
   const onSignInSubmit = async () => {
     const phoneNumber = "+84" + phone;
     try {
@@ -119,20 +121,19 @@ export default function ForgotPass({ navigation }) {
       setErrorOtp("");
       showToastWithGravity();
       navigation.navigate("Login");
-      handleSubmit();
+      dispatch(actions.forgotpass(phone, confirmPass));
+      //  handleForgot();
     } catch (err) {
       setErrorOtp("Mã xác thực sai ! Vui lòng kiểm tra lại");
     }
   };
-  const handleForgot = () => {
-    const confirm = confirmPass;
-    onSubitOTP();
-
-    dispatch(actions.forgotpass(phoneotp, confirm));
-    setTimeout(() => {
-      navigation.navigate("Login");
-    }, 8000);
-  };
+  // const handleForgot = () => {
+  //   const confirm = confirmPass;
+  //   const phone = phone;
+  //   console.log(phone);
+  //   console.log(confirm);
+  //   dispatch(actions.forgotpass(phone, confirm));
+  // };
   return (
     <View style={styles.container}>
       <FirebaseRecaptchaVerifierModal
@@ -190,11 +191,7 @@ export default function ForgotPass({ navigation }) {
       ) : (
         <View style={{ width: "100%" }}>
           <Input
-            type="text"
-            placeholder="Mật khẩu mới"
-            name="newpass"
-            onChangeText={(e) => setNewPass(e)}
-            value={newPass}
+            placeholder="Nhập mã OTP"
             leftIcon={
               <Icon
                 name="key"
@@ -203,11 +200,17 @@ export default function ForgotPass({ navigation }) {
                 style={{ paddingRight: 15 }}
               />
             }
+            onChangeText={(c) => {
+              setCode(c);
+            }}
           />
+          <Text style={{ color: "red", paddingBottom: 10, paddingTop: 10 }}>
+            {errorOtp}
+          </Text>
           <Input
             type="text"
-            placeholder="Xác nhận mật khẩu "
-            name="newpass"
+            placeholder="Nhập mật khẩu mới"
+            name="confirmpass"
             onChangeText={(e) => setConfirmPass(e)}
             value={confirmPass}
             leftIcon={
@@ -219,17 +222,9 @@ export default function ForgotPass({ navigation }) {
               />
             }
           />
-          {/* <Text>Vui lòng nhập mã OTP bạn đã nhận được</Text> */}
-          <Input
-            onChangeText={(c) => {
-              setCode(c);
-            }}
-          />
-          <Text style={{ color: "red", paddingBottom: 10, paddingTop: 10 }}>
-            {errorOtp}
-          </Text>
+
           <Button
-            title="XÁC THỰC"
+            title="XÁC NHẬN"
             type="outline"
             containerStyle={{
               backgroundColor: "#098524",

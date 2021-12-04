@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useCallback, Fragment } from "react";
 
 // material
-import { Grid, Button, Container, Stack, Typography } from "@material-ui/core";
+import { Grid, Container } from "@material-ui/core";
 // components
 import Page from "src/components/Page";
 //ort POSTS from '../_mocks_/blog';
@@ -91,7 +91,7 @@ export default function Chat() {
                 </Grid>
               </Grid>
 
-              {/* When activeRoom has value */}
+              {/* When activeRoom has values */}
               {activeRoom && (
                 <Fragment>
                   <Grid
@@ -118,7 +118,7 @@ export default function Chat() {
                 </Fragment>
               )}
 
-              {/* When activeRoom undefined */}
+              {/* When activeRoom is undefined */}
               {!activeRoom && (
                 <Grid item xs={12} sm={12} md={10} style={{ height: "100%" }}>
                   <div className={classes.contain}>

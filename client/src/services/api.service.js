@@ -1,6 +1,4 @@
 import axios from "axios";
-// import { Feedback } from "@material-ui/icons";
-// import { phone } from "faker";
 
 const baseApi = "http://localhost:4000/api/";
 export default {
@@ -15,7 +13,7 @@ export default {
       addUser: (userChat) => axios.post(url + "register", userChat),
       listRoom: (userId) => axios.get(url + userId + "/rooms"),
       listFriend: (userId) => axios.get(url + userId + "/friends"),
-      // forgotpass: (userChat) => axios.post(url + "forgotpass", userChat),
+
       forgotpass: (phone, newpass) =>
         axios.post(url + "forgotpass/" + phone + "&&" + newpass),
       getallphone: () => axios.get(url + "get-all-phones"),

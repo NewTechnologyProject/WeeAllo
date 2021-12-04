@@ -13,8 +13,6 @@ import { Grid } from "@material-ui/core";
 const ImagesShow = (props) => {
   const { listMedia } = props;
 
-  console.log(listMedia);
-
   return (
     <List component="nav" aria-labelledby="nested-list-subheader">
       <ListItem button onClick={props.onClickImage}>
@@ -25,13 +23,13 @@ const ImagesShow = (props) => {
         <List component="div" disablePadding>
           <Grid container>
             {listMedia &&
-              listMedia.map((media) => (
+              listMedia.map((media, i) => (
                 <Grid
                   item
                   xs={4}
                   padding={0.3}
                   className={classes.item}
-                  key={media.key}
+                  key={i}
                 >
                   <a
                     href={media.url}

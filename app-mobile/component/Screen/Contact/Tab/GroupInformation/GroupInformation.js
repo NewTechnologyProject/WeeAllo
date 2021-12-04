@@ -71,8 +71,6 @@ const GroupInformation = ({ navigation, route }) => {
       .then((response) => {
         console.log("removed");
         backToChat();
-        // props.onNeedLoad(props.roomId);
-        // props.onSetActiveRoomNull();
       })
       .catch((error) => {
         console.log(error);

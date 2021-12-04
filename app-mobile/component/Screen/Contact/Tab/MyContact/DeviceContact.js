@@ -66,6 +66,7 @@ export default function DeviceContact({ navigation, route }) {
             }
         })();
     }, []);
+    console.log(contacts)
     const getContactInDevice = () => {
         if (contacts) {
             dispatch(actions.getJsonString(contacts, 1));
