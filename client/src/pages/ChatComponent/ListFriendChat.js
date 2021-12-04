@@ -85,7 +85,14 @@ export default function ListFriendChat(props) {
                     src={room.avatar ? room.avatar : "dummy.js"}
                   ></Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={name} secondary={room.createAt} />
+                <ListItemText
+                  primary={name}
+                  secondary={room.createAt}
+                  primaryTypographyProps={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                />
               </ListItem>
             );
           })}

@@ -41,7 +41,10 @@
 
 /* textfiled */
 .title-input {
-  padding: 7px;
+  padding: 5px 7px;
+}
+.title-input-name {
+  padding: 0 7px;
 }
 
 .group-name {

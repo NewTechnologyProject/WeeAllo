@@ -5,6 +5,7 @@ import { deepOrange } from "@material-ui/core/colors";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import { Grid } from "@material-ui/core";
 import { width } from "@material-ui/system";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     messageFile: {
@@ -103,7 +104,7 @@ const useStyles = makeStyles((theme) =>
       position: "absolute",
       fontSize: ".85em",
       fontWeight: "300",
-      marginTop: "10px",
+      marginTop: "50px",
       bottom: "-3px",
       right: "5px",
       paddingBottom: 10,
@@ -137,41 +138,61 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+const getFileExt = (str) => {
+  const fileExt1 = str.split(
+    "https://image-upload-weeallo.s3.us-east-2.amazonaws.com/"
+  )[1];
+  const fileName = String(fileExt1);
+  let fileExt = fileName.split(/-(.+)/)[1];
+  return fileExt;
+};
+
+const getFileType = (str) => {
+  let re = /(?:\.([^.]+))?$/;
+  return re.exec(str)[1];
+};
+
 export const MessageLeft = (props) => {
-  var re = /(?:\.([^.]+))?$/;
   const message = props.message ? props.message : "";
   const timestamp = props.timestamp ? props.timestamp : "";
   const photoURL = props.photoURL ? props.photoURL : "";
   const displayName = props.displayName ? props.displayName : "";
   const img = props.img ? props.img : "";
+  const video = props.video ? props.video : "";
   const filePath = props.file ? props.file : "";
-  var ext = re.exec(filePath)[1];
-  const fileExt1 = filePath.split(
-    "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/"
-  )[1];
-  const fileName = String(fileExt1);
-  var fileExt = fileName.split(/-(.+)/)[1];
+
+  let ext = getFileType(filePath);
+  let fileExt = getFileExt(filePath);
+  let video_ext = getFileType(video);
+  let video_fileExt = getFileExt(video);
   const classes = useStyles();
 
   return (
     <>
       <div className={classes.messageRow}>
-        <Avatar
-          // alt={displayName}
-          // className={classes.orange}
-          src={photoURL}
-        ></Avatar>
+        <Avatar src={photoURL}></Avatar>
         <div>
           <div className={classes.displayName}>{displayName}</div>
           <div className={classes.messageBlue}>
             <div>
               <p className={classes.messageContent}>{message}</p>
             </div>
-            <div style={{ width: 300, marginBottom: 10 }}>
-              <img src={img} style={{ width: "95%" }} />
+            <div style={{ width: 300 }}>
+              <img src={img} style={{ width: "95%", paddingBottom: 20 }} />
+              {video && video_ext === "mp4" && (
+                <video
+                  width="95%"
+                  height="100%"
+                  style={{ paddingBottom: 20 }}
+                  controls
+                >
+                  <source src={video} />
+                </video>
+              )}
             </div>
+
             {filePath ? (
-              <Grid container style={{ width: 300 }}>
+              <Grid container style={{ width: 300, paddingBottom: 10 }}>
                 <Grid item xs={2}>
                   <a target="_blank" href={filePath} download={fileExt}>
                     <FileIcon extension={ext} {...defaultStyles[ext]} />
@@ -190,6 +211,30 @@ export const MessageLeft = (props) => {
             ) : (
               <div></div>
             )}
+
+            {video && video_ext !== "mp4" ? (
+              <Grid container style={{ width: 300, paddingBottom: 10 }}>
+                <Grid item xs={2}>
+                  <a target="_blank" href={video} download={video_fileExt}>
+                    <FileIcon
+                      extension={video_ext}
+                      {...defaultStyles[video_ext]}
+                    />
+                  </a>
+                </Grid>
+                <Grid item xs={10}>
+                  <a
+                    target="_blank"
+                    href={video}
+                    className={classes.displayFile}
+                  >
+                    {`${video_fileExt}`}
+                  </a>
+                </Grid>
+              </Grid>
+            ) : (
+              <div></div>
+            )}
             <div className={classes.messageTimeStampRight}>{timestamp}</div>
           </div>
         </div>
@@ -199,28 +244,36 @@ export const MessageLeft = (props) => {
 };
 
 export const MessageRight = (props) => {
-  var re = /(?:\.([^.]+))?$/;
   const classes = useStyles();
   const message = props.message ? props.message : "";
   const timestamp = props.timestamp ? props.timestamp : "";
   const img = props.img ? props.img : "";
+  const video = props.video ? props.video : "";
   const filePath = props.file ? props.file : "";
-  var ext = re.exec(filePath)[1];
-  const fileExt1 = filePath.split(
-    "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/"
-  )[1];
-  const fileName = String(fileExt1);
-  var fileExt = fileName.split(/-(.+)/)[1];
+
+  let ext = getFileType(filePath);
+  let fileExt = getFileExt(filePath);
+  let video_ext = getFileType(video);
+  let video_fileExt = getFileExt(video);
 
   return (
     <div className={classes.messageRowRight}>
       <div className={classes.messageOrange}>
         <p className={classes.messageContent}>{message}</p>
         <div style={{ marginBottom: 10 }}>
-          <img src={img} />
+          <img style={{ paddingBottom: 20 }} src={img} />
+          {video && video && video_ext === "mp4" && (
+            <video
+              src={video}
+              width="100%"
+              height="100%"
+              style={{ paddingBottom: 20 }}
+              controls
+            ></video>
+          )}
         </div>
         {filePath ? (
-          <Grid container style={{ width: 300 }}>
+          <Grid container style={{ width: 300, paddingBottom: 10 }}>
             <Grid item xs={2}>
               <a target="_blank" href={filePath} download={fileExt}>
                 <FileIcon extension={ext} {...defaultStyles[ext]} />
@@ -234,6 +287,31 @@ export const MessageRight = (props) => {
                 style={{ paddingRight: 45 }}
               >
                 {`${fileExt}`}
+              </a>
+            </Grid>
+          </Grid>
+        ) : (
+          <div></div>
+        )}
+
+        {video && video_ext !== "mp4" ? (
+          <Grid container style={{ width: 300, paddingBottom: 10 }}>
+            <Grid item xs={2}>
+              <a target="_blank" href={video} download={video_fileExt}>
+                <FileIcon
+                  extension={video_ext}
+                  {...defaultStyles[video_fileExt]}
+                />
+              </a>
+            </Grid>
+            <Grid item xs={10}>
+              <a
+                target="_blank"
+                href={video}
+                className={classes.displayFile}
+                style={{ paddingRight: 45 }}
+              >
+                {`${video_fileExt}`}
               </a>
             </Grid>
           </Grid>

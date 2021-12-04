@@ -82,13 +82,18 @@ const GroupChatMember = (props) => {
           )}
 
           {/* List members */}
-          {props.members &&
-            props.members.map((user) => {
+          {props.membersWithUserAdd &&
+            props.membersWithUserAdd.map((ug) => {
+              let userAddName = "";
+              if (ug.userAdd) {
+                userAddName = `${ug.userAdd.firstname} ${ug.userAdd.lastname}`;
+              }
+
               return (
-                <ListItem button key={user.id}>
+                <ListItem button key={ug.userId.id}>
                   <ListItemIcon>
                     <Avatar
-                      alt={user.firstname}
+                      alt={ug.userId.firstname}
                       src="dummy.js"
                       className={classes["avatar-size-small"]}
                     />
@@ -98,12 +103,16 @@ const GroupChatMember = (props) => {
                       primary: classes["primary-text"],
                       secondary: classes["secondary-text"],
                     }}
-                    primary={`${user.firstname} ${user.lastname}`}
-                    secondary={user.id === props.creator ? "Trưởng nhóm" : ""}
+                    primary={`${ug.userId.firstname} ${ug.userId.lastname}`}
+                    secondary={
+                      ug.userId.id === props.creator
+                        ? "Trưởng nhóm"
+                        : `Thêm bởi ${userAddName}`
+                    }
                   />
 
                   {/* Actions */}
-                  {!(user.id === props.creator) &&
+                  {!(ug.userId.id === props.creator) &&
                     Number(userId) === props.creator && (
                       <ListItemSecondaryAction>
                         <PopupState
@@ -134,7 +143,7 @@ const GroupChatMember = (props) => {
                                           button
                                           onClick={showRemoveAlert.bind(
                                             this,
-                                            user.id
+                                            ug.userId.id
                                           )}
                                         >
                                           <ListItemText

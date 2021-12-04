@@ -20,7 +20,11 @@ const GroupMembers = ({ navigation }) => {
   const [visible, setVisible] = useState(false);
   const [func, setFunc] = useState(null);
   const [memberId, setMemberId] = useState(null);
+
   const listMembers = useSelector((state) => state.roomchat.listMembers);
+  const listMembersWithUserAdd = useSelector(
+    (state) => state.roomchat.listMembersWithUserAdd
+  );
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const dispatch = useDispatch();
 
@@ -56,6 +60,14 @@ const GroupMembers = ({ navigation }) => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const getUserAddName = (ug) => {
+    let userAddName = "";
+    if (ug.userAdd) {
+      userAddName = `${ug.userAdd.firstname} ${ug.userAdd.lastname}`;
+    }
+    return userAddName;
   };
 
   return (
@@ -123,17 +135,17 @@ const GroupMembers = ({ navigation }) => {
             </View>
           ))}
 
-        {listMembers && listMembers.length > 0 && (
+        {listMembersWithUserAdd && listMembersWithUserAdd.length > 0 && (
           <View>
             <FlatList
-              data={listMembers}
+              data={listMembersWithUserAdd}
               renderItem={(item) => {
                 return (
                   <TouchableOpacity
                     onPress={
-                      activeRoom.creator !== item.item.id &&
+                      activeRoom.creator !== item.item.userId.id &&
                       Number(userId) === activeRoom.creator
-                        ? onPressBottomSheet.bind(this, item.item.id)
+                        ? onPressBottomSheet.bind(this, item.item.userId.id)
                         : () => {}
                     }
                   >
@@ -144,16 +156,18 @@ const GroupMembers = ({ navigation }) => {
                         size={50}
                         source={{
                           uri: `${
-                            item.item.avatar ? item.item.avatar : "dummy.js"
+                            item.item.userId.avatar
+                              ? item.item.userId.avatar
+                              : "dummy.js"
                           }`,
                         }}
                       />
                       <ListItem.Content>
-                        <ListItem.Title>{`${item.item.firstname} ${item.item.lastname}`}</ListItem.Title>
+                        <ListItem.Title>{`${item.item.userId.firstname} ${item.item.userId.lastname}`}</ListItem.Title>
                         <ListItem.Subtitle>{`${
-                          activeRoom.creator === item.item.id
+                          activeRoom.creator === item.item.userId.id
                             ? "Trưởng nhóm"
-                            : ""
+                            : `Thêm bởi ${getUserAddName(item.item)}`
                         }`}</ListItem.Subtitle>
                       </ListItem.Content>
                     </ListItem>

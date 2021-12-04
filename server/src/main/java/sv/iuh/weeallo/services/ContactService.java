@@ -143,8 +143,8 @@ public class ContactService {
         roomChatRepository.save(roomChat);
         UserChat userChat= userRepository.findById(id1).get();
         UserChat userChat2= userRepository.findById(id2).get();
-        UserGroup userGroup= new UserGroup(roomChat,userChat);
-        UserGroup userGroup2= new UserGroup(roomChat,userChat2);
+        UserGroup userGroup= new UserGroup(roomChat,userChat, null);
+        UserGroup userGroup2= new UserGroup(roomChat,userChat2, null);
         userGroupRepository.save(userGroup);
         userGroupRepository.save(userGroup2);
 

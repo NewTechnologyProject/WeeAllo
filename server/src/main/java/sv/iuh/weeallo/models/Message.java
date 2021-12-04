@@ -35,6 +35,8 @@ public class Message implements Serializable {
     private String file;
     @Column(name = "image")
     private String image;
+    @Column(name = "video")
+    private String video;
     @Column(name = "time")
     private Date time;
     @Column(name = "content")
@@ -49,7 +51,7 @@ public class Message implements Serializable {
     public Message() {
     }
 
-    public Message(Long id, String status, String content, Date time, String image, String file, RoomChat roomChatId,
+    public Message(Long id, String status, String content, Date time,String video ,String image, String file, RoomChat roomChatId,
             UserChat userId) {
         this.id = id;
         this.status = status;
@@ -59,6 +61,7 @@ public class Message implements Serializable {
         this.roomChatId = roomChatId;
         this.userId = userId;
         this.file = file;
+        this.video = video;
     }
 
     public String getContent() {
@@ -127,6 +130,14 @@ public class Message implements Serializable {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     @Override

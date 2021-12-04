@@ -12,10 +12,14 @@ import {
 
 import { FlatGrid } from "react-native-super-grid";
 import { Header } from "react-native-elements/dist/header/Header";
+import * as actions from "../../../../../action/roomchat.action";
 
 const GroupMedia = ({ navigation }) => {
-  const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [listMedia, setListMedia] = useState([]);
+  const dispatch = useDispatch();
+  const activeRoom = useSelector((state) => state.roomchat.activeRoom);
+  const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const newMessage = useSelector((state) => state.message.message);
 
   useEffect(() => {
     setListMedia([]);
@@ -28,6 +32,12 @@ const GroupMedia = ({ navigation }) => {
       }
     }
   }, [listMessages]);
+
+  useEffect(() => {
+    if (newMessage) {
+      dispatch(actions.fetchAllMessages(activeRoom.id));
+    }
+  }, [newMessage]);
 
   const backToGroupInformation = () => {
     navigation.navigate("GroupInformation");

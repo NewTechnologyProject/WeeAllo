@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import * as actionuser from "src/actions/customer.action";
 import classes from "./ModalAddMember.module.css";
 import Modal from "@material-ui/core/Modal";
 import Fade from "@material-ui/core/Fade";
@@ -14,8 +16,15 @@ import { addUserGroup } from "src/actions/usergroup.action";
 const ModalAddMember = (props) => {
   const [keyWord, setKeyWord] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
   const userId = localStorage.getItem("user_authenticated");
+  const profile = useSelector((state) => state.customer.userById);
   let listMembers = [];
+
+  useEffect(() => {
+    dispatch(actionuser.findByIdUser(userId));
+  }, []);
 
   const getChosenMembersHandler = (chosenMembers) => {
     listMembers = chosenMembers;
@@ -34,6 +43,11 @@ const ModalAddMember = (props) => {
         },
         userId: {
           id: member.id,
+        },
+        userAdd: {
+          id: Number(userId),
+          firstname: profile.firstname,
+          lastname: profile.lastname,
         },
       };
 

@@ -7,11 +7,11 @@ import {
   fetchAllMembers,
   updateCreator,
   deleteRoomChat,
+  fetchAllMembersWithUserAdd,
 } from "../../../../../action/roomchat.action";
 import { deleteUserGroup } from "../../../../../action/usergroup.action";
 import { Header } from "react-native-elements/dist/header/Header";
 import Alert from "./Alert";
-import GroupFile from "./GroupFile";
 
 const GroupInformation = ({ navigation, route }) => {
   const [expanded, setExpanded] = useState(false);
@@ -25,6 +25,8 @@ const GroupInformation = ({ navigation, route }) => {
 
   useEffect(() => {
     dispatch(fetchAllMembers(activeRoom.id));
+
+    dispatch(fetchAllMembersWithUserAdd(activeRoom.id));
   }, [fetchAllMembers, activeRoom.id, route.params]);
 
   const toggleOverlay = (item) => {
@@ -56,6 +58,23 @@ const GroupInformation = ({ navigation, route }) => {
         deletedRoom: activeRoom,
       },
     });
+  };
+
+  const showNameHandler = () => {
+    let name = "Group";
+    if (listMembers.length > 2) {
+      const members = listMembers.filter(
+        (member) => member.id !== Number(userId)
+      );
+      name = `${members[0].firstname}, ${members[1].firstname},...`;
+    } else if (listMembers.length === 2) {
+      name =
+        listMembers[0].id === Number(userId)
+          ? `${listMembers[1].firstname} ${listMembers[1].lastname}`
+          : `${listMembers[0].firstname} ${listMembers[0].lastname}`;
+    }
+
+    return name;
   };
 
   const changeAdmin = (roomId, members, creator) => {
@@ -183,7 +202,7 @@ const GroupInformation = ({ navigation, route }) => {
         </View>
         <View>
           <Text style={styles.text}>
-            {activeRoom.roomName ? activeRoom.roomName : "Group"}
+            {activeRoom.roomName ? activeRoom.roomName : showNameHandler()}
           </Text>
         </View>
 

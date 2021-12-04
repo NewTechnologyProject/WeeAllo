@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Icon, ListItem } from "react-native-elements";
+import { Icon } from "react-native-elements";
+import { Video } from "expo-av";
 import {
   View,
   StyleSheet,
@@ -22,13 +23,10 @@ import { SOCKET_URL } from "../../../../services/api.service";
 import { uploadAvatar } from "../../../../action/roomchat.action";
 import Spinner from "react-native-loading-spinner-overlay";
 import apiService from "../../../../services/api.service";
+import FileAlert from "./FileAlert";
 
 const URL = SOCKET_URL;
 export default function ChatContent({ navigation, route }) {
-  const dispatch = useDispatch();
-  const activeRoom = useSelector((state) => state.roomchat.activeRoom);
-  const listMessages = useSelector((state) => state.roomchat.listMessages);
-  const listMembers = useSelector((state) => state.roomchat.listMembers);
   const [receiverId, setReceiverId] = useState([]);
   const [messages, setMessages] = useState([]);
   const [customText, setCustomText] = useState(null);
@@ -37,6 +35,7 @@ export default function ChatContent({ navigation, route }) {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [link, setLink] = useState();
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   // ----------------------------------------------------------------------
   //RealTime
   const socket = useRef();
@@ -44,6 +43,11 @@ export default function ChatContent({ navigation, route }) {
   // ----------------------------------------------------------------------
   const profile = useSelector((state) => state.user.userById);
   const userId = "1";
+
+  const dispatch = useDispatch();
+  const activeRoom = useSelector((state) => state.roomchat.activeRoom);
+  const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const listMembers = useSelector((state) => state.roomchat.listMembers);
 
   LogBox.ignoreLogs(["Warning: ..."]);
 
@@ -61,7 +65,6 @@ export default function ChatContent({ navigation, route }) {
 
   useEffect(() => {
     if (listMembers.length > 0) {
-      console.log(listMembers);
       setReceiverId([]);
       for (let member of listMembers) {
         if (member.id !== Number(userId))
@@ -88,6 +91,7 @@ export default function ChatContent({ navigation, route }) {
         createdAt: new Date(),
         image: arrivalMessage.image ? arrivalMessage.image : null,
         file: arrivalMessage.file ? arrivalMessage.file : null,
+        video: arrivalMessage.video ? arrivalMessage.video : null,
         user: {
           _id: arrivalMessage.userId.id,
           name: `${arrivalMessage.userId.firstname} ${arrivalMessage.userId.lastname}`,
@@ -98,6 +102,11 @@ export default function ChatContent({ navigation, route }) {
       };
 
       setMessages((prevState) => [gifted_message, ...prevState]);
+
+      dispatch({
+        type: "ADDMESSAGE",
+        payload: arrivalMessage,
+      });
     }
   }, [arrivalMessage, activeRoom]);
 
@@ -107,68 +116,6 @@ export default function ChatContent({ navigation, route }) {
       // console.log(users);
     });
   }, [userId]);
-  // ----------------------------------------------------------------------
-
-  if (route.params) {
-    const { name } = route.params;
-  }
-
-  const onSend = (messages = []) => {
-    sentMessage(messages[0], null, null);
-  };
-
-  const sentMessage = (message, file, image) => {
-    const messageText = {
-      status: "send",
-      content: message.text,
-      image,
-      file,
-      roomChatId: {
-        id: activeRoom.id,
-      },
-      time: new Date(),
-      userId: {
-        id: Number(userId),
-        firstname: "Huy",
-        lastname: "Le",
-      },
-    };
-
-    apiService
-      .message()
-      .addMessage(messageText)
-      .then((response) => {
-        //Ad to chat screen
-        const gifted_message = {
-          _id: response.data.id,
-          text: response.data.content ? response.data.content : "",
-          createdAt: new Date(),
-          image: response.data.image ? response.data.image : null,
-          file: response.data.file ? response.data.file : null,
-          user: {
-            _id: response.data.userId.id,
-            name: `${response.data.userId.firstname} ${response.data.userId.lastname}`,
-            avatar: response.data.userId.avatar
-              ? response.data.userId.avatar
-              : "",
-          },
-        };
-        setMessages((prevState) => [gifted_message, ...prevState]);
-
-        // ----------------------------------------------------------------------
-        //RealTime
-        // ws.send(JSON.stringify(messageRealTime));
-        socket.current.emit("sendMessage", {
-          senderId: Number(userId),
-          receiverId,
-          message: messageText,
-        });
-        // ---------------------------------------------------------------------
-      })
-      .catch((err) => console.log(err));
-
-    setLoading(false);
-  };
 
   // =======================================KEYBOARD===============================================
   useEffect(() => {
@@ -208,6 +155,7 @@ export default function ChatContent({ navigation, route }) {
               createdAt: new Date(),
               image: message.image ? message.image : null,
               file: message.file ? message.file : null,
+              video: message.video ? message.video : null,
               user: {
                 _id: message.userId.id,
                 name: `${message.userId.firstname} ${message.userId.lastname}`,
@@ -221,8 +169,157 @@ export default function ChatContent({ navigation, route }) {
     }
   }, [listMessages]);
 
+  // ----------------------------------------------------------------------
+  const sentMessage = (message, file, image, video) => {
+    const messageText = {
+      status: "send",
+      content: message.text,
+      image,
+      file,
+      video,
+      roomChatId: {
+        id: activeRoom.id,
+      },
+      time: new Date(),
+      userId: {
+        id: Number(userId),
+        firstname: "Huy",
+        lastname: "Le",
+      },
+    };
+
+    apiService
+      .message()
+      .addMessage(messageText)
+      .then((response) => {
+        //Ad to chat screen
+        const gifted_message = {
+          _id: response.data.id,
+          text: response.data.content ? response.data.content : "",
+          createdAt: new Date(),
+          image: response.data.image ? response.data.image : null,
+          file: response.data.file ? response.data.file : null,
+          video: response.data.video ? response.data.video : null,
+          user: {
+            _id: response.data.userId.id,
+            name: `${response.data.userId.firstname} ${response.data.userId.lastname}`,
+            avatar: response.data.userId.avatar
+              ? response.data.userId.avatar
+              : "",
+          },
+        };
+        setMessages((prevState) => [gifted_message, ...prevState]);
+
+        dispatch({
+          type: "ADDMESSAGE",
+          payload: response.data,
+        });
+
+        // ----------------------------------------------------------------------
+        //RealTime
+        socket.current.emit("sendMessage", {
+          senderId: Number(userId),
+          receiverId,
+          message: messageText,
+        });
+        // ---------------------------------------------------------------------
+      })
+      .catch((err) => console.log(err));
+
+    setLoading(false);
+  };
+
   const toGroupInformation = () => {
     navigation.navigate("GroupInformation");
+  };
+
+  const showNameHandler = () => {
+    let name = "Group";
+    if (listMembers.length > 2) {
+      const members = listMembers.filter(
+        (member) => member.id !== Number(userId)
+      );
+      name = `${members[0].firstname}, ${members[1].firstname},...`;
+    } else if (listMembers.length === 2) {
+      name =
+        listMembers[0].id === Number(userId)
+          ? `${listMembers[1].firstname} ${listMembers[1].lastname}`
+          : `${listMembers[0].firstname} ${listMembers[0].lastname}`;
+    }
+
+    return name;
+  };
+
+  const isVideo = (type) => {
+    switch (type.toLowerCase()) {
+      case "mp4":
+      case "mov":
+      case "wmv":
+      case "avchd":
+      case "flv":
+      case "f4v":
+      case "swf":
+      case "mkv":
+      case "webm":
+      case "html5":
+      case "mpeg-2":
+      case "video":
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const onSend = (messages = []) => {
+    sentMessage(messages[0], null, null, null);
+  };
+
+  const getFileName = (str) => {
+    if (str) {
+      const str1 = str.split("/")[3];
+      const str2 = str1.substring(str1.indexOf("-") + 1);
+      return str2;
+    }
+    return;
+  };
+
+  const getType = (str) => {
+    const str1 = str.split(".")[5];
+    return str1;
+  };
+
+  const getIconType = (url) => {
+    const type = getType(url);
+    let value;
+    switch (type) {
+      case "docx":
+        value = "file-word-o";
+        break;
+      case "pdf":
+        value = "file-pdf-o";
+        break;
+      case "ppt":
+        value = "file-powerpoint-o";
+        break;
+      case "xls":
+      case "csv":
+        value = "file-excel-o";
+        break;
+      case "mp4":
+      case "mov":
+      case "video":
+        value = "file-video-o";
+        break;
+
+      default:
+        value = "file";
+        break;
+    }
+    return value;
   };
 
   // =================================INPUT CHAT=========================================
@@ -325,9 +422,23 @@ export default function ChatContent({ navigation, route }) {
       name: result.name,
     });
 
-    uploadAvatar(formData).then((response) => {
-      sentMessage({}, response.data, null);
-    });
+    setLoading(true);
+    uploadAvatar(formData)
+      .then((response) => {
+        const type = getType(response.data);
+
+        if (type.toLowerCase() === "mp4") {
+          sentMessage({}, null, null, response.data);
+        } else {
+          sentMessage({}, response.data, null, null);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        if (result.uri) {
+          setOpen(true);
+        }
+      });
   };
   // ======================================IMAGE============================
   const pickImage = async () => {
@@ -337,7 +448,9 @@ export default function ChatContent({ navigation, route }) {
       aspect: [4, 3],
       quality: 0.5,
     });
+
     setLink(result.uri);
+
     const imageType = result.uri.split(".")[1];
     const formData = new FormData();
     formData.append("file", {
@@ -347,14 +460,25 @@ export default function ChatContent({ navigation, route }) {
     });
 
     setLoading(true);
-    uploadAvatar(formData).then((response) => {
-      sentMessage({}, null, response.data);
-    });
-  };
+    uploadAvatar(formData)
+      .then((response) => {
+        const type = getType(response.data);
 
-  const wait = (timeout) => {
-    return;
-    new Promise((resolve) => setTimeout(resolve, timeout));
+        if (isVideo(type.toLowerCase())) {
+          if (type.toLowerCase() === "mp4") {
+            sentMessage({}, null, null, response.data);
+          }
+          sentMessage({}, response.data, null, null);
+        } else {
+          sentMessage({}, null, response.data, null);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        if (result.uri) {
+          setOpen(true);
+        }
+      });
   };
 
   // ===============================OPEN  CAMERA========================
@@ -383,9 +507,17 @@ export default function ChatContent({ navigation, route }) {
       name: `photo.${imageType}`,
     });
 
-    uploadAvatar(formData).then((response) => {
-      sentMessage({}, null, response.data);
-    });
+    setLoading(true);
+    uploadAvatar(formData)
+      .then((response) => {
+        sentMessage({}, null, response.data, null);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (result.uri) {
+          setOpen(true);
+        }
+      });
   };
 
   //====================================ON LONG PRESS BUBBLE====================
@@ -437,49 +569,6 @@ export default function ChatContent({ navigation, route }) {
       </View>
     );
   };
-  // ==================================================================
-
-  const getFileName = (str) => {
-    if (str) {
-      const str1 = str.split("/")[3];
-      const str2 = str1.substring(str1.indexOf("-") + 1);
-      return str2;
-    }
-    return;
-  };
-
-  const getType = (str) => {
-    const str1 = str.split(".")[5];
-    return str1;
-  };
-
-  const getIconType = (url) => {
-    if (url) {
-      const type = getType(url);
-      let value;
-      switch (type) {
-        case "docx":
-          value = "file-word-o";
-          break;
-        case "pdf":
-          value = "file-pdf-o";
-          break;
-        case "ppt":
-          value = "file-powerpoint-o";
-          break;
-        case "xls":
-        case "csv":
-          value = "file-excel-o";
-          break;
-
-        default:
-          value = "file";
-          break;
-      }
-      return value;
-    }
-    return;
-  };
 
   // ==========================CUSTOM VIEW====================================
   const renderCustomView = (props) => {
@@ -515,6 +604,30 @@ export default function ChatContent({ navigation, route }) {
     }
   };
 
+  // =========================RENDER MESSAGE VIDEO====================================
+  const renderMessageVideo = (props) => {
+    const { currentMessage } = props;
+
+    return (
+      <View
+        style={{
+          paddingHorizontal: 10,
+          paddingTop: 20,
+        }}
+      >
+        <Video
+          resizeMode="contain"
+          useNativeControls
+          shouldPlay={false}
+          source={{
+            uri: `${currentMessage.video}`,
+          }}
+          style={styles.video}
+        />
+      </View>
+    );
+  };
+
   // ==========================CHAT FOOTER ====================================
   const renderChatFooter = () => {
     if (link) {
@@ -533,6 +646,7 @@ export default function ChatContent({ navigation, route }) {
   // ========================SCREEN CHAT=================================
   return (
     <View style={styles.container}>
+      <FileAlert open={open} onClose={onClose} />
       <Spinner
         //visibility of Overlay Loading Spinner
         visible={loading}
@@ -546,7 +660,9 @@ export default function ChatContent({ navigation, route }) {
         statusBarProps={{ barStyle: "light-content" }}
         barStyle="light-content"
         centerComponent={{
-          text: `${activeRoom.roomName ? activeRoom.roomName : "Group"}`,
+          text: `${
+            activeRoom.roomName ? activeRoom.roomName : showNameHandler()
+          }`,
           style: { color: "#fff" },
         }}
         leftComponent={
@@ -572,6 +688,7 @@ export default function ChatContent({ navigation, route }) {
           justifyContent: "space-around",
         }}
       />
+
       {/* ==========================GIFTED CHAT========================================== */}
       <GiftedChat
         messages={messages}
@@ -590,6 +707,7 @@ export default function ChatContent({ navigation, route }) {
         renderAvatarOnTop={true}
         renderUsernameOnMessage={true} //show username
         renderComposer={renderComposer}
+        renderMessageVideo={renderMessageVideo}
         //renderChatEmpty={renderChatEmpty}
         // renderChatFooter={renderChatFooter}
         // renderMessageImage={renderMessageImage}
@@ -628,6 +746,7 @@ export default function ChatContent({ navigation, route }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   avatar: {
     borderRadius: 1,
@@ -684,5 +803,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  video: {
+    alignSelf: "center",
+    width: 320,
+    height: 200,
   },
 });

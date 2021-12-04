@@ -173,9 +173,7 @@ export default function Chat({ navigation, route }) {
                     <ListItem.Title>
                       {item.item.roomName ? item.item.roomName : groupName}
                     </ListItem.Title>
-                    <ListItem.Subtitle>
-                      {/* {item.item.roomName ? item.item.roomName : "room"} */}
-                    </ListItem.Subtitle>
+                    <ListItem.Subtitle>{item.item.createAt}</ListItem.Subtitle>
                   </ListItem.Content>
                   <ListItem.Chevron />
                 </ListItem>

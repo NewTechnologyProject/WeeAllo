@@ -20,7 +20,7 @@
   color: #343a40;
   font-size: 13px;
   overflow: hidden;
-  white-space: nowrap; /* Don't forget this one */
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 

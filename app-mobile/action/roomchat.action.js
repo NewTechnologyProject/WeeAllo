@@ -27,6 +27,20 @@ export const fetchAllMembers = (roomId) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
+//Get list members with userAdd
+export const fetchAllMembersWithUserAdd = (roomId) => (dispatch) => {
+  apiService
+    .roomchat()
+    .listMembersWithUserAdd(roomId)
+    .then((response) => {
+      dispatch({
+        type: "LIST MEMBERS WITH USER ADD",
+        payload: response.data,
+      });
+    })
+    .catch((error) => console.log(error));
+};
+
 //Add new group chat
 export const addNewGroupChat = (newGroupChat) => {
   return apiService.roomchat().newGroupChat(newGroupChat);

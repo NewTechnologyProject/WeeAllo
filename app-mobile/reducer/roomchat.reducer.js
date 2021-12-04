@@ -1,11 +1,7 @@
-// import {
-//     INITIALIZE_APP,
-//     UPDATE_MESSAGES_LIST,
-//   } from "../constants/internal-action-types.const";
-
 const initialState = {
   listMessages: [],
   listMembers: [],
+  listMembersWithUserAdd: [],
   moveToActiveRoom: null,
   activeRoom: null,
 };
@@ -20,11 +16,19 @@ export const roomChatReducer = (state = initialState, action) => {
       };
     }
 
-    // Get list messages
+    // Get list members
     case "LIST MEMBERS": {
       return {
         ...state,
         listMembers: [...action.payload],
+      };
+    }
+
+    // Get list members with user add
+    case "LIST MEMBERS WITH USER ADD": {
+      return {
+        ...state,
+        listMembersWithUserAdd: [...action.payload],
       };
     }
 

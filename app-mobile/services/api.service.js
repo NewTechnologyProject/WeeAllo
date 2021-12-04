@@ -1,6 +1,4 @@
 import axios from "axios";
-// import { Feedback } from "@material-ui/icons";
-// import { phone } from "faker";
 
 const baseApi = "http://192.168.1.14:4000/api/";
 const SOCKET_URL = "ws://192.168.1.14:3030";
@@ -53,6 +51,8 @@ export default {
       listMessages: (roomId) => axios.get(url + roomId + "/messages"),
       newGroupChat: (groupChat) => axios.post(url, groupChat),
       listMembers: (roomId) => axios.get(url + roomId + "/users"),
+      listMembersWithUserAdd: (roomId) =>
+        axios.get(url + roomId + "/users-with-useradd"),
       deleteRoom: (roomId) => axios.delete(url + roomId),
       updateCreator: (roomId, creator) =>
         axios.put(url + roomId + "&" + creator),

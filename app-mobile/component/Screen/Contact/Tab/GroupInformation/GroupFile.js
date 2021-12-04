@@ -9,12 +9,15 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { FlatGrid } from "react-native-super-grid";
 import { Header } from "react-native-elements/dist/header/Header";
+import * as actions from "../../../../../action/roomchat.action";
 
 const GroupFile = ({ navigation }) => {
-  const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [listFiles, setListFiles] = useState([]);
+  const dispatch = useDispatch();
+  const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const activeRoom = useSelector((state) => state.roomchat.activeRoom);
+  const newMessage = useSelector((state) => state.message.message);
 
   useEffect(() => {
     setListFiles([]);
@@ -25,8 +28,20 @@ const GroupFile = ({ navigation }) => {
           return [...prevState, { id: message.id, file: message.file }];
         });
       }
+
+      if (message.video) {
+        setListFiles((prevState) => {
+          return [...prevState, { id: message.id, file: message.video }];
+        });
+      }
     }
   }, [listMessages]);
+
+  useEffect(() => {
+    if (newMessage) {
+      dispatch(actions.fetchAllMessages(activeRoom.id));
+    }
+  }, [newMessage]);
 
   const getFileName = (str) => {
     const str1 = str.split("/")[3];
@@ -55,6 +70,11 @@ const GroupFile = ({ navigation }) => {
       case "xls":
       case "csv":
         value = "file-excel-o";
+        break;
+      case "mp4":
+      case "mov":
+      case "video":
+        value = "file-video-o";
         break;
 
       default:
