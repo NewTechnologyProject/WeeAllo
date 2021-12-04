@@ -15,12 +15,13 @@ import Alert from "./Alert";
 import { Header } from "react-native-elements/dist/header/Header";
 
 const GroupMembers = ({ navigation }) => {
-  const userId = "1";
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [func, setFunc] = useState(null);
   const [memberId, setMemberId] = useState(null);
 
+  // const userId = "1";
+  const userId = useSelector((state) => state.user.userAuth);
   const listMembers = useSelector((state) => state.roomchat.listMembers);
   const listMembersWithUserAdd = useSelector(
     (state) => state.roomchat.listMembersWithUserAdd

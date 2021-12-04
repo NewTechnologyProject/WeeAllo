@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon } from "react-native-elements";
+
 import { Video } from "expo-av";
 import {
   View,
@@ -24,6 +25,7 @@ import { uploadAvatar } from "../../../../action/roomchat.action";
 import Spinner from "react-native-loading-spinner-overlay";
 import apiService from "../../../../services/api.service";
 import FileAlert from "./FileAlert";
+import { findByIdUser } from "../../../../action/user.action";
 
 const URL = SOCKET_URL;
 export default function ChatContent({ navigation, route }) {
@@ -41,10 +43,10 @@ export default function ChatContent({ navigation, route }) {
   const socket = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
   // ----------------------------------------------------------------------
-  const profile = useSelector((state) => state.user.userById);
-  const userId = "1";
-
+  // const userId = "1";
+  const userId = useSelector((state) => state.user.userAuth);
   const dispatch = useDispatch();
+  const profile = useSelector((state) => state.user.userById);
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const listMembers = useSelector((state) => state.roomchat.listMembers);
@@ -54,14 +56,14 @@ export default function ChatContent({ navigation, route }) {
   useEffect(() => {
     if (activeRoom) {
       dispatch(actions.fetchAllMessages(activeRoom.id));
+      dispatch(actions.fetchAllMembers(activeRoom.id));
+      console.log(activeRoom.id);
     }
   }, [activeRoom]);
 
   useEffect(() => {
-    if (activeRoom) {
-      dispatch(actions.fetchAllMembers(activeRoom.id));
-    }
-  }, [activeRoom]);
+    dispatch(findByIdUser(userId));
+  }, [userId]);
 
   useEffect(() => {
     if (listMembers.length > 0) {
@@ -71,16 +73,24 @@ export default function ChatContent({ navigation, route }) {
           setReceiverId((prevState) => [...prevState, { userId: member.id }]);
       }
     }
+
+    return () => {
+      setReceiverId([]);
+    };
   }, [listMembers]);
 
   // ----------------------------------------------------------------------
   //RealTime
   useEffect(() => {
     socket.current = io(URL);
+  }, []);
+
+  useEffect(() => {
     socket.current.on("getMessage", (data) => {
       setArrivalMessage(data.message);
+      console.log("da nhan tin nhan");
     });
-  }, []);
+  }, [activeRoom]);
 
   useEffect(() => {
     if (arrivalMessage && arrivalMessage.roomChatId.id === activeRoom.id) {
@@ -88,7 +98,7 @@ export default function ChatContent({ navigation, route }) {
       const gifted_message = {
         _id: arrivalMessage.id,
         text: arrivalMessage.content ? arrivalMessage.content : "",
-        createdAt: new Date(),
+        createdAt: new Date(arrivalMessage.time),
         image: arrivalMessage.image ? arrivalMessage.image : null,
         file: arrivalMessage.file ? arrivalMessage.file : null,
         video: arrivalMessage.video ? arrivalMessage.video : null,
@@ -102,20 +112,15 @@ export default function ChatContent({ navigation, route }) {
       };
 
       setMessages((prevState) => [gifted_message, ...prevState]);
-
-      dispatch({
-        type: "ADDMESSAGE",
-        payload: arrivalMessage,
-      });
     }
-  }, [arrivalMessage, activeRoom]);
+  }, [arrivalMessage]);
 
   useEffect(() => {
     socket.current.emit("addUser", Number(userId));
     socket.current.on("getUsers", (users) => {
-      // console.log(users);
+      console.log(users);
     });
-  }, [userId]);
+  }, []);
 
   // =======================================KEYBOARD===============================================
   useEffect(() => {
@@ -152,7 +157,7 @@ export default function ChatContent({ navigation, route }) {
             {
               _id: i,
               text: message.content ? message.content : "",
-              createdAt: new Date(),
+              createdAt: new Date(message.time),
               image: message.image ? message.image : null,
               file: message.file ? message.file : null,
               video: message.video ? message.video : null,
@@ -183,8 +188,8 @@ export default function ChatContent({ navigation, route }) {
       time: new Date(),
       userId: {
         id: Number(userId),
-        firstname: "Huy",
-        lastname: "Le",
+        firstname: profile.firstname,
+        lastname: profile.lastname,
       },
     };
 
@@ -209,11 +214,6 @@ export default function ChatContent({ navigation, route }) {
           },
         };
         setMessages((prevState) => [gifted_message, ...prevState]);
-
-        dispatch({
-          type: "ADDMESSAGE",
-          payload: response.data,
-        });
 
         // ----------------------------------------------------------------------
         //RealTime

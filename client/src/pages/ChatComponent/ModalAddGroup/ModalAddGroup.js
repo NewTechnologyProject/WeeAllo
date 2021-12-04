@@ -17,7 +17,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
 import ChoosingMember from "./ChoosingMember";
 import Spinner from "../ui/Spinner";
-import { he } from "date-fns/locale";
 
 const ModalAddGroup = (props) => {
   const [nameInput, setNameInput] = useState("");

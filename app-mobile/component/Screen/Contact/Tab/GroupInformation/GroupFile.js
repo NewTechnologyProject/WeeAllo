@@ -17,7 +17,12 @@ const GroupFile = ({ navigation }) => {
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
-  const newMessage = useSelector((state) => state.message.message);
+
+  useEffect(() => {
+    if (activeRoom) {
+      dispatch(actions.fetchAllMessages(activeRoom.id));
+    }
+  }, [activeRoom]);
 
   useEffect(() => {
     setListFiles([]);
@@ -36,12 +41,6 @@ const GroupFile = ({ navigation }) => {
       }
     }
   }, [listMessages]);
-
-  useEffect(() => {
-    if (newMessage) {
-      dispatch(actions.fetchAllMessages(activeRoom.id));
-    }
-  }, [newMessage]);
 
   const getFileName = (str) => {
     const str1 = str.split("/")[3];

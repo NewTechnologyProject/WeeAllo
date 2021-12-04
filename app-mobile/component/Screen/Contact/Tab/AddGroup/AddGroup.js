@@ -23,7 +23,8 @@ const AddGroup = ({ navigation }) => {
   const [chosenMembers, setChosenMembers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const userId = "1";
+  // const userId = "1";
+  const userId = useSelector((state) => state.user.userAuth);
   const dispatch = useDispatch();
   const listFriends = useSelector((state) => state.user.listFriends);
   const profile = useSelector((state) => state.user.userById);

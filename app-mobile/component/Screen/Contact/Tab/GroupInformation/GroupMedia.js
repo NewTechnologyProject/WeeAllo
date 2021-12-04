@@ -19,7 +19,12 @@ const GroupMedia = ({ navigation }) => {
   const dispatch = useDispatch();
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const listMessages = useSelector((state) => state.roomchat.listMessages);
-  const newMessage = useSelector((state) => state.message.message);
+
+  useEffect(() => {
+    if (activeRoom) {
+      dispatch(actions.fetchAllMessages(activeRoom.id));
+    }
+  }, [activeRoom]);
 
   useEffect(() => {
     setListMedia([]);
@@ -32,12 +37,6 @@ const GroupMedia = ({ navigation }) => {
       }
     }
   }, [listMessages]);
-
-  useEffect(() => {
-    if (newMessage) {
-      dispatch(actions.fetchAllMessages(activeRoom.id));
-    }
-  }, [newMessage]);
 
   const backToGroupInformation = () => {
     navigation.navigate("GroupInformation");

@@ -21,7 +21,8 @@ const GroupInformation = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const listMembers = useSelector((state) => state.roomchat.listMembers);
-  const userId = "1";
+  // const userId = "1";
+  const userId = useSelector((state) => state.user.userAuth);
 
   useEffect(() => {
     dispatch(fetchAllMembers(activeRoom.id));

@@ -78,14 +78,17 @@ export default function Profile1({ navigation }) {
     // }
     navigation.navigate("Login");
   };
+
   const changeEdit = () => {
     navigation.navigate("EditProfile");
   };
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     dispatch(actions.fetchAllContact(1));
     wait(2000).then(() => setRefreshing(false));
   }, []);
+
   return (
     <View style={styles.container} on>
       <View>
