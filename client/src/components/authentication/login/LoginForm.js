@@ -168,8 +168,7 @@ export default function LoginForm() {
   const onSignInSubmit = (e) => {
     e.preventDefault();
     configureCaptcha();
-    // const phoneNumber = "+84" + values.phone;
-    const phoneNumber = values.phone;
+    const phoneNumber = "+84" + values.phone;
     console.log(phoneNumber);
     const appVerifier = window.recaptchaVerifier;
     firebase
@@ -180,7 +179,6 @@ export default function LoginForm() {
         console.log("OTP đã gởi");
       })
       .catch((error) => {
-        // Error; SMS not sent
         console.log("SMS không được gởi");
         // navigate("/register", { replace: true });
       });
@@ -206,7 +204,6 @@ export default function LoginForm() {
     }
   };
 
-  console.log(values.phone);
   return loginComponent ? (
     <>
       <FormikProvider value={formik}>
@@ -276,7 +273,7 @@ export default function LoginForm() {
               helperText: errors.phone,
             })}
 
-          // onChange={(e) => setOTP(e.target.value)}
+            // onChange={(e) => setOTP(e.target.value)}
           />
         </Stack>
         <LoadingButton

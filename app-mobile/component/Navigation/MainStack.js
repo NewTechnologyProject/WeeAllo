@@ -45,7 +45,7 @@ export default function MainStack(Stack) {
       <Stack.Screen name="MyContact" component={MyContact} />
       <Stack.Screen name="DeviceContact" component={DeviceContact} />
       <Stack.Screen name="AddGroup" component={AddGroup} />
-      <Stack.Screen name="AddMember" component={addMember} />
+      {/* <Stack.Screen name="AddMember" component={addMember} /> */}
       <Stack.Screen name="DetailContact" component={DetailContact} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Scanner" component={Scanner} />
