@@ -112,6 +112,10 @@ export default function ForgotPass({ navigation }) {
   };
 
   const onSubitOTP = async () => {
+    const phoneNumber = phone;
+    const newpass = confirmPass;
+    console.log(phoneNumber);
+    console.log(newpass);
     try {
       const credential = firebase.auth.PhoneAuthProvider.credential(
         verificationId,
@@ -121,19 +125,11 @@ export default function ForgotPass({ navigation }) {
       setErrorOtp("");
       showToastWithGravity();
       navigation.navigate("Login");
-      dispatch(actions.forgotpass(phone, confirmPass));
-      //  handleForgot();
+      dispatch(actions.forgotpass(phoneNumber, newpass));
     } catch (err) {
       setErrorOtp("Mã xác thực sai ! Vui lòng kiểm tra lại");
     }
   };
-  // const handleForgot = () => {
-  //   const confirm = confirmPass;
-  //   const phone = phone;
-  //   console.log(phone);
-  //   console.log(confirm);
-  //   dispatch(actions.forgotpass(phone, confirm));
-  // };
   return (
     <View style={styles.container}>
       <FirebaseRecaptchaVerifierModal

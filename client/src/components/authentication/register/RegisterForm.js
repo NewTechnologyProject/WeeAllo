@@ -43,6 +43,7 @@ export default function RegisterForm() {
   const [disable, setDisable] = React.useState(false);
   const [registerComponent, setRegisterComponent] = useState(true);
   const [open, setOpen] = React.useState(false);
+  const [openF, setOpenF] = React.useState(false);
   const [agree, setAgree] = React.useState(false);
   const [user, setUser] = useState([]);
   useEffect(() => {
@@ -155,6 +156,7 @@ export default function RegisterForm() {
       setTimeout(() => {
         setRegisterComponent(false);
       }, 8000);
+      // }, 2000);
     }
   };
 
@@ -201,12 +203,12 @@ export default function RegisterForm() {
         const user = result.user;
         console.log(JSON.stringify(user));
         dispatch(actions.register(values));
-        setTimeout(() => {
-          navigate("/login", { replace: true });
-        }, 2000);
+        handleOpenRegister();
+        // setTimeout(() => {
+        //   navigate("/login", { replace: true });
+        // }, 2000);
       });
     } else {
-      //   console.log("hihi");
       handleClickOpen();
     }
   };
@@ -229,12 +231,22 @@ export default function RegisterForm() {
   };
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenF(true);
   };
 
   const handleClickClose = () => {
-    setOpen(false);
+    setOpenF(false);
     comeBack();
+  };
+
+  const handleOpenRegister = () => {
+    setOpen(true);
+  };
+
+  const handleCloseRegister = () => {
+    navigate("/login", { replace: true });
+    setOpen(false);
+    //  comeBack();
   };
   return registerComponent ? (
     <form id="otp" autoComplete="off" noValidate>
@@ -350,8 +362,8 @@ export default function RegisterForm() {
               onChange={(e) => setOTP(e.target.value)}
             />
           </Stack>
+
           <LoadingButton
-            //  disabled={disable}
             fullWidth
             size="large"
             type="submit"
@@ -362,6 +374,27 @@ export default function RegisterForm() {
           <Dialog
             open={open}
             keepMounted
+            onClose={handleCloseRegister}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle id="alert-dialog-slide-title">
+              {"Cảnh báo"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Đăng ký thành công!
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseRegister} color="primary">
+                Đồng ý
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openF}
+            keepMounted
             onClose={handleClickClose}
             aria-labelledby="alert-dialog-slide-title"
             aria-describedby="alert-dialog-slide-description"
@@ -371,7 +404,7 @@ export default function RegisterForm() {
             </DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-slide-description">
-                Mã xác thực không được để trống!
+                Mã OTP không phù hợp!
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -380,15 +413,6 @@ export default function RegisterForm() {
               </Button>
             </DialogActions>
           </Dialog>
-          {/* <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
-            <Alert
-              onClose={handleClose}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Đăng ký thành công
-            </Alert>
-          </Snackbar> */}
         </Stack>
       </form>
     </div>
