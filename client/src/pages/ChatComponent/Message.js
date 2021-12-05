@@ -251,7 +251,7 @@ export default function MessageChat(props) {
 
           {/* Message Area */}
           <Grid item xs={12} sm={12} md={12} style={{ height: "75%" }}>
-            {listMessages.length > 0 ? (
+            {messages.length > 0 ? (
               <Scrollbar
                 sx={{
                   height: "100%",
