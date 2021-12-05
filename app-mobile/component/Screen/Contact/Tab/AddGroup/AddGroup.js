@@ -42,12 +42,14 @@ const AddGroup = ({ navigation }) => {
   const getGroupName = (input) => {
     const name = input;
     const regex = new RegExp("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$");
-    if (name.length > 18) {
+    if (name.length === "") {
+      setHelperText({ error: false, text: " " });
+    } else if (name.length > 18) {
       setHelperText({ error: true, text: "Tên phải bé hơn 18 kí tự" });
     } else if (!regex.test(name)) {
       setHelperText({
         error: true,
-        text: "Tên bắt đầu là chữ cái hoặc số và không có kí tự đặc biệt",
+        text: "Tên gồm chữ cái hoặc số và không có kí tự đặc biệt",
       });
     } else {
       setHelperText({ error: false, text: " " });

@@ -93,7 +93,10 @@ export const MessageInput = (props) => {
             type: "ADDMESSAGE",
             payload: response.data,
           });
+
           props.onSubmitMessage(response.data);
+
+          console.log(response.data);
         })
         .catch((err) => console.log(err));
       setMessage("");
