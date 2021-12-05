@@ -4,8 +4,7 @@ import { Camera } from 'expo-camera';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Button, Icon } from 'react-native-elements';
 import { Dialog } from 'react-native-elements';
-import { withNavigationFocus } from "react-navigation";
-const Scanner = ({ navigation }) => {
+export default function Scanner({ navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [isActive, setIsActive] = useState(false);
@@ -135,4 +134,3 @@ const styles = StyleSheet.create({
         color: 'white',
     },
 });
-export default withNavigationFocus(Scanner)
