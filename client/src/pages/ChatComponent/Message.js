@@ -19,6 +19,7 @@ import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import Scrollbar from "src/components/Scrollbar";
 import axios from "axios";
 import { io } from "socket.io-client";
+import FileAlert from "./send-file-alert/FileAlert";
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +28,6 @@ const URL = "ws://localhost:3030";
 export default function MessageChat(props) {
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
-  const newMessage = useSelector((state) => state.message.message);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [listMembers, setListMembers] = useState([]);
   const [chosenEmoji, setChosenEmoji] = useState(null);
@@ -35,14 +35,15 @@ export default function MessageChat(props) {
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
   const [img, setImg] = useState();
+  const [video, setVideo] = useState();
   const [sFile, setSFile] = useState();
+  const [open, setOpen] = useState(false);
   const socket = useRef();
   const file = useRef(null);
   const image = useRef(null);
   const userId = localStorage.getItem("user_authenticated");
   //RealTime
   const [messages, setMessage] = useState([]);
-  // const [ws, setWs] = useState(new WebSocket(URL));
   //Scroll
   const messagesEndRef = useRef(null);
 
@@ -74,6 +75,30 @@ export default function MessageChat(props) {
     image.current.click();
   };
 
+  const getType = (str) => {
+    const str1 = str.split(".")[5];
+    return str1;
+  };
+
+  const isVideo = (type) => {
+    switch (type.toLowerCase()) {
+      case "mp4":
+      case "mov":
+      case "wmv":
+      case "avchd":
+      case "flv":
+      case "f4v":
+      case "swf":
+      case "mkv":
+      case "webm":
+      case "html5":
+      case "mpeg-2":
+        return true;
+      default:
+        return false;
+    }
+  };
+
   const handleImage = (e) => {
     const imageA = e.target.files[0];
     const formData = new FormData();
@@ -81,7 +106,18 @@ export default function MessageChat(props) {
     axios
       .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
       .then((response) => {
-        setImg(response.data);
+        const typeOfFile = getType(response.data);
+        if (isVideo(typeOfFile)) {
+          setVideo(response.data);
+        } else {
+          setImg(response.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        if (imageA) {
+          setOpen(true);
+        }
       });
   };
 
@@ -93,6 +129,12 @@ export default function MessageChat(props) {
       .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
       .then((response) => {
         setSFile(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        if (imageA) {
+          setOpen(true);
+        }
       });
   };
 
@@ -162,11 +204,17 @@ export default function MessageChat(props) {
 
     addMessage(messageString);
     setImg();
+    setVideo();
     setSFile();
+  };
+
+  const onClose = () => {
+    setOpen(false);
   };
 
   return (
     <div style={{ height: "100%" }}>
+      <FileAlert open={open} onClose={onClose} />
       <Grid container spacing={0} style={{ height: "100%" }}>
         <Grid
           container
@@ -303,6 +351,7 @@ export default function MessageChat(props) {
                   dataEmoji={chosenEmoji}
                   image={img}
                   file={sFile}
+                  video={video}
                   activeRoom={props.activeRoom.id}
                   onSubmitMessage={(messageString) =>
                     submitMessage(messageString)

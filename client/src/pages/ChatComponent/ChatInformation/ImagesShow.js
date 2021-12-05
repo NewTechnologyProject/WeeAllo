@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { Fragment } from "react";
 
 import classes from "./ImagesShow.module.css";
 import List from "@material-ui/core/List";
@@ -16,7 +15,7 @@ const ImagesShow = (props) => {
   return (
     <List component="nav" aria-labelledby="nested-list-subheader">
       <ListItem button onClick={props.onClickImage}>
-        <ListItemText primary="Ảnh/Video" />
+        <ListItemText primary="Hình ảnh" />
         {props.openImage ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={props.openImage} timeout="auto" unmountOnExit>
@@ -31,12 +30,16 @@ const ImagesShow = (props) => {
                   className={classes.item}
                   key={i}
                 >
-                  <a
-                    href={media.url}
-                    target="_blank"
-                    className={classes.link}
-                  ></a>
-                  <img className={classes.imgFile} src={media.url} />
+                  {media.type === "image" && (
+                    <Fragment>
+                      <a
+                        href={media.url}
+                        target="_blank"
+                        className={classes.link}
+                      ></a>
+                      <img className={classes.imgFile} src={media.url} />
+                    </Fragment>
+                  )}
                 </Grid>
               ))}
 

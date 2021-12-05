@@ -3,7 +3,10 @@ import { useSelector } from "react-redux";
 
 import classes from "./ChatInformation.module.css";
 import Scrollbar from "src/components/Scrollbar";
-import { fetchAllMembers } from "src/actions/roomchat.action";
+import {
+  fetchAllMembers,
+  fetchAllMembersWithUserAdd,
+} from "src/actions/roomchat.action";
 import ModalAddMember from "./ModalAddMembers/ModalAddMember";
 import GroupChatMember from "./GroupChatMembers";
 import ImagesShow from "./ImagesShow";
@@ -17,6 +20,7 @@ export default function ChatInfomation(props) {
   const [openImage, setOpenImage] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [listMembers, setListMembers] = useState([]);
+  const [listMembersWithUserAdd, setListMembersWithUserAdd] = useState([]);
   const [listFiles, setListFiles] = useState({ files: [], media: [] });
   const [needLoadMembers, setNeedLoadMembers] = useState({ name: "new" });
   const listMessages = useSelector((state) => state.roomchat.listMessages);
@@ -30,7 +34,20 @@ export default function ChatInfomation(props) {
       .catch((error) => {
         console.log(error);
       });
+
+    fetchAllMembersWithUserAdd(roomId)
+      .then((response) => {
+        setListMembersWithUserAdd(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
+
+  const getFileType = (str) => {
+    let re = /(?:\.([^.]+))?$/;
+    return re.exec(str)[1];
+  };
 
   const getFilesAndMedia = (message) => {
     if (message.file) {
@@ -46,9 +63,43 @@ export default function ChatInfomation(props) {
       setListFiles((prevState) => {
         return {
           files: [...prevState.files],
-          media: [...prevState.media, { key: message.id, url: message.image }],
+          media: [
+            ...prevState.media,
+            { key: message.id, url: message.image, type: "image" },
+          ],
         };
       });
+    }
+
+    if (message.video) {
+      setListFiles((prevState) => {
+        return {
+          files: [...prevState.files, { key: message.id, url: message.video }],
+          media: [...prevState.media],
+        };
+      });
+
+      // if (getFileType(message.video) === "mp4") {
+      //   setListFiles((prevState) => {
+      //     return {
+      //       files: [...prevState.files],
+      //       media: [
+      //         ...prevState.media,
+      //         { key: message.id, url: message.video, type: "video" },
+      //       ],
+      //     };
+      //   });
+      // } else {
+      //   setListFiles((prevState) => {
+      //     return {
+      //       files: [
+      //         ...prevState.files,
+      //         { key: message.id, url: message.video },
+      //       ],
+      //       media: [...prevState.media],
+      //     };
+      //   });
+      // }
     }
   };
 
@@ -108,6 +159,7 @@ export default function ChatInfomation(props) {
         openModal={openModal}
         onCloseModal={closeModalHandler}
         members={listMembers}
+        membersWithUserAdd={listMembersWithUserAdd}
         activeRoomId={props.activeRoom.id}
         onNeedLoad={needLoadHandler}
       />
@@ -131,6 +183,7 @@ export default function ChatInfomation(props) {
                 creator={props.activeRoom.creator}
                 roomId={props.activeRoom.id}
                 members={listMembers}
+                membersWithUserAdd={listMembersWithUserAdd}
                 open={open}
                 onOpenModal={openModalHandler}
                 onNeedLoad={needLoadHandler}

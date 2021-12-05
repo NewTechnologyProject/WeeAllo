@@ -12,10 +12,19 @@ import {
 
 import { FlatGrid } from "react-native-super-grid";
 import { Header } from "react-native-elements/dist/header/Header";
+import * as actions from "../../../../../action/roomchat.action";
 
 const GroupMedia = ({ navigation }) => {
-  const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [listMedia, setListMedia] = useState([]);
+  const dispatch = useDispatch();
+  const activeRoom = useSelector((state) => state.roomchat.activeRoom);
+  const listMessages = useSelector((state) => state.roomchat.listMessages);
+
+  useEffect(() => {
+    if (activeRoom) {
+      dispatch(actions.fetchAllMessages(activeRoom.id));
+    }
+  }, [activeRoom]);
 
   useEffect(() => {
     setListMedia([]);

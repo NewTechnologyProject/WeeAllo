@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import * as actionuser from "src/actions/customer.action";
 import * as actions from "src/actions/roomchat.action";
 import { addUserGroup } from "src/actions/usergroup.action";
 import Modal from "@material-ui/core/Modal";
@@ -21,12 +23,21 @@ const ModalAddGroup = (props) => {
   const [keyWord, setKeyWord] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [helperText, setHelperText] = useState({ error: false, text: " " });
+
+  const dispatch = useDispatch();
   const userId = localStorage.getItem("user_authenticated");
+  const profile = useSelector((state) => state.customer.userById);
   let listMembers = [];
+
+  useEffect(() => {
+    dispatch(actionuser.findByIdUser(userId));
+  }, []);
 
   const exitModal = () => {
     props.onCloseModal();
     setAvatarUrl("");
+    setHelperText({ error: false, text: " " });
   };
 
   const getAvatarUrl = (event) => {
@@ -38,16 +49,23 @@ const ModalAddGroup = (props) => {
   };
 
   const getNameInput = (event) => {
-    setNameInput(event.target.value);
+    const name = event.target.value;
+    const regex = new RegExp("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$");
+    if (name.length > 18) {
+      setHelperText({ error: true, text: "Tên phải bé hơn 18 kí tự" });
+    } else if (!regex.test(name)) {
+      setHelperText({
+        error: true,
+        text: "Tên bắt đầu là chữ cái hoặc số và không có kí tự đặc biệt",
+      });
+    } else {
+      setHelperText({ error: false, text: " " });
+      setNameInput(name);
+    }
   };
 
   const getChosenMembersHandler = (chosenMembers) => {
     listMembers = chosenMembers;
-
-    // dispatch({
-    //   type: "ABLE TO CREATE",
-    //   payload: chosenMembers,
-    // });
   };
 
   const createUserGroup = (roomId, members) => {
@@ -59,6 +77,11 @@ const ModalAddGroup = (props) => {
         },
         userId: {
           id: member.id,
+        },
+        userAdd: {
+          id: Number(userId),
+          firstname: profile.firstname,
+          lastname: profile.lastname,
         },
       };
 
@@ -87,9 +110,9 @@ const ModalAddGroup = (props) => {
     const today = new Date();
     const getDate =
       today.getDate() +
-      "-" +
+      "/" +
       (today.getMonth() + 1) +
-      "-" +
+      "/" +
       today.getFullYear();
 
     const room = {
@@ -199,12 +222,14 @@ const ModalAddGroup = (props) => {
               </div>
 
               {/* Ten nhom */}
-              <div className={classes["title-input"]}>
+              <div className={classes["title-input-name"]}>
                 <TextField
                   id="standard-basic"
                   label="Tên nhóm"
                   placeholder="Tên nhóm"
                   fullWidth
+                  error={helperText.error}
+                  helperText={helperText.text}
                   margin="normal"
                   size="medium"
                   onChange={getNameInput}
@@ -246,6 +271,7 @@ const ModalAddGroup = (props) => {
                 onGetChosenMembers={getChosenMembersHandler}
                 keyWord={keyWord}
                 onCloseModal={exitModal}
+                helperText={helperText}
               />
             </form>
           </div>

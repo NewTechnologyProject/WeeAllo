@@ -44,7 +44,7 @@ public class RoomChatController {
                 UserChat user = sliceUser(message.getUserId());
 
                 newListMessages.add(new Message(message.getId(), message.getStatus(), message.getContent(),
-                        message.getTime(), message.getImage(), message.getFile(), roomChat, user));
+                        message.getTime(), message.getVideo(), message.getImage(), message.getFile(), roomChat, user));
             }
         }
         Collections.sort(newListMessages, Comparator.comparing(Message::getId));
@@ -65,6 +65,33 @@ public class RoomChatController {
             for (UserGroup ug : userGroups) {
                 UserChat user = sliceUser(ug.getUserId());
                 members.add(user);
+            }
+        }
+        return members;
+    }
+
+    @GetMapping("/{roomId}/users-with-useradd")
+    public List<UserGroup> getListMembersWithUserAdd(@PathVariable("roomId") Long roomId) {
+        List<UserGroup> members = new ArrayList<UserGroup>();
+        List<UserGroup> userGroups = roomChatService.getAllMembers(roomId);
+
+        if (userGroups.size() > 0) {
+            for (UserGroup ug : userGroups) {
+                RoomChat room = new RoomChat();
+                room.setId(ug.getRoomChatId().getId());
+
+                UserChat user = sliceUser(ug.getUserId());
+
+                UserChat userAdd = null;
+                if(ug.getUserAdd() != null){
+                    userAdd = new UserChat();
+                    userAdd.setId(ug.getUserAdd().getId());
+                    userAdd.setFirstname(ug.getUserAdd().getFirstname());
+                    userAdd.setLastname(ug.getUserAdd().getLastname());
+                }
+
+                UserGroup newUserGroup = new UserGroup(ug.getId(), room, user, userAdd);
+                members.add(newUserGroup);
             }
         }
         return members;

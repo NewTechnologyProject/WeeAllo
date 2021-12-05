@@ -27,7 +27,7 @@ const FilesShow = (props) => {
   return (
     <List component="nav" aria-labelledby="nested-list-subheader">
       <ListItem button onClick={props.onClickFile}>
-        <ListItemText primary="File" />
+        <ListItemText primary="Tập tin" />
         {props.openFile ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={props.openFile} timeout="auto" unmountOnExit>

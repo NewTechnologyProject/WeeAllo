@@ -1,6 +1,11 @@
 .imgFile {
   height: 10vh;
-  width: auto;
+  width: 10vh;
+}
+
+.videoFile {
+  height: 10vh;
+  width: 10vh;
 }
 
 .item {

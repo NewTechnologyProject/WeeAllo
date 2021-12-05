@@ -9,12 +9,20 @@ import {
   StyleSheet,
 } from "react-native";
 
-import { FlatGrid } from "react-native-super-grid";
 import { Header } from "react-native-elements/dist/header/Header";
+import * as actions from "../../../../../action/roomchat.action";
 
 const GroupFile = ({ navigation }) => {
-  const listMessages = useSelector((state) => state.roomchat.listMessages);
   const [listFiles, setListFiles] = useState([]);
+  const dispatch = useDispatch();
+  const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const activeRoom = useSelector((state) => state.roomchat.activeRoom);
+
+  useEffect(() => {
+    if (activeRoom) {
+      dispatch(actions.fetchAllMessages(activeRoom.id));
+    }
+  }, [activeRoom]);
 
   useEffect(() => {
     setListFiles([]);
@@ -23,6 +31,12 @@ const GroupFile = ({ navigation }) => {
       if (message.file) {
         setListFiles((prevState) => {
           return [...prevState, { id: message.id, file: message.file }];
+        });
+      }
+
+      if (message.video) {
+        setListFiles((prevState) => {
+          return [...prevState, { id: message.id, file: message.video }];
         });
       }
     }
@@ -55,6 +69,11 @@ const GroupFile = ({ navigation }) => {
       case "xls":
       case "csv":
         value = "file-excel-o";
+        break;
+      case "mp4":
+      case "mov":
+      case "video":
+        value = "file-video-o";
         break;
 
       default:

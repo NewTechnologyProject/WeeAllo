@@ -85,6 +85,7 @@ const ChoosingMember = (props) => {
       <ActionButton
         onCloseModal={props.onCloseModal}
         chosenMembers={chosenMembers}
+        helperText={props.helperText}
       />
     </Fragment>
   );

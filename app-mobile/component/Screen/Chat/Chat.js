@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
   ScrollView,
+  RefreshControl,
   TouchableOpacity,
   View,
   FlatList,
@@ -27,8 +28,13 @@ export default function Chat({ navigation, route }) {
   const [textSearch, setTextSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [listRooms, setListRooms] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const userId = "1";
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  // const userId = "1";
+  const userId = useSelector((state) => state.user.userAuth);
   const dispatch = useDispatch();
   const rooms = useSelector((state) => state.user.listRooms);
 
@@ -40,6 +46,11 @@ export default function Chat({ navigation, route }) {
     loadRoomsHandler();
   }, [loadRoomsHandler, route.params]);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    dispatch(actions.fetchAllRoom(userId));
+    wait(2000).then(() => setRefreshing(false));
+  }, [userId]);
 
   //Set members on room to get name
   const setListMembersOnRoom = useCallback(
@@ -99,7 +110,7 @@ export default function Chat({ navigation, route }) {
 
   const toChatContent = (room, name) => {
     dispatch({ type: "SET ACTIVE ROOM", payload: { ...room } });
-    navigation.navigate("ChatContent", { name: name });
+    navigation.navigate("ChatContent", { room: room });
   };
 
   const updateSearch = (search) => {
@@ -151,6 +162,9 @@ export default function Chat({ navigation, route }) {
       {/* List rooms */}
       <View>
         <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           data={rooms}
           renderItem={(item) => {
             let groupName = item.item.roomName;
@@ -174,9 +188,7 @@ export default function Chat({ navigation, route }) {
                     <ListItem.Title>
                       {item.item.roomName ? item.item.roomName : groupName}
                     </ListItem.Title>
-                    <ListItem.Subtitle>
-                      {/* {item.item.roomName ? item.item.roomName : "room"} */}
-                    </ListItem.Subtitle>
+                    <ListItem.Subtitle>{item.item.createAt}</ListItem.Subtitle>
                   </ListItem.Content>
                   <ListItem.Chevron />
                 </ListItem>

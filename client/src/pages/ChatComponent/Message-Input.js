@@ -1,6 +1,5 @@
-import React, { PureComponent, useEffect, Fragment } from "react";
+import React, { PureComponent, useEffect, Fragment, useState } from "react";
 import InputBase from "@material-ui/core/InputBase";
-import { useState } from "react";
 import Picker, { SKIN_TONE_MEDIUM_DARK } from "emoji-picker-react";
 import SendIcon from "@material-ui/icons/Send";
 import IconButton from "@material-ui/core/IconButton";
@@ -49,6 +48,12 @@ export const MessageInput = (props) => {
   }, [props.dataEmoji]);
 
   useEffect(() => {
+    if (props.video) {
+      sentMessage();
+    }
+  }, [props.video]);
+
+  useEffect(() => {
     if (props.image) {
       sentMessage();
     }
@@ -65,6 +70,7 @@ export const MessageInput = (props) => {
       const messageText = {
         status: "send",
         content: message,
+        video: props.video,
         image: props.image,
         file: props.file,
         roomChatId: {
@@ -98,6 +104,7 @@ export const MessageInput = (props) => {
     const messageText = {
       status: "send",
       content: message,
+      video: props.video,
       image: props.image,
       file: props.file,
       roomChatId: {
@@ -111,7 +118,7 @@ export const MessageInput = (props) => {
         avartar: userProfile.avartar,
       },
     };
-    // dispatch(actions.addMessage(messageText));
+
     apiService
       .message()
       .addMessage(messageText)

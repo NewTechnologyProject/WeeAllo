@@ -1,10 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { RefreshControl, ScrollView, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Icon } from 'react-native-elements'
-import { ListItem, Avatar } from 'react-native-elements'
+import {
+  RefreshControl,
+  ScrollView,
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Icon } from "react-native-elements";
+import { ListItem, Avatar } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../../action/contact.action";
-import QRCode from 'react-native-qrcode-svg';
+import QRCode from "react-native-qrcode-svg";
+
 const styles = StyleSheet.create({
   container: {},
   sectionHeader: {
@@ -27,55 +36,54 @@ export default function ContactList({ navigation }) {
   const dispatch = useDispatch();
   const allContact = useSelector((state) => state.contact.listcontact);
   const [refreshing, setRefreshing] = useState(false);
-  const [contact, setContact] = useState([])
+  const [contact, setContact] = useState([]);
   const user = useSelector((state) => state.user.userAuth);
   const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-  }
-  console.log(user)
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  console.log(user);
   useEffect(() => {
     dispatch(actions.fetchAllContact(user));
   }, [user]);
   useEffect(() => {
     if (allContact) {
-      setContact(allContact)
+      setContact(allContact);
     }
-  }, [allContact])
+  }, [allContact]);
   const toReceive = () => {
     navigation.navigate("MyContact");
   };
 
   const toDevice = () => {
     dispatch(actions.getJsonString([], user));
-    navigation.navigate('DeviceContact')
-  }
+    navigation.navigate("DeviceContact");
+  };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     dispatch(actions.fetchAllContact(user));
     wait(2000).then(() => setRefreshing(false));
   }, []);
+
   return (
     <View style={styles.container}>
       <View>
         <ScrollView
           refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         >
           <TouchableOpacity onPress={toReceive}>
             <ListItem
               containerStyle={{
                 marginTop: -5,
-              }}>
+              }}
+            >
               <Icon
                 reverse={true}
-                reverseColor=''
-                name='user-plus'
-                type='font-awesome-5'
-                color='#5cc8d7'
+                reverseColor=""
+                name="user-plus"
+                type="font-awesome-5"
+                color="#5cc8d7"
                 size={20}
               />
               <ListItem.Content>
@@ -84,17 +92,18 @@ export default function ContactList({ navigation }) {
             </ListItem>
           </TouchableOpacity>
           <TouchableOpacity onPress={toDevice}>
-            <ListItem topDivider
+            <ListItem
+              topDivider
               containerStyle={{
                 marginTop: -5,
               }}
             >
               <Icon
                 reverse={true}
-                reverseColor=''
-                name='address-book'
-                type='font-awesome-5'
-                color='#447d00'
+                reverseColor=""
+                name="address-book"
+                type="font-awesome-5"
+                color="#447d00"
                 size={20}
               />
               <ListItem.Content>
@@ -102,27 +111,27 @@ export default function ContactList({ navigation }) {
               </ListItem.Content>
             </ListItem>
           </TouchableOpacity>
-          <Text style={{ padding: 10 }}>Tất cả liên hệ ( {contact.length ? contact.length : "0"} )</Text>
-          {
-            contact.map((c, i) => (
-              <ListItem key={i}
-              >
-                <Avatar rounded size={50} source={{ uri: c.avartar }} />
-                <ListItem.Content>
-                  <ListItem.Title>{c.firstname + " " + c.lastname}</ListItem.Title>
-                </ListItem.Content>
-                <Icon
-                  name='comment-dots'
-                  type='font-awesome-5'
-                  color='gray'
-                  size={20}
-                />
-              </ListItem>
-            ))
-          }
+          <Text style={{ padding: 10 }}>
+            Tất cả liên hệ ( {contact.length ? contact.length : "0"} )
+          </Text>
+          {contact.map((c, i) => (
+            <ListItem key={i}>
+              <Avatar rounded size={50} source={{ uri: c.avartar }} />
+              <ListItem.Content>
+                <ListItem.Title>
+                  {c.firstname + " " + c.lastname}
+                </ListItem.Title>
+              </ListItem.Content>
+              <Icon
+                name="comment-dots"
+                type="font-awesome-5"
+                color="gray"
+                size={20}
+              />
+            </ListItem>
+          ))}
         </ScrollView>
       </View>
-
     </View>
   );
 }

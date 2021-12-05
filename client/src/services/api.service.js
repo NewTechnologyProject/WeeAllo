@@ -46,6 +46,8 @@ export default {
       listMessages: (roomId) => axios.get(url + roomId + "/messages"),
       newGroupChat: (groupChat) => axios.post(url, groupChat),
       listMembers: (roomId) => axios.get(url + roomId + "/users"),
+      listMembersWithUserAdd: (roomId) =>
+        axios.get(url + roomId + "/users-with-useradd"),
       deleteRoom: (roomId) => axios.delete(url + roomId),
       updateCreator: (roomId, creator) =>
         axios.put(url + roomId + "&" + creator),

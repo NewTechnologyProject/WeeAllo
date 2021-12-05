@@ -20,8 +20,8 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "insert into user_group (room_chat_id, user_id) values (:roomId, :userId) ", nativeQuery = true)
-    void addUserGroup(@Param("roomId") Long roomId, @Param("userId") Long userId);
+    @Query(value = "insert into user_group (room_chat_id, user_id, user_add) values (:roomId, :userId, :userAdd) ", nativeQuery = true)
+    void addUserGroup(@Param("roomId") Long roomId, @Param("userId") Long userId, @Param("userAdd") Long userAddId);
 
     @Transactional
     @Modifying

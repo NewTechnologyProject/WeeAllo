@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
 export default function ContactGroupList({ navigation, route }) {
   const [listRooms, setListRooms] = useState([]);
 
-  const userId = "1";
+  // const userId = "1";
+  const userId = useSelector((state) => state.user.userAuth);
   const dispatch = useDispatch();
   const rooms = useSelector((state) => state.user.listRooms);
 
@@ -104,7 +105,7 @@ export default function ContactGroupList({ navigation, route }) {
 
   const toChatContent = (room) => {
     dispatch({ type: "SET ACTIVE ROOM", payload: { ...room } });
-    navigation.navigate("ChatContent");
+    navigation.navigate("ChatContent", { room: room });
   };
 
   const toAddGroup = () => {
@@ -135,9 +136,7 @@ export default function ContactGroupList({ navigation, route }) {
             </ListItem>
           </TouchableOpacity>
 
-          <Text
-            style={{ padding: 10 }}
-          >{`Nhóm đang tham gia `}</Text>
+          <Text style={{ padding: 10 }}>{`Nhóm đang tham gia `}</Text>
 
           {rooms.map((room) => {
             if (room.creator) {

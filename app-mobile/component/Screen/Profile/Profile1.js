@@ -14,6 +14,7 @@ import { ListItem, Avatar } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../action/user.action";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const styles = StyleSheet.create({
   container: {},
   sectionHeader: {
@@ -41,6 +42,7 @@ export default function Profile1({ navigation }) {
   const user = useSelector((state) => state.user.userAuth);
   const profile = useSelector((state) => state.user.userById);
   const [refreshing, setRefreshing] = useState(false);
+
   useEffect(() => {
     dispatch(actions.findByIdUser(user));
   }, [user]);
@@ -76,14 +78,17 @@ export default function Profile1({ navigation }) {
     // }
     navigation.navigate("Login");
   };
+
   const changeEdit = () => {
     navigation.navigate("EditProfile");
   };
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     dispatch(actions.fetchAllContact(1));
     wait(2000).then(() => setRefreshing(false));
   }, []);
+
   return (
     <View style={styles.container} on>
       <View>

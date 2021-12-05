@@ -34,13 +34,24 @@ public class UserGroup implements Serializable {
     @JoinColumn(name = "userId", referencedColumnName = "id")
     @ManyToOne
     private UserChat userId;
+    @JoinColumn(name = "userAdd", referencedColumnName = "id")
+    @ManyToOne
+    private UserChat userAdd;
 
     public UserGroup() {
     }
 
-    public UserGroup(RoomChat roomChatId, UserChat userId) {
+    public UserGroup(RoomChat roomChatId, UserChat userId, UserChat userAdd) {
         this.roomChatId = roomChatId;
         this.userId = userId;
+        this.userAdd = userAdd;
+    }
+
+    public UserGroup(Long id, RoomChat roomChatId, UserChat userId, UserChat userAdd) {
+        this.id = id;
+        this.roomChatId = roomChatId;
+        this.userId = userId;
+        this.userAdd = userAdd;
     }
 
     public UserGroup(Long id) {
@@ -69,6 +80,14 @@ public class UserGroup implements Serializable {
 
     public void setUserId(UserChat userId) {
         this.userId = userId;
+    }
+
+    public UserChat getUserAdd() {
+        return userAdd;
+    }
+
+    public void setUserAdd(UserChat userAdd) {
+        this.userAdd = userAdd;
     }
 
     @Override

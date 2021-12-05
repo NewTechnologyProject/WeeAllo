@@ -67,10 +67,11 @@ public class UserChat implements Serializable {
     private List<Message> messageList;
     @OneToMany(mappedBy = "userId")
     private List<UserGroup> userGroupList;
+    @OneToMany(mappedBy = "userId")
+    private List<UserGroup> AddedUserList;
 
     public UserChat() {
     }
-
 
     public UserChat(Long id, String firstname, String lastname, String email, String phone, String avartar, String coverImage, String status) {
         this.id = id;

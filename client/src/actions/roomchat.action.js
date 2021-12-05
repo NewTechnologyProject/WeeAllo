@@ -26,6 +26,11 @@ export const fetchAllMembers = (roomId) => {
   return apiService.roomchat().listMembers(roomId);
 };
 
+//Get list members with userAdd
+export const fetchAllMembersWithUserAdd = (roomId) => {
+  return apiService.roomchat().listMembersWithUserAdd(roomId);
+};
+
 //Upload image to aws s3
 export const uploadAvatar = (formData) => {
   return apiService.upload().image(formData);

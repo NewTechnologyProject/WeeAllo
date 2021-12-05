@@ -8,6 +8,7 @@ import { Header } from "react-native-elements/dist/header/Header";
 import { addUserGroup } from "../../../../../action/usergroup.action";
 import ListFriends from "./ListFriend";
 import * as actions from "../../../../../action/user.action";
+import { findByIdUser } from "../../../../../action/user.action";
 
 const addMember = ({ navigation }) => {
   const [keyword, setKeyword] = useState("");
@@ -19,6 +20,11 @@ const addMember = ({ navigation }) => {
   const dispatch = useDispatch();
   const listFriends = useSelector((state) => state.user.listFriends);
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
+  const profile = useSelector((state) => state.user.userById);
+
+  useEffect(() => {
+    dispatch(findByIdUser(userId));
+  }, [userId]);
 
   //fetch all friends
   useEffect(() => {
@@ -55,6 +61,11 @@ const addMember = ({ navigation }) => {
         },
         userId: {
           id: member.id,
+        },
+        userAdd: {
+          id: Number(userId),
+          firstname: profile.firstname,
+          lastname: profile.lastname,
         },
       };
 

@@ -35,7 +35,9 @@ const ChosenMember = (props) => {
                       src={"dummy.js"}
                     ></Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={`${member.firstname} ${member.lasstname}`} />
+                  <ListItemText
+                    primary={`${member.firstname} ${member.lastname}`}
+                  />
                   <ListItemSecondaryAction>
                     <IconButton
                       aria-label="delete"
