@@ -2,8 +2,8 @@ import axios from "axios";
 // import { Feedback } from "@material-ui/icons";
 // import { phone } from "faker";
 
-const baseApi = "http://192.168.1.2:4000/api/";
-const SOCKET_URL = "ws://192.168.1.2:3030";
+const baseApi = "http://192.168.1.1:4000/api/";
+const SOCKET_URL = "ws://192.168.1.1:3030";
 
 export default {
   user(url = baseApi + "user/") {

@@ -13,7 +13,6 @@ export default {
       addUser: (userChat) => axios.post(url + "register", userChat),
       listRoom: (userId) => axios.get(url + userId + "/rooms"),
       listFriend: (userId) => axios.get(url + userId + "/friends"),
-
       forgotpass: (phone, newpass) =>
         axios.post(url + "forgotpass/" + phone + "&&" + newpass),
       getallphone: () => axios.get(url + "get-all-phones"),
