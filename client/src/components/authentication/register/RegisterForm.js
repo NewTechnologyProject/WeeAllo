@@ -64,7 +64,7 @@ export default function RegisterForm() {
     createAt: null,
     updateAt: null,
     avartar:
-      "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png",
+      "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1639117409210-user.png",
     coverImage: null,
     status: null,
     contactList: null,

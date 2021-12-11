@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseApi = "http://localhost:4000/api/";
+const baseApi = "http://weeallo-env.eba-xgex53xi.ap-southeast-1.elasticbeanstalk.com/api/";
 export default {
   user(url = baseApi + "user/") {
     return {

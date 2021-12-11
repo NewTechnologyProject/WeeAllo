@@ -12,7 +12,7 @@ export default function Notifycation(props) {
   return (
     <Snackbar
       open={notify.isOpen}
-      autoHideDuration={5000}
+      autoHideDuration={7000}
       onClose={handleClose}
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
       bodyStyle={{ maxWidth: "100%", height: "auto" }}

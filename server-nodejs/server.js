@@ -19,6 +19,7 @@ const getUser = (userId) => {
   return users.find((user) => Number(user.userId) === userId);
 };
 
+
 io.on("connection", (socket) => {
   console.log("connected");
   socket.emit("welcome", "This is socket server");
@@ -27,6 +28,15 @@ io.on("connection", (socket) => {
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
     io.emit("getUsers", users);
+  });
+
+  //Notifi Send contact
+  socket.on("sendUser", ({ userReceive, userSend }) => {
+    // sendUser(userId, socket.id);
+    socket.broadcast.emit("send", {
+      userReceive,
+      userSend,
+    });
   });
 
   //send and get message

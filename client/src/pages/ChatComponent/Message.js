@@ -23,7 +23,7 @@ import FileAlert from "./send-file-alert/FileAlert";
 
 // ----------------------------------------------------------------------
 
-const URL = "ws://localhost:3030";
+const URL = "ws://localhost:3030/";
 
 export default function MessageChat(props) {
   const dispatch = useDispatch();
