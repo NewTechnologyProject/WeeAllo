@@ -83,20 +83,19 @@ export default function Forgot() {
   const onSubmitOTP = () => {
     const code = otp;
     console.log(code);
-    if (code.length) {
-      window.confirmationResult.confirm(code).then((result) => {});
-      setDisable(true);
-    } else {
-      console.log("hihi");
-      handleClickOpen();
-    }
+
+    window.confirmationResult
+      .confirm(code)
+      .then((result) => {
+        setRegisterComponent(false);
+      })
+      .catch((error) => {
+        handleClickOpen();
+      });
   };
   const handleSubmidOTP = (e) => {
     e.preventDefault();
     onSubmitOTP();
-    setTimeout(() => {
-      setRegisterComponent(false);
-    }, 8000);
   };
   const handleClickOpen = () => {
     setOpen(true);
@@ -183,7 +182,7 @@ export default function Forgot() {
           <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
             <TextField
               fullWidth
-              disabled={disable}
+              disabled
               type={showPassword ? "text" : "password"}
               label="Mật khẩu cũ"
               name="pass"

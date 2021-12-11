@@ -46,6 +46,7 @@ export default function RegisterForm() {
   const [openF, setOpenF] = React.useState(false);
   const [agree, setAgree] = React.useState(false);
   const [user, setUser] = useState([]);
+  const [errorOtp, setErrorOtp] = React.useState("");
   useEffect(() => {
     dispatch(actions.fecthAllPhone());
   }, []);
@@ -140,14 +141,6 @@ export default function RegisterForm() {
   const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
     useForm(initialFieldValues, validate);
 
-  const duplicatePhone = () => {
-    const phone = values.phone;
-    // const dataPhone = actions.findByPhoneUser(phone);
-    const dataPhone = dispatch(actions.findByPhoneUser(phone));
-    if (phone === dataPhone) {
-      console.log("Đúng rồi ");
-    } else console.log("Sao m cứ sai vậy");
-  };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
@@ -197,23 +190,22 @@ export default function RegisterForm() {
     e.preventDefault();
     const code = otp;
     console.log(code);
-    if (code.length) {
-      // console.log("OTP k dc rong");
-      window.confirmationResult.confirm(code).then((result) => {
+
+    window.confirmationResult
+      .confirm(code)
+      .then((result) => {
         const user = result.user;
         console.log(JSON.stringify(user));
         dispatch(actions.register(values));
+        setErrorOtp("");
         handleOpenRegister();
-        // setTimeout(() => {
-        //   navigate("/login", { replace: true });
-        // }, 2000);
+      })
+      .catch((error) => {
+        handleClickOpen();
       });
-    } else {
-      handleClickOpen();
-    }
-  };
-  const handleClick = () => {
-    setOpen(true);
+    const handleClick = () => {
+      setOpen(true);
+    };
   };
 
   const handleClose = (event, reason) => {
