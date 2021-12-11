@@ -33,8 +33,8 @@ export default function Contact() {
                 setNotify({
                     isOpen: true,
                     message:
-                        "Tài khoản hoặc mật khẩu không chính xác - Vui lòng nhập lại !",
-                    type: "error",
+                        `Bạn đã nhận một lời mời kết bạn từ! ${data.userSend}`,
+                    type: "success",
                 })
                 console.log(data.userReceive)
             }
@@ -84,11 +84,11 @@ export default function Contact() {
     };
     return (
         <Page title="Trang liên hệ | WeeAllo">
+            <Notifycation notify={notify} setNotify={setNotify} />
             <Container>
                 <Typography variant="h4" sx={{ mb: 5 }}>
                     Liên hệ
                 </Typography>
-                <Notifycation notify={notify} setNotify={setNotify} />
                 <Box sx={{ width: '100%', typography: 'body1' }}>
                     <TabContext value={value}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

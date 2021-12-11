@@ -1,12 +1,7 @@
 import axios from "axios";
 
-<<<<<<< HEAD
-const baseApi = "http://192.168.1.1:4000/api/";
-const SOCKET_URL = "ws://192.168.1.1:3030";
-=======
-const baseApi = "http://192.168.1.14:4000/api/";
+const baseApi = "http://weeallo-env.eba-xgex53xi.ap-southeast-1.elasticbeanstalk.com/api/";
 const SOCKET_URL = "ws://192.168.1.14:3030";
->>>>>>> 29449bb8d31dd5394fc941ba8ffaa5da2d3aa203
 
 export default {
   user(url = baseApi + "user/") {
