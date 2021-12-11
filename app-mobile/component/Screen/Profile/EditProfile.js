@@ -19,6 +19,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../action/user.action";
+import * as action from "../../../action/roomchat.action";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { Header } from "react-native-elements/dist/header/Header";
@@ -228,18 +229,22 @@ export default function EditProfile({ navigation }) {
     });
 
     if (!result.cancelled) {
-      axios
-        .post(
-          "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
-          formData
-        )
-        .then((response) => {
+      action.uploadAvatar(formData).then((response) => {
           setImage(response.data);
           console.log(response.data);
           //console.log(image);
         });
-      // setImage(result.uri);
-      // console.log(result);
+      // axios
+      //   .post(
+      //     "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
+      //     formData
+      //   )
+      //   .then((response) => {
+      //     setImage(response.data);
+      //     console.log(response.data);
+      //     //console.log(image);
+      //   });
+
     }
   };
 
@@ -262,16 +267,21 @@ export default function EditProfile({ navigation }) {
     });
 
     if (!result.cancelled) {
-      axios
-        .post(
-          "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
-          formData
-        )
-        .then((response) => {
+      action.uploadAvatar(formData).then((response) => {
           setImage(response.data);
-          //console.log(response.data);
+          console.log(response.data);
           //console.log(image);
         });
+      // axios
+      //   .post(
+      //     "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
+      //     formData
+      //   )
+      //   .then((response) => {
+      //     setImage(response.data);
+      //     //console.log(response.data);
+      //     //console.log(image);
+      //   });
     }
   };
   const backToProfile = () => {

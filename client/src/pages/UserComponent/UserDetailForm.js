@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import * as actions from "src/actions/customer.action";
+import * as action from "src/actions/roomchat.action";
 import Notifycation from "./Notifycation";
 import { useForm } from "react-hook-form";
 
@@ -59,24 +60,10 @@ export default function UserDetail() {
     const imageA = e.target.files[0];
     const formData = new FormData();
     formData.append("file", imageA);
-    // fetch("http://localhost:4000/api/storage/uploadFile?key=file", {
-    //   method: "POST",
-    //   body: formData,
-    // })
-    //   .then((response) => console.log(response))
-    //   .then((result) => {
-    //     setImage(result);
-    //     console.log("Success:", result);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //   });
-    axios
-      .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
-      .then((response) => {
-        setImage(response.data);
-        //console.log(response.data);
-      });
+    action.uploadAvatar(formData).then((response) => {
+      setImage(response.data);
+      //console.log(response.data);
+    });
   };
   //console.log(image);
 
