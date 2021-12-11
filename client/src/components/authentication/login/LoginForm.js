@@ -278,6 +278,7 @@ export default function LoginForm() {
         </Stack>
         <LoadingButton
           fullWidth
+          disabled={disable}
           size="large"
           type="submit"
           variant="contained"
