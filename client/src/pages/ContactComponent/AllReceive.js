@@ -1,5 +1,5 @@
 import { Grid } from '@material-ui/core';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import * as actions from "../../actions/contact.action";
 import { Card, CardActions, CardContent, CardMedia, Button, Typography, TextField } from '@material-ui/core';
 import { useDispatch, useSelector } from "react-redux";
@@ -12,10 +12,13 @@ import userAvatar from 'src/access/UserImage/user.png';
 import { Search } from '@material-ui/icons';
 import Snackbar from '@material-ui/core/Snackbar';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { io } from "socket.io-client";
 // ----------------------------------------------------------------------
-
+const URL = "ws://localhost:3030/";
 export default function AllReceive() {
     const dispatch = useDispatch();
+    const socket = useRef();
+    socket.current = io(URL);
     const allReceive = useSelector(state => state.contact.listReceive);
     const user = useSelector(state => state.customer.userAuth);
     const [receiveContact, setReceiveContact] = useState([])
@@ -23,7 +26,20 @@ export default function AllReceive() {
     const [idDelete, setIdDelete] = useState(0);
     const [openToast, setOpenToast] = React.useState(false);
     const [openToast1, setOpenToast1] = React.useState(false);
+
     const [search, setSearch] = useState("")
+    //User
+    const userpro = useSelector(state => state.contact.userQR);
+    const [userPr, setUserProfile] = useState(null);
+    useEffect(() => {
+        dispatch(actions.findUserById(user))
+    }, [user])
+    useEffect(() => {
+        if (userpro !== null) {
+            setUserProfile(userpro)
+        }
+    }, [userpro])
+
     const handleClick = () => {
         setOpenToast(true);
     };
@@ -34,6 +50,7 @@ export default function AllReceive() {
         setOpen(true);
         setIdDelete(id)
     };
+
     const handleCloseToast1 = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -54,6 +71,8 @@ export default function AllReceive() {
     useEffect(() => {
         dispatch(actions.fetchReceiveContact(user))
     }, [])
+
+
     useEffect(() => {
         if (allReceive) {
             setReceiveContact(
@@ -101,6 +120,10 @@ export default function AllReceive() {
                                         fullWidth
                                         onClick={() => {
                                             dispatch(actions.acceptContact(record.id, user))
+                                            socket.current.emit("acceptUser", {
+                                                userReceive: userPr ? userPr.firstname + " " + userPr.lastname : "Một người ",
+                                                userSend: record.id
+                                            });
                                             handleClick1()
                                         }}
                                     >Đồng ý</Button>

@@ -41,6 +41,21 @@ export default function Contact() {
 
         });
     }, []);
+    useEffect(() => {
+        socket.current = io(URL);
+        socket.current.on("accept", (data) => {
+            if (data.userSend === Number(user)) {
+                setNotify({
+                    isOpen: true,
+                    message:
+                        `${data.userReceive} đã chấp nhận lời mời kết bạn của bạn`,
+                    type: "success",
+                })
+
+            }
+            console.log(data)
+        });
+    }, []);
     const allContact = useSelector((state) => state.contact.listcontact);
     const [allContactTab, setAllContactTab] = useState([]);
 
