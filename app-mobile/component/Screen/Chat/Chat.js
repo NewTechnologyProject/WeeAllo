@@ -117,6 +117,17 @@ export default function Chat({ navigation, route }) {
     setTextSearch(search);
   };
 
+  const getFilteredRooms = (rooms, key) => {
+    if (key === "") {
+      return rooms;
+    }
+    return rooms.filter((room) => {
+      if (room.roomName) {
+        return room.roomName.toLowerCase().includes(key.toLowerCase());
+      }
+    });
+  };
+
   const toAddGroup = () => {
     navigation.navigate("AddGroup");
   };
@@ -131,8 +142,8 @@ export default function Chat({ navigation, route }) {
           <SearchBar
             platform="default"
             cancelButtonTitle=""
-            placeholder="Tìm bạn bè..."
-            onChangeText={setTextSearch}
+            placeholder="Tìm kIếm ..."
+            onChangeText={updateSearch}
             value={textSearch}
             inputStyle={{
               color: "#e6fcf5",
@@ -165,7 +176,7 @@ export default function Chat({ navigation, route }) {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
-          data={rooms}
+          data={getFilteredRooms(rooms, textSearch)}
           renderItem={(item) => {
             let groupName = item.item.roomName;
             if (!item.item.roomName) {

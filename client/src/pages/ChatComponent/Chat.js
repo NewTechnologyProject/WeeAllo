@@ -6,7 +6,6 @@ import { useState, useEffect, useCallback, Fragment } from "react";
 import { Grid, Container } from "@material-ui/core";
 // components
 import Page from "src/components/Page";
-//ort POSTS from '../_mocks_/blog';
 import MessageChat from "./Message";
 import SearchFriend from "./Search";
 import ListFriendChat from "./ListFriendChat";
@@ -14,11 +13,14 @@ import { Card } from "@material-ui/core";
 import * as actions from "src/actions/customer.action";
 import classes from "./Chat.module.css";
 import ChatInfomation from "./ChatInformation/ChatInfomation";
-// import { alpha, styled } from "@material-ui/core/styles";
+import Spinner from "./ui/Spinner";
 
 export default function Chat() {
   const [activeRoom, setActiveRoom] = useState(null);
   const [needLoad, setNeedLoad] = useState({ data: "new" });
+  const [keyword, setKeyword] = useState("");
+  const [updatedRoom, setUpdatedRoom] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
@@ -39,8 +41,22 @@ export default function Chat() {
     setActiveRoom(null);
   };
 
+  const getKeyword = (key) => {
+    setKeyword(key);
+  };
+
+  const getFilteredRooms = (rooms, key) => {
+    if (key === "") {
+      return rooms;
+    }
+    return rooms.filter((room) => {
+      if (room.roomName) {
+        return room.roomName.toLowerCase().includes(key.toLowerCase());
+      }
+    });
+  };
+
   useEffect(() => {
-    console.log("Loading");
     if (!activeRoom) {
       setActiveRoom(moveToActiveRoom);
     }
@@ -62,6 +78,14 @@ export default function Chat() {
     setActiveRoom(newRoom);
   };
 
+  useEffect(() => {
+    loadRoomsHandler();
+  }, [updatedRoom]);
+
+  const getUpdatedRoom = (newRoom) => {
+    setUpdatedRoom(newRoom);
+  };
+
   return (
     <Page title="Chat | WeeAllo">
       <Container maxWidth="100%" style={{ paddingTop: 10 }}>
@@ -79,13 +103,17 @@ export default function Chat() {
                   }}
                 >
                   <Grid item xs={12} sm={12} md={12} style={{ height: "25%" }}>
-                    <SearchFriend onNeedLoad={needLoadHandler} />
+                    <SearchFriend
+                      onNeedLoad={needLoadHandler}
+                      getKeyword={getKeyword}
+                    />
                   </Grid>
                   <Grid item xs={12} sm={12} md={12} style={{ height: "75%" }}>
                     <ListFriendChat
-                      listRooms={listRooms}
+                      listRooms={getFilteredRooms(listRooms, keyword)}
                       getActiveRoom={getActiveRoom}
                       activeRoom={activeRoom}
+                      updatedRoom={updatedRoom}
                     />
                   </Grid>
                 </Grid>
@@ -103,6 +131,7 @@ export default function Chat() {
                       height: "80vh",
                       borderLeft: "1px solid #e9e7e5",
                       borderRight: "1px solid #e9e7e5",
+                      position: "relative",
                     }}
                   >
                     <MessageChat activeRoom={activeRoom} />
@@ -113,6 +142,7 @@ export default function Chat() {
                       activeRoom={activeRoom}
                       onNeedLoad={needLoadHandler}
                       onSetActiveRoomNull={setActiveRoomNullHandler}
+                      getUpdatedRoom={getUpdatedRoom}
                     />
                   </Grid>
                 </Fragment>

@@ -19,9 +19,10 @@ const ChoosingMember = (props) => {
 
   //Filter friends by keyword
   if (listFriends.length > 0 && props.keyWord) {
-    listFriends = listFriends.filter((friend) =>
-      friend.firstname.includes(props.keyWord)
-    );
+    listFriends = listFriends.filter((friend) => {
+      const name = `${friend.firstname} ${friend.lastname}`;
+      return name.toLowerCase().includes(props.keyWord.toLowerCase());
+    });
   }
 
   //Return chosen members

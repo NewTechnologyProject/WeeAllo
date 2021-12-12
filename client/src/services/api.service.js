@@ -13,7 +13,6 @@ export default {
       addUser: (userChat) => axios.post(url + "register", userChat),
       listRoom: (userId) => axios.get(url + userId + "/rooms"),
       listFriend: (userId) => axios.get(url + userId + "/friends"),
-
       forgotpass: (phone, newpass) =>
         axios.post(url + "forgotpass/" + phone + "&&" + newpass),
       getallphone: () => axios.get(url + "get-all-phones"),
@@ -52,6 +51,8 @@ export default {
       deleteRoom: (roomId) => axios.delete(url + roomId),
       updateCreator: (roomId, creator) =>
         axios.put(url + roomId + "&" + creator),
+      updateInfo: (roomId, newRoom) =>
+        axios.put(url + roomId + "/update-info", newRoom),
     };
   },
   usergroup(url = baseApi + "usergroups/") {

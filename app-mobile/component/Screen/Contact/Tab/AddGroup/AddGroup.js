@@ -42,7 +42,7 @@ const AddGroup = ({ navigation }) => {
   const getGroupName = (input) => {
     const name = input;
     const regex = new RegExp("^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$");
-    if (name.length === "") {
+    if (name.length === 0 || !name) {
       setHelperText({ error: false, text: " " });
     } else if (name.length > 18) {
       setHelperText({ error: true, text: "Tên phải bé hơn 18 kí tự" });

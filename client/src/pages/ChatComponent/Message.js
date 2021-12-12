@@ -178,7 +178,7 @@ export default function MessageChat(props) {
   useEffect(() => {
     socket.current.emit("addUser", Number(userId));
     socket.current.on("getUsers", (users) => {
-      console.log(users);
+      // console.log(users);
     });
   }, [userId]);
   // ----------------------------------------------------------------------

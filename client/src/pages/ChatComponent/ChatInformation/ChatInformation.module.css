@@ -18,3 +18,28 @@
 .list {
   height: 90%;
 }
+
+.image-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 10px;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.button-contain {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 7px;
+}
+
+.image {
+  height: 70px;
+  width: 70px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+}

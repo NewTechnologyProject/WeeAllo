@@ -19,4 +19,9 @@ public interface RoomChatRepository extends JpaRepository<RoomChat, Long> {
     @Query(value = "update room_chat set creator=:creator where id=:roomId ", nativeQuery = true)
     void updateRoomChatCreator(@Param("roomId") Long roomId, @Param("creator") Long creator);
 
+    @Modifying
+    @Transactional
+    @Query(value = "update room_chat set avatar=:avatar, room_name=:roomName where id=:roomId ", nativeQuery = true)
+    void updateRoomInfo(@Param("roomId") Long roomId, @Param("roomName") String roomName, @Param("avatar") String avatar);
+
 }

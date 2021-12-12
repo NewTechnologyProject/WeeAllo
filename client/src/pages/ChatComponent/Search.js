@@ -5,20 +5,9 @@ import { Grid, TextField } from "@material-ui/core";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import FormControl from "@material-ui/core/FormControl";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@material-ui/core/IconButton";
 import ModalAddGroup from "./ModalAddGroup/ModalAddGroup";
-// ----------------------------------------------------------------------
-
-// import { Paper } from "@material-ui/core";
-// import MessageChat from "./Message";
-// const SORT_OPTIONS = [
-//   { value: "latest", label: "Latest" },
-//   { value: "popular", label: "Popular" },
-//   { value: "oldest", label: "Oldest" },
-// ];
-
-// ----------------------------------------------------------------------
 
 export default function SearchFriend(props) {
   const [openModal, setOpenModal] = useState(false);
@@ -29,6 +18,10 @@ export default function SearchFriend(props) {
 
   const closeModalHandler = () => {
     setOpenModal(false);
+  };
+
+  const searchRoom = (event) => {
+    props.getKeyword(event.target.value);
   };
 
   return (
@@ -60,10 +53,11 @@ export default function SearchFriend(props) {
                 id="input-with-icon-textfield"
                 size="small"
                 fullWidth
+                onChange={searchRoom}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <AccountCircle />
+                      <SearchIcon />
                     </InputAdornment>
                   ),
                 }}

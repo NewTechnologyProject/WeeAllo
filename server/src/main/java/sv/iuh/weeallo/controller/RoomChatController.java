@@ -107,6 +107,11 @@ public class RoomChatController {
         roomChatService.updateRoomChatCreator(roomId, creator);
     }
 
+    @PutMapping("/{roomId}/update-info")
+    public void updateRoomChatInfo(@PathVariable("roomId") Long roomId, @RequestBody RoomChat room) {
+        roomChatService.updateRoomChatInfo(roomId, room.getAvatar(), room.getRoomName());
+    }
+
     @PostMapping(value = "/room")
     public RoomChat creaRoomChat(@RequestBody RoomChat roomChat) {
         // TODO: process POST request

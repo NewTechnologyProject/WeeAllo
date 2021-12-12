@@ -230,7 +230,7 @@ export default function EditProfile({ navigation }) {
     if (!result.cancelled) {
       axios
         .post(
-          "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
+          "http://192.168.1.7:4000/api/storage/uploadFile?key=file",
           formData
         )
         .then((response) => {
@@ -264,7 +264,7 @@ export default function EditProfile({ navigation }) {
     if (!result.cancelled) {
       axios
         .post(
-          "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
+          "http://192.168.1.7:4000/api/storage/uploadFile?key=file",
           formData
         )
         .then((response) => {

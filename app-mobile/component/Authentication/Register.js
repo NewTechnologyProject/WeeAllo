@@ -1,6 +1,12 @@
 import React from "react";
 
-import { SectionList, StyleSheet, Text, View, ToastAndroid } from "react-native";
+import {
+  SectionList,
+  StyleSheet,
+  Text,
+  View,
+  ToastAndroid,
+} from "react-native";
 import { Avatar, Icon, Tab } from "react-native-elements";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { Input } from "react-native-elements/dist/input/Input";
@@ -11,11 +17,11 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../action/user.action";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
-import OTPInputView from '@twotalltotems/react-native-otp-input'
+import OTPInputView from "@twotalltotems/react-native-otp-input";
 const styles = StyleSheet.create({
   borderStyleBase: {
     width: 30,
-    height: 45
+    height: 45,
   },
 
   borderStyleHighLighted: {
@@ -27,7 +33,7 @@ const styles = StyleSheet.create({
     height: 55,
     borderWidth: 0,
     borderBottomWidth: 1,
-    color: 'black'
+    color: "black",
   },
 
   underlineStyleHighLighted: {
@@ -72,12 +78,18 @@ export default function Register({ navigation }) {
   const [passworderror, setPassWordError] = React.useState(false);
   const recaptchaVerifier = React.useRef(null);
   const [verificationId, setVerificationId] = React.useState();
-  const firebaseConfig = firebase.apps.length ? firebase.app().options : undefined;
-  const [code, setCode] = React.useState('');
-  const [errorOtp, setErrorOtp] = React.useState('');
-  const [message, showMessage] = React.useState((!firebaseConfig || Platform.OS === 'web')
-    ? { text: "To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device." }
-    : undefined);
+  const firebaseConfig = firebase.apps.length
+    ? firebase.app().options
+    : undefined;
+  const [code, setCode] = React.useState("");
+  const [errorOtp, setErrorOtp] = React.useState("");
+  const [message, showMessage] = React.useState(
+    !firebaseConfig || Platform.OS === "web"
+      ? {
+          text: "To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.",
+        }
+      : undefined
+  );
   const [screen, setScreen] = React.useState(true);
   const handleSubmit = () => {
     const initialFieldValues = {
@@ -148,7 +160,7 @@ export default function Register({ navigation }) {
     } catch (err) {
       showMessage({ text: `Error: ${err.message}`, color: "red" });
     }
-    setScreen(false)
+    setScreen(false);
   };
   const onSubitOTP = async () => {
     try {
@@ -157,12 +169,14 @@ export default function Register({ navigation }) {
         code
       );
       await firebase.auth().signInWithCredential(credential);
-      setErrorOtp("")
-      showToastWithGravity()
-      navigation.navigate("Login");
-      handleSubmit()
+      setErrorOtp("");
+      handleSubmit();
+      showToastWithGravity();
+      setTimeout(() => {
+        navigation.navigate("Login");
+      }, 5000);
     } catch (err) {
-      setErrorOtp("Mã xác thực sai ! Vui lòng kiểm tra lại")
+      setErrorOtp("Mã xác thực sai ! Vui lòng kiểm tra lại");
     }
   };
   return (
@@ -170,10 +184,10 @@ export default function Register({ navigation }) {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={firebaseConfig}
-        title='Vui lòng xác nhận!'
-        cancelLabel='Đóng'
+        title="Vui lòng xác nhận!"
+        cancelLabel="Đóng"
         containerStyle={{
-          textAlign: 'center'
+          textAlign: "center",
         }}
       />
       <Text style={styles.text}>ĐĂNG KÝ</Text>
@@ -184,122 +198,135 @@ export default function Register({ navigation }) {
           marginBottom: 25,
         }}
       />
-      {
-        screen ?
-          <View style={{ width: '100%' }}>
-            <Input
-              type="text"
-              placeholder="Họ"
-              name="firstname"
-              onChangeText={(e) => setFirstname(e)}
-              value={firstname}
-              errorStyle={{ color: "red" }}
-              errorMessage={firstnameerror ? "Họ sai định dạng" : ""}
-              leftIcon={
-                <Icon
-                  name="user"
-                  type="font-awesome-5"
-                  color={"#098524"}
-                  style={{ paddingRight: 15 }}
-                />
-              }
-            />
-            <Input
-              placeholder="Tên"
-              name="lastname"
-              onChangeText={(e) => setLastname(e)}
-              value={lastname}
-              errorStyle={{ color: "red" }}
-              errorMessage={lastnameerror ? "Tên sai định dạng" : ""}
-              leftIcon={
-                <Icon
-                  name="user"
-                  type="font-awesome-5"
-                  color={"#098524"}
-                  style={{ paddingRight: 15 }}
-                />
-              }
-            />
-            <Input
-              placeholder="Nhập số điện thoại"
-              name="phone"
-              onChangeText={(e) => setPhone(e)}
-              value={phone}
-              errorStyle={{ color: "red" }}
-              errorMessage={phoneerror ? "Số điện thoại sai định dạng" : ""}
-              leftIcon={
-                <Icon
-                  name="phone"
-                  type="font-awesome-5"
-                  color={"#098524"}
-                  style={{ paddingRight: 15 }}
-                />
-              }
-            />
-            <Input
-              ecureTextEntry={true}
-              placeholder="Nhập mật khẩu"
-              secureTextEntry={true}
-              name="password"
-              onChangeText={(e) => setPassword(e)}
-              value={password}
-              errorStyle={{ color: "red" }}
-              errorMessage={passworderror ? "Mật khẩu sai định dạng" : ""}
-              leftIcon={
-                <Icon
-                  name="unlock-alt"
-                  type="font-awesome-5"
-                  color={"#098524"}
-                  style={{ paddingRight: 15 }}
-                />
-              }
-            />
-            <Button
-              title="ĐĂNG KÝ"
-              type="outline"
-              containerStyle={{
-                backgroundColor: "#098524",
-                borderRadius: 20,
-                border: "none",
-                width: "100%",
-                color: "white",
-              }}
-              titleStyle={{
-                color: "white",
-              }}
-              onPress={() => onSignInSubmit()}
-            /></View> :
-          <View style={{ width: '100%' }}>
-            <Text>Vui lòng nhập mã OTP bạn đã nhận được</Text>
-            <Input
-              // style={{ width: '90%', height: 100, color: 'red' }}
-              // pinCount={6}
-              // placeholderTextColor='black'
-              // code={code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
-              onChangeText={c => { setCode(c) }}
+      {screen ? (
+        <View style={{ width: "100%" }}>
+          <Input
+            type="text"
+            placeholder="Họ"
+            name="firstname"
+            onChangeText={(e) => setFirstname(e)}
+            value={firstname}
+            errorStyle={{ color: "red" }}
+            errorMessage={firstnameerror ? "Họ sai định dạng" : ""}
+            leftIcon={
+              <Icon
+                name="user"
+                type="font-awesome-5"
+                color={"#098524"}
+                style={{ paddingRight: 15 }}
+              />
+            }
+          />
+          <Input
+            placeholder="Tên"
+            name="lastname"
+            onChangeText={(e) => setLastname(e)}
+            value={lastname}
+            errorStyle={{ color: "red" }}
+            errorMessage={lastnameerror ? "Tên sai định dạng" : ""}
+            leftIcon={
+              <Icon
+                name="user"
+                type="font-awesome-5"
+                color={"#098524"}
+                style={{ paddingRight: 15 }}
+              />
+            }
+          />
+          <Input
+            placeholder="Nhập số điện thoại"
+            name="phone"
+            onChangeText={(e) => setPhone(e)}
+            value={phone}
+            errorStyle={{ color: "red" }}
+            errorMessage={phoneerror ? "Số điện thoại sai định dạng" : ""}
+            leftIcon={
+              <Icon
+                name="phone"
+                type="font-awesome-5"
+                color={"#098524"}
+                style={{ paddingRight: 15 }}
+              />
+            }
+          />
+          <Input
+            ecureTextEntry={true}
+            placeholder="Nhập mật khẩu"
+            secureTextEntry={true}
+            name="password"
+            onChangeText={(e) => setPassword(e)}
+            value={password}
+            errorStyle={{ color: "red" }}
+            errorMessage={passworderror ? "Mật khẩu sai định dạng" : ""}
+            leftIcon={
+              <Icon
+                name="unlock-alt"
+                type="font-awesome-5"
+                color={"#098524"}
+                style={{ paddingRight: 15 }}
+              />
+            }
+          />
+          <Button
+            title="ĐĂNG KÝ"
+            type="outline"
+            containerStyle={{
+              backgroundColor: "#098524",
+              borderRadius: 20,
+              border: "none",
+              width: "100%",
+              color: "white",
+            }}
+            titleStyle={{
+              color: "white",
+            }}
+            onPress={() => onSignInSubmit()}
+          />
+        </View>
+      ) : (
+        <View style={{ width: "100%" }}>
+          <Text>Vui lòng nhập mã OTP bạn đã nhận được</Text>
+          <Input
+            // style={{ width: '90%', height: 100, color: 'red' }}
+            // pinCount={6}
+            // placeholderTextColor='black'
+            // code={code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
+            onChangeText={(c) => {
+              setCode(c);
+            }}
+            // leftIcon={
+            //   <Icon
+            //     name="unlock-alt"
+            //     type="font-awesome-5"
+            //     color={"#098524"}
+            //     style={{ paddingRight: 15 }}
+            //   />
+            // }
             // editable
             // autoFocusOnLoad={false}
             // codeInputFieldStyle={styles.underlineStyleBase}
             // codeInputHighlightStyle={styles.underlineStyleHighLighted}
-            />
-            <Text style={{ color: 'red', paddingBottom: 10, paddingTop: 10 }}>{errorOtp}</Text>
-            <Button
-              title="XÁC THỰC"
-              type="outline"
-              containerStyle={{
-                backgroundColor: "#098524",
-                borderRadius: 20,
-                border: "none",
-                width: "100%",
-                color: "white",
-              }}
-              titleStyle={{
-                color: "white",
-              }}
-              onPress={() => onSubitOTP()}
-            />
-          </View>
-      }
+          />
+          <Text style={{ color: "red", paddingBottom: 10, paddingTop: 10 }}>
+            {errorOtp}
+          </Text>
+          <Button
+            title="XÁC THỰC"
+            type="outline"
+            containerStyle={{
+              backgroundColor: "#098524",
+              borderRadius: 20,
+              border: "none",
+              width: "100%",
+              color: "white",
+            }}
+            titleStyle={{
+              color: "white",
+            }}
+            onPress={() => onSubitOTP()}
+          />
+        </View>
+      )}
     </View>
   );
 }

@@ -116,9 +116,14 @@ export const fetchAllRoom = (userId) => async (dispatch) => {
     .user()
     .listRoom(userId)
     .then((response) => {
+      let data = response.data;
+      if (data.length > 0) {
+        data = data.reverse();
+      }
+
       dispatch({
         type: "LIST ROOMS",
-        payload: response.data,
+        payload: data,
       });
     })
     .catch((err) => {

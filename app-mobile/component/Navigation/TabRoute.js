@@ -1,51 +1,15 @@
-
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Chat from "../Screen/Chat/Chat";
 import Contact from "../Screen/Contact/Contact";
 import Profile from "../Screen/Profile/Profile";
-import { Image } from "react-native";
 import { Icon } from "react-native-elements";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-import { useState, useEffect } from "react";
-import Login from "../Authentication/Login";
-import Register from "../Authentication/Register";
-import ForgotPass from "../Authentication/ForgotPass";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import ChatContent from "../Screen/Chat/ChatScreen/ChatContent";
-import { set } from "react-hook-form";
+import { Color } from "../Color/Color";
 
-// #098524
+const Tab = createBottomTabNavigator();
 
 export default function TabRoute({ navigation, route }) {
-  const [index, setIndex] = useState(0);
-  const [getValue, setGetValue] = useState(null);
-  const [load, setLoad] = useState(13);
-
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener("focus", () => {
-  //     setLoad(12);
-  //   });
-
-  //   return unsubscribe;
-  // }, [navigation]);
-
-  // console.log(load);
-
-  // useEffect(() => {
-  //     AsyncStorage.getItem("user_authenticated").then((value) => {
-  //         setGetValue(value);
-  //         console.log(value)
-  //     })
-  //         .then(res => {
-
-  //         });
-
-  // })
   return (
     <Tab.Navigator
       screenOptions={{

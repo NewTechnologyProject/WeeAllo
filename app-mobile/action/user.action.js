@@ -17,7 +17,7 @@ export const ACTION_TYPES = {
   LOGIN: "LOGIN",
   FINDUSERBYID: "FINDUSERBYID",
   UPDATEBYIDUSER: "UPDATEBYIDUSER",
-  REGISTER: 'REGISTER'
+  REGISTER: "REGISTER",
 };
 export const login = (phone, pass) => (dispatch) => {
   apiService
@@ -40,9 +40,14 @@ export const fetchAllRoom = (userId) => (dispatch) => {
     .user()
     .listRoom(userId)
     .then((response) => {
+      let data = response.data;
+      if (data.length > 0) {
+        data = data.reverse();
+      }
+
       dispatch({
         type: "LIST ROOMS",
-        payload: response.data,
+        payload: data,
       });
     })
     .catch((err) => {

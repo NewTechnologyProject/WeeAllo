@@ -2,10 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7d9496a6-f8d9-48bd-a536-54568e402e65" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app-mobile/component/Screen/Chat/ChatScreen/ChatContent.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/component/Screen/Chat/ChatScreen/ChatContent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-mobile/component/Authentication/ForgotPass.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/component/Authentication/ForgotPass.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-mobile/component/Authentication/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/component/Authentication/Register.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-mobile/component/Screen/Contact/Tab/AddGroup/AddGroup.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/component/Screen/Contact/Tab/AddGroup/AddGroup.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-mobile/component/Screen/Contact/Tab/Scanner.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/component/Screen/Contact/Tab/Scanner.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-mobile/component/Screen/Profile/EditProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/component/Screen/Profile/EditProfile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app-mobile/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app-mobile/services/api.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/app-mobile/services/api.service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/controller/RoomChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/sv/iuh/weeallo/controller/RoomChatController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/authentication/login/Forgot.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/authentication/login/Forgot.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/authentication/register/RegisterForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/authentication/register/RegisterForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/services/api.service.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/services/api.service.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +32,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -46,6 +53,7 @@
       <workItem from="1636535189891" duration="11000" />
       <workItem from="1636715135534" duration="202000" />
       <workItem from="1636715490894" duration="233000" />
+      <workItem from="1639190957091" duration="177000" />
     </task>
     <servers />
   </component>

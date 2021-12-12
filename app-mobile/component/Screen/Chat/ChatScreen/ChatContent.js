@@ -16,7 +16,6 @@ import { io } from "socket.io-client";
 import { GiftedChat, Composer, Send } from "react-native-gifted-chat";
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../action/roomchat.action";
-import * as action from "../../../../action/message.action";
 import EmojiSelector, { Categories } from "react-native-emoji-selector";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
@@ -438,6 +437,7 @@ export default function ChatContent({ navigation, route }) {
         if (result.uri) {
           setOpen(true);
         }
+        setLoading(false);
       });
   };
   // ======================================IMAGE============================
@@ -478,6 +478,7 @@ export default function ChatContent({ navigation, route }) {
         if (result.uri) {
           setOpen(true);
         }
+        setLoading(false);
       });
   };
 
@@ -517,6 +518,7 @@ export default function ChatContent({ navigation, route }) {
         if (result.uri) {
           setOpen(true);
         }
+        setLoading(false);
       });
   };
 

@@ -8,7 +8,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import { fetchAllMembers } from "src/actions/roomchat.action";
-import { set } from "lodash";
 
 export default function ListFriendChat(props) {
   const userId = localStorage.getItem("user_authenticated");
@@ -38,6 +37,27 @@ export default function ListFriendChat(props) {
   useEffect(() => {
     setListMembersOnRoom(props.listRooms);
   }, [setListMembersOnRoom, props.listRooms]);
+
+  useEffect(() => {
+    let room = props.updatedRoom;
+    if (room) {
+      let name = room.roomName;
+      if (!name) {
+        name = showNameHandler(room.id);
+      }
+
+      let neededRoom = props.listRooms.find((r) => r.id === room.id);
+
+      if (neededRoom.roomName !== room.roomName) {
+        neededRoom = { ...neededRoom, roomName: room.roomName };
+      }
+      if (neededRoom.avatar !== room.avatar) {
+        neededRoom = { ...neededRoom, avatar: room.avatar };
+      }
+
+      props.getActiveRoom(room, name);
+    }
+  }, [props.updatedRoom]);
 
   const showNameHandler = (roomId) => {
     let name = "Group";

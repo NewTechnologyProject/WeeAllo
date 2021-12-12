@@ -54,6 +54,11 @@ export const updateCreator = (roomId, creator) => {
     });
 };
 
+//Update info
+export const updateInfo = (roomId, newRoom) => {
+  return apiService.roomchat().updateInfo(roomId, newRoom);
+};
+
 let nextMessageId = 0;
 const nextUserId = 0;
 

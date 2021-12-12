@@ -86,4 +86,8 @@ public class RoomChatService {
         roomChatRepository.updateRoomChatCreator(roomId, creator);
     }
 
+    public void updateRoomChatInfo(Long roomId, String avatar, String roomName) {
+        roomChatRepository.updateRoomInfo(roomId, roomName, avatar);
+    }
+
 }

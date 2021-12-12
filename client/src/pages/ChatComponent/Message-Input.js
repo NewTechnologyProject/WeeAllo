@@ -84,7 +84,7 @@ export const MessageInput = (props) => {
           avartar: userProfile.avartar,
         },
       };
-      // dispatch(actions.addMessage(messageText));
+
       apiService
         .message()
         .addMessage(messageText)
@@ -96,7 +96,7 @@ export const MessageInput = (props) => {
 
           props.onSubmitMessage(response.data);
 
-          console.log(response.data);
+          // console.log(response.data);
         })
         .catch((err) => console.log(err));
       setMessage("");
