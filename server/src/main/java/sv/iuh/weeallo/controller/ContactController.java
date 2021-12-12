@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sv.iuh.weeallo.models.Contact;
 import sv.iuh.weeallo.models.UserChat;
+import sv.iuh.weeallo.models.UserGroup;
 import sv.iuh.weeallo.services.ContactService;
 import sv.iuh.weeallo.services.UserService;
 import com.google.gson.*;
@@ -96,5 +97,9 @@ public class ContactController {
         }else {
             return contactService.searchToAddMobile(phone, idAuth);
         }
+    }
+    @GetMapping("/test/{id1}&{id2}")
+    public UserGroup searchContactMobile(@PathVariable("id1") Long id1, @PathVariable("id2") Long id2){
+      return contactService.listUg(id1,id2);
     }
 }

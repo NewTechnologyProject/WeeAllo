@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sv.iuh.weeallo.models.Contact;
+import sv.iuh.weeallo.models.UserGroup;
 
 import java.util.List;
 
@@ -29,4 +30,6 @@ public interface ContactRepository extends JpaRepository<Contact,Long> {
     @Query("select c from Contact c where (c.sendId.id=:id1 and c.receiveId.id=:id2) or (c.sendId.id=:id2 and c.receiveId.id=:id1)")
     Contact getContactToDelete(@Param("id1") Long id1,@Param("id2") Long id2);
 
+    @Query("select u from UserGroup u where u.userId.id=:id")
+    List<UserGroup> listUG(@Param("id") Long id);
 }
