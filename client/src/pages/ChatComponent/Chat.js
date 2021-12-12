@@ -20,7 +20,7 @@ export default function Chat() {
   const [needLoad, setNeedLoad] = useState({ data: "new" });
   const [keyword, setKeyword] = useState("");
   const [updatedRoom, setUpdatedRoom] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
@@ -86,12 +86,20 @@ export default function Chat() {
     setUpdatedRoom(newRoom);
   };
 
+  const getLoading = (value) => {
+    setLoading(value);
+  };
+
   return (
     <Page title="Chat | WeeAllo">
       <Container maxWidth="100%" style={{ paddingTop: 10 }}>
         <Card>
           <Grid container spacing={1}>
-            <Grid container spacing={0} style={{ height: "80vh" }}>
+            <Grid
+              container
+              spacing={0}
+              style={{ height: "80vh", position: "relative" }}
+            >
               <Grid item xs={12} sm={12} md={2} style={{ height: "100%" }}>
                 <Grid
                   container
@@ -134,7 +142,10 @@ export default function Chat() {
                       position: "relative",
                     }}
                   >
-                    <MessageChat activeRoom={activeRoom} />
+                    <MessageChat
+                      activeRoom={activeRoom}
+                      getLoading={getLoading}
+                    />
                   </Grid>
 
                   <Grid item xs={12} sm={12} md={2} style={{ height: "100%" }}>
@@ -143,6 +154,7 @@ export default function Chat() {
                       onNeedLoad={needLoadHandler}
                       onSetActiveRoomNull={setActiveRoomNullHandler}
                       getUpdatedRoom={getUpdatedRoom}
+                      getLoading={getLoading}
                     />
                   </Grid>
                 </Fragment>
@@ -164,6 +176,8 @@ export default function Chat() {
                   </div>
                 </Grid>
               )}
+
+              {loading && <Spinner />}
             </Grid>
           </Grid>
         </Card>

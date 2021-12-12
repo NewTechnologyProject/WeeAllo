@@ -23,7 +23,7 @@ import FileAlert from "./send-file-alert/FileAlert";
 
 // ----------------------------------------------------------------------
 
-const URL = "ws://localhost:3030";
+const URL = "ws://localhost:3030/";
 
 export default function MessageChat(props) {
   const dispatch = useDispatch();
@@ -100,6 +100,8 @@ export default function MessageChat(props) {
   };
 
   const handleImage = (e) => {
+    props.getLoading(true);
+
     const imageA = e.target.files[0];
     const formData = new FormData();
     formData.append("file", imageA);
@@ -112,16 +114,22 @@ export default function MessageChat(props) {
         } else {
           setImg(response.data);
         }
+
+        props.getLoading(false);
       })
       .catch((error) => {
         console.log(error);
         if (imageA) {
           setOpen(true);
         }
+
+        props.getLoading(false);
       });
   };
 
   const handleFile = (e) => {
+    props.getLoading(true);
+
     const imageA = e.target.files[0];
     const formData = new FormData();
     formData.append("file", imageA);
@@ -129,12 +137,16 @@ export default function MessageChat(props) {
       .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
       .then((response) => {
         setSFile(response.data);
+
+        props.getLoading(false);
       })
       .catch((error) => {
         console.log(error);
         if (imageA) {
           setOpen(true);
         }
+
+        props.getLoading(false);
       });
   };
 

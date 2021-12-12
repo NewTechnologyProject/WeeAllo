@@ -14,7 +14,7 @@ const GroupsByMe = (props) => {
   const navigate = useNavigate();
   const { listRooms } = props;
 
-  console.log(listRooms);
+  // console.log(listRooms);
 
   const showNameHandler = (roomId) => {
     let name = "Group";

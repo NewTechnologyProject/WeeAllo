@@ -196,6 +196,8 @@ export default function ChatInfomation(props) {
       .then((res) => {
         console.log("success");
         props.getUpdatedRoom(newRoom);
+
+        props.getLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -231,6 +233,7 @@ export default function ChatInfomation(props) {
   };
 
   const submitHandler = () => {
+    props.getLoading(true);
     updateRoom(updatedRoomName, avatarUrl);
   };
 

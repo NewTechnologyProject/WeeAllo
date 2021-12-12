@@ -35,10 +35,16 @@ import Label from "src/components/Label";
 import Snackbar from "@material-ui/core/Snackbar";
 import QRCode from "qrcode";
 import QrReader from "react-qr-reader";
+
+import { io } from "socket.io-client";
+
+
 // ----------------------------------------------------------------------
+const URL = "ws://localhost:3030/";
 
 export default function SearchContact() {
   const qrRef = useRef(null);
+  const socket = useRef();
   const [imageUrl, setImageUrl] = useState("");
   const [textsearch, setTextSearch] = useState("");
   const dispatch = useDispatch();
@@ -65,6 +71,7 @@ export default function SearchContact() {
   const handleClick = () => {
     setOpenToast(true);
   };
+  socket.current = io(URL);
   const handleCloseToast = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -265,6 +272,10 @@ export default function SearchContact() {
               handleClick();
               setOpen4(false);
               handleClose();
+              socket.current.emit("sendUser", {
+                userReceive: detailContact.id,
+                userSend: user
+              });
             }}
             fullWidth
             color="primary"
@@ -364,7 +375,7 @@ export default function SearchContact() {
                 src={
                   detailContact
                     ? detailContact.avartar
-                    : "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png"
+                    : "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1639117409210-user.png"
                 }
               />
             </Avatar>
