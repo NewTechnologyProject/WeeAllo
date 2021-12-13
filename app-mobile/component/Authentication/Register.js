@@ -18,6 +18,7 @@ import * as actions from "../../action/user.action";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
+
 const styles = StyleSheet.create({
   borderStyleBase: {
     width: 30,

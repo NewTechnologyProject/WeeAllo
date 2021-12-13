@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const baseApi =
-  "http://weeallo-env.eba-xgex53xi.ap-southeast-1.elasticbeanstalk.com/api/";
+// const baseApi = "http://weeallo-env.eba-xgex53xi.ap-southeast-1.elasticbeanstalk.com/api/";
+// const SOCKET_URL = "ws://server-nodejs-demo.herokuapp.com/";
+const baseApi = "http://localhost:4000/api/";
+const SOCKET_URL = "ws://localhost:3030/";
 
 export default {
   user(url = baseApi + "user/") {
@@ -84,3 +86,5 @@ export default {
     };
   },
 };
+
+export { SOCKET_URL };

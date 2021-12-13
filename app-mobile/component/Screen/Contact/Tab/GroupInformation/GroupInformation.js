@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon, ListItem, Avatar, Overlay } from "react-native-elements";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Touchable,
+} from "react-native";
 
 import {
   fetchAllMembers,
@@ -190,16 +196,18 @@ const GroupInformation = ({ navigation, route }) => {
 
       <View style={styles.content}>
         <View style={styles.image}>
-          <Avatar
-            rounded
-            size={100}
-            icon={{ name: "user", type: "font-awesome" }}
-            source={{
-              uri: `${activeRoom.avatar ? activeRoom.avatar : "dummy.js"}`,
-            }}
-            activeOpacity={0.7}
-            containerStyle={{ backgroundColor: "gray" }}
-          />
+          <TouchableOpacity>
+            <Avatar
+              rounded
+              size={100}
+              icon={{ name: "user", type: "font-awesome" }}
+              source={{
+                uri: `${activeRoom.avatar ? activeRoom.avatar : "dummy.js"}`,
+              }}
+              activeOpacity={0.7}
+              containerStyle={{ backgroundColor: "gray" }}
+            />
+          </TouchableOpacity>
         </View>
         <View>
           <Text style={styles.text}>

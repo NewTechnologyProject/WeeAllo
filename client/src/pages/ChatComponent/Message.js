@@ -20,10 +20,11 @@ import Scrollbar from "src/components/Scrollbar";
 import axios from "axios";
 import { io } from "socket.io-client";
 import FileAlert from "./send-file-alert/FileAlert";
+import { SOCKET_URL } from "src/services/api.service";
 
 // ----------------------------------------------------------------------
 
-const URL = "ws://localhost:3030/";
+const URL = SOCKET_URL;
 
 export default function MessageChat(props) {
   const dispatch = useDispatch();
