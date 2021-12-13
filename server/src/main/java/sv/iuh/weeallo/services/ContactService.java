@@ -33,6 +33,7 @@ public class ContactService {
     private RoomChatRepository roomChatRepository;
     @Autowired
     private UserGroupRepository userGroupRepository;
+
     //Get all contact of user
     public List<UserChat> getAllContact(Long id){
         List<Contact> list= contactRepository.getAllContact(id);
@@ -110,6 +111,7 @@ public class ContactService {
 
         return userChat;
     }
+
     //Delete
     public List<UserChat> DeleteContact(Long id1,Long id2){
         Contact contact=contactRepository.getContactToDelete(id1,id2);
@@ -117,6 +119,7 @@ public class ContactService {
         List<UserChat> list=getAllContact(id1);
         return list;
     }
+
     public List<UserChat> DeleteSendContact(Long id1,Long id2){
         Contact contact=contactRepository.getContactToDelete(id1,id2);
         contactRepository.delete(contact);
@@ -139,16 +142,19 @@ public class ContactService {
         contactRepository.save(contact);
 
         //create room
-        RoomChat roomChat=new RoomChat();
-        roomChat.setCreateAt(date);
-        roomChatRepository.save(roomChat);
-        UserChat userChat= userRepository.findById(id1).get();
-        UserChat userChat2= userRepository.findById(id2).get();
-        UserGroup userGroup= new UserGroup(roomChat,userChat, null);
-        UserGroup userGroup2= new UserGroup(roomChat,userChat2, null);
-        userGroupRepository.save(userGroup);
-        userGroupRepository.save(userGroup2);
+        UserGroup uG= listUg(id1,id2);
+        if(uG==null){
+            RoomChat roomChat=new RoomChat();
+            roomChat.setCreateAt(date);
+            roomChatRepository.save(roomChat);
+            UserChat userChat= userRepository.findById(id1).get();
+            UserChat userChat2= userRepository.findById(id2).get();
+            UserGroup userGroup= new UserGroup(roomChat,userChat, null);
+            UserGroup userGroup2= new UserGroup(roomChat,userChat2, null);
+            userGroupRepository.save(userGroup);
+            userGroupRepository.save(userGroup2);
 
+        }
         List<UserChat> list=getAllReceive(id2);
         return list;
     }
@@ -217,5 +223,19 @@ public class ContactService {
             }
         }
         return list;
+    }
+    public UserGroup listUg(Long id1,Long id2){
+        List<UserGroup> list1= contactRepository.listUG(id1);
+        List<UserGroup> list2= contactRepository.listUG(id2);
+        UserGroup u=null;
+        for (int i = 0; i < list1.size(); i++) {
+            for (int j = 0; j < list2.size(); j++) {
+                if ((list1.get(i).getRoomChatId().getId()==list2.get(j).getRoomChatId().getId())
+                        &&(list1.get(i).getUserAdd()==null&&list2.get(j).getUserAdd()==null)) {
+                    u=new UserGroup(list1.get(i).getId(),new RoomChat(list1.get(i).getRoomChatId().getId()));
+                }
+            }
+        }
+        return u;
     }
 }

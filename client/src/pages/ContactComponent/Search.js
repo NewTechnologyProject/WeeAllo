@@ -37,7 +37,7 @@ import QRCode from "qrcode";
 import QrReader from "react-qr-reader";
 
 import { io } from "socket.io-client";
-
+import { SOCKET_URL } from "src/services/api.service";
 
 // ----------------------------------------------------------------------
 const URL = "ws://localhost:3030/";
@@ -65,6 +65,17 @@ export default function SearchContact() {
   const [messageToast, setMessageToast] = useState("");
   const [selectedTab, setSelectedTab] = useState(0);
   const [openToast, setOpenToast] = React.useState(false);
+  const userpro = useSelector((state) => state.contact.userQR);
+  const [userPr, setUserProfile] = useState(null);
+  useEffect(() => {
+    dispatch(actions.findUserById(user));
+  }, [user]);
+  useEffect(() => {
+    if (userpro !== null) {
+      setUserProfile(userpro);
+    }
+  }, [userpro]);
+
   function handleTabChange(event, value) {
     setSelectedTab(value);
   }
@@ -274,7 +285,9 @@ export default function SearchContact() {
               handleClose();
               socket.current.emit("sendUser", {
                 userReceive: detailContact.id,
-                userSend: user
+                userSend: userPr
+                  ? userPr.firstname + " " + userPr.lastname
+                  : "Một người ",
               });
             }}
             fullWidth
@@ -294,9 +307,7 @@ export default function SearchContact() {
         <div>
           <div style={{ width: "100%", textAlign: "center" }}>
             <Search fontSize="large" />
-            <Typography variant="h5">
-              Không tìm thấy liên hệ nào
-            </Typography>
+            <Typography variant="h5">Không tìm thấy liên hệ nào</Typography>
           </div>
         </div>
       );

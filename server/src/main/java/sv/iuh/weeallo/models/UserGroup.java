@@ -41,6 +41,11 @@ public class UserGroup implements Serializable {
     public UserGroup() {
     }
 
+    public UserGroup(Long id, RoomChat roomChatId) {
+        this.id = id;
+        this.roomChatId = roomChatId;
+    }
+
     public UserGroup(RoomChat roomChatId, UserChat userId, UserChat userAdd) {
         this.roomChatId = roomChatId;
         this.userId = userId;
