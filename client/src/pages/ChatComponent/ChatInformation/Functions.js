@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useRef, useEffect } from "react";
 
 import classes from "./Functions.module.css";
 import List from "@material-ui/core/List";
@@ -13,11 +13,30 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Alert from "./alert/alert";
 import { deleteUserGroup } from "src/actions/usergroup.action";
 import { deleteRoomChat, updateCreator } from "src/actions/roomchat.action";
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "src/services/api.service";
+
+const URL = SOCKET_URL;
 
 const Functions = (props) => {
   const [open, setOpen] = useState(false);
   const [contentAlert, setContentAlert] = useState({});
+  const socket = useRef();
   const userId = localStorage.getItem("user_authenticated");
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -41,6 +60,11 @@ const Functions = (props) => {
         console.log("remove");
         props.onNeedLoad(props.roomId);
         props.onSetActiveRoomNull();
+
+        socket.current.emit("deletedRoom", {
+          roomId: props.roomId,
+          members: props.members.filter((mem) => mem.id !== Number(userId)),
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -60,6 +84,11 @@ const Functions = (props) => {
           props.onNeedLoad(props.roomId);
           props.onSetActiveRoomNull();
           console.log("out");
+
+          socket.current.emit("memberOutRoom", {
+            memberId: userId,
+            roomId: props.roomId,
+          });
         })
         .catch((error) => {
           console.log(error);

@@ -106,8 +106,9 @@ export default function MessageChat(props) {
     const imageA = e.target.files[0];
     const formData = new FormData();
     formData.append("file", imageA);
-    axios
-      .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
+
+    actions
+      .uploadAvatar(formData)
       .then((response) => {
         const typeOfFile = getType(response.data);
         if (isVideo(typeOfFile)) {
@@ -134,8 +135,9 @@ export default function MessageChat(props) {
     const imageA = e.target.files[0];
     const formData = new FormData();
     formData.append("file", imageA);
-    axios
-      .post("http://localhost:4000/api/storage/uploadFile?key=file", formData)
+
+    actions
+      .uploadAvatar(formData)
       .then((response) => {
         setSFile(response.data);
 

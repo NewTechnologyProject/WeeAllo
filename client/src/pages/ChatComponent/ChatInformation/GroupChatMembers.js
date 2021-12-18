@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useCallback, useEffect } from "react";
+import React, { useState, Fragment, useRef, useEffect } from "react";
 
 import { deleteUserGroup } from "src/actions/usergroup.action";
 import Alert from "./alert/alert";
@@ -20,12 +20,46 @@ import PopupState, { bindToggle, bindPopper } from "material-ui-popup-state";
 import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
 import classes from "./GroupChatMembers.module.css";
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "src/services/api.service";
+
+const URL = SOCKET_URL;
 
 const GroupChatMember = (props) => {
   const [open, setOpen] = useState(false);
   const [memberId, setMemberId] = useState(null);
+  const socket = useRef();
 
   const userId = localStorage.getItem("user_authenticated");
+
+  const reload = (data) => {
+    props.onNeedLoad(data);
+  };
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    let unmount = true;
+    socket.current = io(URL);
+
+    socket.current.on("getMemberOutRoom", (data) => {
+      if (data.roomId === props.roomId && unmount) {
+        reload(data.memberId);
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -39,6 +73,11 @@ const GroupChatMember = (props) => {
     deleteUserGroup(props.roomId, memberId)
       .then((response) => {
         props.onNeedLoad(memberId);
+
+        socket.current.emit("removedMember", {
+          memberId: memberId,
+          roomId: props.roomId,
+        });
       })
       .catch((error) => {
         console.log(error);

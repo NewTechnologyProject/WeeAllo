@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as actionuser from "src/actions/customer.action";
@@ -17,6 +17,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
 import ChoosingMember from "./ChoosingMember";
 import Spinner from "../ui/Spinner";
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "src/services/api.service";
+
+const URL_SOCKET = SOCKET_URL;
 
 const ModalAddGroup = (props) => {
   const [nameInput, setNameInput] = useState("");
@@ -24,6 +28,7 @@ const ModalAddGroup = (props) => {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [helperText, setHelperText] = useState({ error: false, text: " " });
+  const socket = useRef();
 
   const dispatch = useDispatch();
   const userId = localStorage.getItem("user_authenticated");
@@ -34,10 +39,25 @@ const ModalAddGroup = (props) => {
     dispatch(actionuser.findByIdUser(userId));
   }, []);
 
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL_SOCKET);
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
+
   const exitModal = () => {
     props.onCloseModal();
     setAvatarUrl("");
     setHelperText({ error: false, text: " " });
+    setLoading(false);
   };
 
   const getAvatarUrl = (event) => {
@@ -103,6 +123,7 @@ const ModalAddGroup = (props) => {
 
         //Need to reload rooms
         props.onNeedLoad(response.data);
+        socket.current.emit("newRoom", listMembers);
       })
       .catch((error) => {
         console.log(error);
@@ -139,11 +160,12 @@ const ModalAddGroup = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    setLoading(true);
 
     if (props.openModal === true) {
       // Get avatar link from aws s3
       if (avatarUrl) {
+        setLoading(true);
+
         const formData = new FormData();
         formData.append("file", avatarUrl);
 

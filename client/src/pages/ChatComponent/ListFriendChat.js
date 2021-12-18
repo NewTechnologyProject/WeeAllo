@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import Scrollbar from "src/components/Scrollbar";
@@ -10,8 +10,8 @@ import Avatar from "@material-ui/core/Avatar";
 import { fetchAllMembers } from "src/actions/roomchat.action";
 
 export default function ListFriendChat(props) {
-  const userId = localStorage.getItem("user_authenticated");
   const [listRooms, setListRooms] = useState([]);
+  const userId = localStorage.getItem("user_authenticated");
 
   const setListMembersOnRoom = useCallback(
     (rooms) => {

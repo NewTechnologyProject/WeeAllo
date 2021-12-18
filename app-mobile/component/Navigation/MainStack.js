@@ -29,6 +29,7 @@ import QrTab from "../Screen/Contact/Tab/QrTab";
 export default function MainStack(Stack) {
   return (
     <>
+      <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="TabRoute" component={TabRoute} />
       <Stack.Screen name="ChatContent" component={ChatContent} />
       <Stack.Screen name="Register" component={Register} />
@@ -41,7 +42,7 @@ export default function MainStack(Stack) {
       <Stack.Screen name="GroupMembers" component={GroupMembers} />
       <Stack.Screen name="GroupMedia" component={GroupMedia} />
       <Stack.Screen name="GroupFile" component={GroupFile} />
-      <Stack.Screen name="Login" component={Login} />
+
       <Stack.Screen name="MyContact" component={MyContact} />
       <Stack.Screen name="DeviceContact" component={DeviceContact} />
       <Stack.Screen name="AddGroup" component={AddGroup} />

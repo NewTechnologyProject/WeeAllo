@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect, useCallback, Fragment } from "react";
+import { useState, useEffect, useCallback, Fragment, useRef } from "react";
 
 // material
 import { Grid, Container } from "@material-ui/core";
@@ -14,6 +14,10 @@ import * as actions from "src/actions/customer.action";
 import classes from "./Chat.module.css";
 import ChatInfomation from "./ChatInformation/ChatInfomation";
 import Spinner from "./ui/Spinner";
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "src/services/api.service";
+
+const URL = SOCKET_URL;
 
 export default function Chat() {
   const [activeRoom, setActiveRoom] = useState(null);
@@ -21,6 +25,11 @@ export default function Chat() {
   const [keyword, setKeyword] = useState("");
   const [updatedRoom, setUpdatedRoom] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [receivedDeletedRoom, setReceivedDeletedRoom] = useState(null);
+  const [receivedRemovedMemberRoom, setReceivedRemovedMemberRoom] =
+    useState(null);
+  const [receivedUpdatedRoom, setReceivedUpdatedRoom] = useState(null);
+  const socket = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const listRooms = useSelector((state) => state.customer.listRooms);
@@ -56,6 +65,100 @@ export default function Chat() {
     });
   };
 
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+
+    socket.current.on("getNewRoom", (data) => {
+      let user = data.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getNewMembers", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+        setReceivedDeletedRoom(roomId);
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user) {
+        loadRoomsHandler();
+        setReceivedRemovedMemberRoom(roomId);
+      }
+    });
+
+    socket.current.on("getUpdatedRoom", (data) => {
+      const { room, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+        setReceivedUpdatedRoom(room);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    if (activeRoom) {
+      if (receivedDeletedRoom === activeRoom.id) {
+        setActiveRoom(null);
+      }
+    }
+  }, [receivedDeletedRoom]);
+
+  useEffect(() => {
+    if (activeRoom) {
+      if (receivedRemovedMemberRoom === activeRoom.id) {
+        setActiveRoom(null);
+      }
+    }
+  }, [receivedRemovedMemberRoom]);
+
+  useEffect(() => {
+    let unmount = true;
+
+    if (activeRoom) {
+      if (receivedUpdatedRoom.id === activeRoom.id && unmount) {
+        setActiveRoom((prevState) => {
+          return {
+            ...prevState,
+            roomName: receivedUpdatedRoom.roomName,
+            avatar: receivedUpdatedRoom.avatar,
+          };
+        });
+      }
+    }
+
+    return () => {
+      unmount = false;
+    };
+  }, [receivedUpdatedRoom]);
+
   useEffect(() => {
     if (!activeRoom) {
       setActiveRoom(moveToActiveRoom);
@@ -76,6 +179,7 @@ export default function Chat() {
       newRoom = { ...room, roomName: name };
     }
     setActiveRoom(newRoom);
+    dispatch({ type: "ACTIVE ROOM", payload: newRoom });
   };
 
   useEffect(() => {

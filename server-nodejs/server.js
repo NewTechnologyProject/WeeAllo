@@ -64,21 +64,55 @@ io.on("connection", (socket) => {
 
   //send and get message
   socket.on("sendMessage", ({ senderId, receiverId, message }) => {
-    // if (receiverId.length > 0) {
-    //   for (let id of receiverId) {
-    //     const user = getUser(id.userId);
-    //     if (user) {
-    //       io.to(user.socketId).emit("getMessage", {
-    //         senderId,
-    //         message,
-    //       });
-    //     }
-    //   }
-    // }
-
     socket.broadcast.emit("getMessage", {
       senderId,
       message,
+    });
+  });
+
+  //send new room
+  socket.on("newRoom", (newRoomMembers) => {
+    socket.broadcast.emit("getNewRoom", newRoomMembers);
+  });
+
+  //send deleted room
+  socket.on("deletedRoom", (deletedRoom) => {
+    socket.broadcast.emit("getDeletedRoom", deletedRoom);
+  });
+
+  //send member out room
+  socket.on("memberOutRoom", (room) => {
+    socket.broadcast.emit("getMemberOutRoom", room);
+  });
+
+  //send new member
+  socket.on("newMembers", (room) => {
+    socket.broadcast.emit("getNewMembers", room);
+  });
+
+  //send removed member
+  socket.on("removedMember", (room) => {
+    socket.broadcast.emit("getRemovedMember", room);
+  });
+
+  //send updated room
+  socket.on("updatedRoom", (room) => {
+    socket.broadcast.emit("getUpdatedRoom", room);
+  });
+
+  //key press
+  socket.on("typing", (roomId) => {
+    socket.broadcast.emit("getTyping", {
+      roomId: roomId,
+      message: "Đang nhập...",
+    });
+  });
+
+  //key up
+  socket.on("stopTyping", (roomId) => {
+    socket.broadcast.emit("getStopTyping", {
+      roomId: roomId,
+      message: "",
     });
   });
 

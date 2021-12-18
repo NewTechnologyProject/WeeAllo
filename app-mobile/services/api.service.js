@@ -3,7 +3,7 @@ import axios from "axios";
 // const SOCKET_URL = "ws://server-nodejs-demo.herokuapp.com/";
 // const baseApi = "http://weeallo-env.eba-xgex53xi.ap-southeast-1.elasticbeanstalk.com/api/";
 const baseApi = "http://192.168.1.13:4000/api/";
-const SOCKET_URL = "ws://192.168.1.13:3030";
+const SOCKET_URL = "ws://192.168.1.13:3030/";
 
 export default {
   user(url = baseApi + "user/") {
@@ -59,6 +59,8 @@ export default {
       deleteRoom: (roomId) => axios.delete(url + roomId),
       updateCreator: (roomId, creator) =>
         axios.put(url + roomId + "&" + creator),
+      updateInfo: (roomId, newRoom) =>
+        axios.put(url + roomId + "/update-info", newRoom),
     };
   },
   usergroup(url = baseApi + "usergroups/") {
