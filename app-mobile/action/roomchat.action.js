@@ -73,3 +73,8 @@ export const updateCreator = (roomId, creator) => {
       console.log(error);
     });
 };
+
+//Update info
+export const updateInfo = (roomId, newRoom) => {
+  return apiService.roomchat().updateInfo(roomId, newRoom);
+};

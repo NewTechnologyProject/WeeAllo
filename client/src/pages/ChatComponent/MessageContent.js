@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/styles";
-import { Paper } from "@material-ui/core";
 import { MessageLeft, MessageRight } from "./CustomMessage";
-import { setDate } from "date-fns";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

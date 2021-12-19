@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as actionuser from "src/actions/customer.action";
@@ -12,10 +12,15 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import ChoosingMember from "./ChoosingMember";
 import { addUserGroup } from "src/actions/usergroup.action";
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "src/services/api.service";
+
+const URL = SOCKET_URL;
 
 const ModalAddMember = (props) => {
   const [keyWord, setKeyWord] = useState("");
   const [loading, setLoading] = useState(false);
+  const socket = useRef();
 
   const dispatch = useDispatch();
   const userId = localStorage.getItem("user_authenticated");
@@ -68,8 +73,27 @@ const ModalAddMember = (props) => {
       createUserGroup(props.activeRoomId, listMembers);
       props.onNeedLoad(listMembers);
       props.onCloseModal();
+
+      socket.current.emit("newMembers", {
+        members: listMembers,
+        roomId: props.activeRoomId,
+      });
     }
   };
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   return (
     <Modal

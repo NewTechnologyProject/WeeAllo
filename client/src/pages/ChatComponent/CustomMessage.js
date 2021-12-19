@@ -139,8 +139,11 @@ const useStyles = makeStyles((theme) =>
 );
 
 const getFileExt = (str) => {
+  // const fileExt1 = str.split(
+  //   "https://image-upload-weeallo.s3.us-east-2.amazonaws.com/"
+  // )[1];
   const fileExt1 = str.split(
-    "https://image-upload-weeallo.s3.us-east-2.amazonaws.com/"
+    "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/"
   )[1];
   const fileName = String(fileExt1);
   let fileExt = fileName.split(/-(.+)/)[1];

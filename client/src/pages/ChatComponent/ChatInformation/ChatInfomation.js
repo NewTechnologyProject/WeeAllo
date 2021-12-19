@@ -1,4 +1,10 @@
-import React, { useState, Fragment, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import classes from "./ChatInformation.module.css";
@@ -9,7 +15,6 @@ import {
   updateInfo,
   uploadAvatar,
 } from "src/actions/roomchat.action";
-import { fetchAllRoom } from "src/actions/customer.action";
 import ModalAddMember from "./ModalAddMembers/ModalAddMember";
 import GroupChatMember from "./GroupChatMembers";
 import ImagesShow from "./ImagesShow";
@@ -17,6 +22,10 @@ import FilesShow from "./FilesShow";
 import Functions from "./Functions";
 import IconButton from "@mui/material/IconButton";
 import { Avatar, TextField, Button } from "@material-ui/core";
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "src/services/api.service";
+
+const URL_NODE = SOCKET_URL;
 
 export default function ChatInfomation(props) {
   const [open, setOpen] = useState(false);
@@ -33,10 +42,39 @@ export default function ChatInfomation(props) {
   const [helperText, setHelperText] = useState({ error: false, text: " " });
   const [listFiles, setListFiles] = useState({ files: [], media: [] });
   const [needLoadMembers, setNeedLoadMembers] = useState({ name: "new" });
+  const [newMembers, setNewMembers] = useState(null);
+  const socket = useRef();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const newMessage = useSelector((state) => state.message.message);
   const dispatch = useDispatch();
   const userId = localStorage.getItem("user_authenticated");
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL_NODE);
+
+    socket.current.on("getNewMembers", (data) => {
+      setNewMembers(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    if (newMembers && props.activeRoom) {
+      if (newMembers.roomId === props.activeRoom.id) {
+        getListMembers(props.activeRoom.id);
+      }
+    }
+    console.log(newMembers, props.activeRoom);
+  }, [newMembers]);
 
   const getListMembers = useCallback((roomId) => {
     fetchAllMembers(roomId)
@@ -101,6 +139,8 @@ export default function ChatInfomation(props) {
     if (needLoadMembers) {
       getListMembers(props.activeRoom.id);
     }
+
+    // console.log("load");
   }, [fetchAllMembers, props.activeRoom.id, needLoadMembers]);
 
   useEffect(() => {
@@ -197,6 +237,10 @@ export default function ChatInfomation(props) {
         console.log("success");
         props.getUpdatedRoom(newRoom);
 
+        socket.current.emit("updatedRoom", {
+          room: newRoom,
+          members: listMembers.filter((mem) => mem.id !== userId),
+        });
         props.getLoading(false);
       })
       .catch((error) => {

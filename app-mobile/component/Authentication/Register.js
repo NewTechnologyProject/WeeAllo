@@ -18,6 +18,7 @@ import * as actions from "../../action/user.action";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
+import PasswordInputText from "react-native-hide-show-password-input";
 
 const styles = StyleSheet.create({
   borderStyleBase: {
@@ -73,10 +74,10 @@ export default function Register({ navigation }) {
   const [lastname, setLastname] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [phoneerror, setPhoneError] = React.useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [firstnameerror, setFirstNameError] = React.useState(false);
-  const [lastnameerror, setLastNameError] = React.useState(false);
-  const [passworderror, setPassWordError] = React.useState(false);
+  const [firsterror, setFirstError] = React.useState(false);
+  const [lasterror, setLastError] = React.useState(false);
+  const [passerror, setPassError] = React.useState(false);
+  const [hidePass, setHidePass] = useState(true);
   const recaptchaVerifier = React.useRef(null);
   const [verificationId, setVerificationId] = React.useState();
   const firebaseConfig = firebase.apps.length
@@ -114,30 +115,49 @@ export default function Register({ navigation }) {
     };
     dispatch(actions.register(initialFieldValues));
   };
-
-  const validate = () => {
-    const regphone = /^[0]{1}\d{9}$/;
+  const first = () => {
     const regfirst =
-      /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*\s*[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*$/;
-    const reglast =
-      /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*\s*[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]*$/;
-    const regpass = /^\w{6,200}$/;
-    if (regphone.test(phone) === false) {
-      setPhoneError(true);
-      return false;
-    } else if (regphone.test(phone) == false) {
-      setPhoneError(false);
-    } else if (regfirst.test(firstname) === false) {
-      setFirstNameError(false);
-      return false;
-    } else if (reglast.test(lastname) === false) {
-      setLastNameError(false);
-      return false;
-    } else if (regpass.test(password) === false) {
-      setPassWordError(false);
+      /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]+$/;
+    if (regfirst.test(firstname) === false) {
+      setFirstError(true);
       return false;
     }
     return true;
+  };
+  const last = () => {
+    const reglast =
+      /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]+$/;
+
+    if (reglast.test(lastname) === false) {
+      setLastError(true);
+      return false;
+    }
+    return true;
+  };
+  const phonee = () => {
+    const regphone = /^[0]{1}\d{9}$/;
+
+    if (regphone.test(phone) === false) {
+      setPhoneError(true);
+      return false;
+    }
+    return true;
+  };
+  const pass = () => {
+    const regpass = /^\w{6,200}$/;
+    if (regpass.test(password) === false) {
+      setPassError(true);
+      return false;
+    }
+    return true;
+  };
+
+  const validate = () => {
+    first();
+    first1();
+    last();
+    phonee();
+    pass();
   };
   const showToastWithGravity = () => {
     ToastAndroid.showWithGravity(
@@ -145,6 +165,11 @@ export default function Register({ navigation }) {
       ToastAndroid.LONG,
       ToastAndroid.CENTER
     );
+  };
+  const sendOTP = () => {
+    if (validate()) {
+      onSignInSubmit();
+    }
   };
   const onSignInSubmit = async () => {
     const phoneNumber = "+84" + phone;
@@ -163,6 +188,7 @@ export default function Register({ navigation }) {
     }
     setScreen(false);
   };
+
   const onSubitOTP = async () => {
     try {
       const credential = firebase.auth.PhoneAuthProvider.credential(
@@ -180,6 +206,7 @@ export default function Register({ navigation }) {
       setErrorOtp("Mã xác thực sai ! Vui lòng kiểm tra lại");
     }
   };
+
   return (
     <View style={styles.container}>
       <FirebaseRecaptchaVerifierModal
@@ -202,13 +229,12 @@ export default function Register({ navigation }) {
       {screen ? (
         <View style={{ width: "100%" }}>
           <Input
-            type="text"
             placeholder="Họ"
             name="firstname"
             onChangeText={(e) => setFirstname(e)}
             value={firstname}
             errorStyle={{ color: "red" }}
-            errorMessage={firstnameerror ? "Họ sai định dạng" : ""}
+            errorMessage={firsterror ? "Họ sai định dạng" : ""}
             leftIcon={
               <Icon
                 name="user"
@@ -224,7 +250,7 @@ export default function Register({ navigation }) {
             onChangeText={(e) => setLastname(e)}
             value={lastname}
             errorStyle={{ color: "red" }}
-            errorMessage={lastnameerror ? "Tên sai định dạng" : ""}
+            errorMessage={lasterror ? "Tên sai định dạng" : ""}
             leftIcon={
               <Icon
                 name="user"
@@ -253,12 +279,12 @@ export default function Register({ navigation }) {
           <Input
             ecureTextEntry={true}
             placeholder="Nhập mật khẩu"
-            secureTextEntry={true}
+            secureTextEntry={hidePass ? true : false}
             name="password"
             onChangeText={(e) => setPassword(e)}
             value={password}
             errorStyle={{ color: "red" }}
-            errorMessage={passworderror ? "Mật khẩu sai định dạng" : ""}
+            errorMessage={passerror ? "Mật khẩu sai định dạng" : ""}
             leftIcon={
               <Icon
                 name="unlock-alt"
@@ -267,7 +293,36 @@ export default function Register({ navigation }) {
                 style={{ paddingRight: 15 }}
               />
             }
+            rightIcon={
+              <Icon
+                name={hidePass ? "eye-slash" : "eye"}
+                type="font-awesome-5"
+                size={15}
+                color="grey"
+                onPress={() => setHidePass(!hidePass)}
+              />
+            }
           />
+
+          {/* <PasswordInputText
+            ecureTextEntry={true}
+            placeholder="Nhập mật khẩu"
+            secureTextEntry={true}
+            name="password"
+            onChangeText={(e) => setPassword(e)}
+            value={password}
+            errorStyle={{ color: "red" }}
+            errorMessage={passerror ? "Mật khẩu sai định dạng" : ""}
+            leftIcon={
+              <Icon
+                name="unlock-alt"
+                type="font-awesome-5"
+                color={"#098524"}
+                style={{ paddingRight: 15 }}
+              />
+            }
+          /> */}
+
           <Button
             title="ĐĂNG KÝ"
             type="outline"
@@ -281,7 +336,8 @@ export default function Register({ navigation }) {
             titleStyle={{
               color: "white",
             }}
-            onPress={() => onSignInSubmit()}
+            // onPress={() => onSignInSubmit()}
+            onPress={() => sendOTP()}
           />
         </View>
       ) : (

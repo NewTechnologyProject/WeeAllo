@@ -1,7 +1,4 @@
 import apiService from "../services/api.service";
-// import { types } from "react-alert";
-//import * as types from "./ActionType"
-
 //Get list messages
 export const fetchAllMessages = (roomId) => (dispatch) => {
   apiService

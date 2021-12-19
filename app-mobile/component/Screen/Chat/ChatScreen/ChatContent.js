@@ -12,21 +12,22 @@ import {
   Image,
   Keyboard,
 } from "react-native";
-import { io } from "socket.io-client";
 import { GiftedChat, Composer, Send } from "react-native-gifted-chat";
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../action/roomchat.action";
 import EmojiSelector, { Categories } from "react-native-emoji-selector";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
-import { SOCKET_URL } from "../../../../services/api.service";
 import { uploadAvatar } from "../../../../action/roomchat.action";
 import Spinner from "react-native-loading-spinner-overlay";
 import apiService from "../../../../services/api.service";
 import FileAlert from "./FileAlert";
 import { findByIdUser } from "../../../../action/user.action";
+import { SOCKET_URL } from "../../../../services/api.service";
+import { io } from "socket.io-client";
 
 const URL = SOCKET_URL;
+
 export default function ChatContent({ navigation, route }) {
   const [receiverId, setReceiverId] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -113,6 +114,42 @@ export default function ChatContent({ navigation, route }) {
       setMessages((prevState) => [gifted_message, ...prevState]);
     }
   }, [arrivalMessage]);
+
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    socket.current.on("getUpdatedRoom", (data) => {
+      const { room, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount && room.id === activeRoom.id) {
+        dispatch({ type: "SET ACTIVE ROOM", payload: { ...room } });
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
 
   useEffect(() => {
     socket.current.emit("addUser", Number(userId));

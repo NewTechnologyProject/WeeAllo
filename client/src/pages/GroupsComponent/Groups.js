@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Tab, Box } from "@material-ui/core";
@@ -10,12 +10,17 @@ import GroupsByMe from "./GroupsByMe";
 import { fetchAllMembers } from "src/actions/roomchat.action";
 import * as actions from "src/actions/customer.action";
 import classes from "./Groups.module.css";
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "src/services/api.service";
+
+const URL = SOCKET_URL;
 
 const Groups = () => {
   const [value, setValue] = useState("1");
+  const [listRooms, setListRooms] = useState([]);
+  const socket = useRef();
   const dispatch = useDispatch();
   const rooms = useSelector((state) => state.customer.listRooms);
-  const [listRooms, setListRooms] = useState([]);
   const userId = localStorage.getItem("user_authenticated");
 
   const loadRoomsHandler = useCallback(() => {
@@ -48,6 +53,7 @@ const Groups = () => {
     if (rooms.length === 0) {
       loadRoomsHandler();
     }
+    console.log("load");
   }, [loadRoomsHandler, rooms]);
 
   useEffect(() => {
@@ -57,6 +63,61 @@ const Groups = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+
+    socket.current.on("getNewRoom", (data) => {
+      let user = data.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getNewMembers", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getUpdatedRoom", (data) => {
+      const { room, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   return (
     <Page title="Nhóm Chat | WeeAllo">
