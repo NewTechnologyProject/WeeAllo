@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../../../action/contact.action"
+import * as action from "../../../../../action/user.action"
 import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { StyleSheet } from "react-native";
 import { ListItem, Avatar, Button } from 'react-native-elements'
@@ -97,6 +98,7 @@ export default function ReceiveContact({ navigation }) {
                                             }
                                             onPress={() => {
                                                 dispatch(actions.acceptContact(c.id, user))
+                                                dispatch(action.fetchAllRoom(user))
                                                 Alert.alert(
                                                     "Bạn bè",
                                                     "Đã trở thành bạn bè với " + c.firstname + " " + c.lastname,

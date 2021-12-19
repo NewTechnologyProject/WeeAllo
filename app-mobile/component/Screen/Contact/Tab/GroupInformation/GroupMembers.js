@@ -63,10 +63,11 @@ const GroupMembers = ({ navigation }) => {
     deleteUserGroup(activeRoom.id, memberId)
       .then((response) => {
         dispatch(fetchAllMembers(activeRoom.id));
+        dispatch(fetchAllMembersWithUserAdd(activeRoom.id));
         setOpen(false);
         setVisible(false);
-
         socket.current.emit("removedMember", {
+
           memberId: memberId,
           roomId: activeRoom.id,
         });
@@ -213,9 +214,9 @@ const GroupMembers = ({ navigation }) => {
                   <TouchableOpacity
                     onPress={
                       activeRoom.creator !== item.item.userId.id &&
-                      Number(userId) === activeRoom.creator
+                        Number(userId) === activeRoom.creator
                         ? onPressBottomSheet.bind(this, item.item.userId.id)
-                        : () => {}
+                        : () => { }
                     }
                   >
                     <ListItem key={item.index}>
@@ -224,20 +225,18 @@ const GroupMembers = ({ navigation }) => {
                         icon={{ name: "user", type: "font-awesome" }}
                         size={50}
                         source={{
-                          uri: `${
-                            item.item.userId.avatar
+                          uri: `${item.item.userId.avatar
                               ? item.item.userId.avatar
                               : "dummy.js"
-                          }`,
+                            }`,
                         }}
                       />
                       <ListItem.Content>
                         <ListItem.Title>{`${item.item.userId.firstname} ${item.item.userId.lastname}`}</ListItem.Title>
-                        <ListItem.Subtitle>{`${
-                          activeRoom.creator === item.item.userId.id
+                        <ListItem.Subtitle>{`${activeRoom.creator === item.item.userId.id
                             ? "Trưởng nhóm"
                             : `Thêm bởi ${getUserAddName(item.item)}`
-                        }`}</ListItem.Subtitle>
+                          }`}</ListItem.Subtitle>
                       </ListItem.Content>
                     </ListItem>
                   </TouchableOpacity>

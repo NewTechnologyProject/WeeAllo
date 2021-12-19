@@ -106,7 +106,7 @@ export default function DeviceContact({ navigation, route }) {
                     : <Badge containerStyle={{ fontSize: 10 }} value="Đã gửi lời mời kết bạn" status="primary" />
             )
         }
-        else if (status === 'you') {
+        else if (status === 'friend') {
             return (
                 <Badge containerStyle={{ fontSize: 10 }} value="Bạn bè" status="success" />
             )
@@ -125,7 +125,7 @@ export default function DeviceContact({ navigation, route }) {
                     <Badge containerStyle={{ fontSize: 10 }} value="Đã nhận lời mời kết bạn" status="warning" />
             )
         }
-        else if (status === 'friend') {
+        else if (status === 'you') {
             return (
                 <Badge containerStyle={{ fontSize: 10 }} value="Tài khoản của bạn" status="success" />
             )

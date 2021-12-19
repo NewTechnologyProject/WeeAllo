@@ -54,7 +54,6 @@ export default function MyQr() {
                     />
                 </View>
             </ViewShot>
-            <Button onPress={shareQR} title="tải" />
         </View>
     );
 }
