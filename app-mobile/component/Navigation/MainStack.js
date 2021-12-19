@@ -17,7 +17,7 @@ import DeviceContact from "../Screen/Contact/Tab/MyContact/DeviceContact";
 import Login from "../Authentication/Login";
 import TabRoute from "./TabRoute";
 import AddGroup from "../Screen/Contact/Tab/AddGroup/AddGroup";
-//import addMember from "../Screen/Contact/Tab/AddMember/addMember";
+import addMember from "../Screen/Contact/Tab/addMember/addMember";
 import DetailContact from "../Screen/Contact/Tab/MyContact/DetailContact";
 import Chat from "../Screen/Chat/Chat";
 import EditProfile from "../Screen/Profile/EditProfile";
@@ -46,7 +46,7 @@ export default function MainStack(Stack) {
       <Stack.Screen name="MyContact" component={MyContact} />
       <Stack.Screen name="DeviceContact" component={DeviceContact} />
       <Stack.Screen name="AddGroup" component={AddGroup} />
-      {/* <Stack.Screen name="AddMember" component={addMember} /> */}
+      <Stack.Screen name="AddMember" component={addMember} />
       <Stack.Screen name="DetailContact" component={DetailContact} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Scanner" component={Scanner} />
