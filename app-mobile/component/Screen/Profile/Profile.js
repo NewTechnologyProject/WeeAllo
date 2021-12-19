@@ -40,7 +40,7 @@ export default function Profile({ navigation }) {
         barStyle="light-content"
         centerComponent={
           <Text style={{ color: "#fff", fontWeight: "700" }}>
-            Cài đặt chung
+            Thông tin chung
           </Text>
         }
         containerStyle={{
