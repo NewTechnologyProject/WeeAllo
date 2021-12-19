@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../../../../action/contact.action"
 import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { StyleSheet } from "react-native";
 import { ListItem, Avatar, Button } from 'react-native-elements'
+
+//
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "../../../../../services/api.service";
+const URL = SOCKET_URL;
 export default function ReceiveContact({ navigation }) {
     const styles = StyleSheet.create({
         avatar: {
@@ -28,6 +33,9 @@ export default function ReceiveContact({ navigation }) {
             flexDirection: 'row',
         },
     });
+    const socket = useRef();
+    socket.current = io(URL);
+
     const dispatch = useDispatch();
     const receiveContact = useSelector((state) => state.contact.listReceive);
     const [refreshing, setRefreshing] = useState(false);
@@ -99,6 +107,10 @@ export default function ReceiveContact({ navigation }) {
                                                         },
                                                     ]
                                                 );
+                                                socket.current.emit("acceptUser", {
+                                                    userReceive: "Một người",
+                                                    userSend: c.id,
+                                                });
                                             }}
                                         />
                                         <Button type="outline" title="Từ chối"

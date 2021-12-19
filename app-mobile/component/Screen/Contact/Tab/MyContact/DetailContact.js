@@ -3,19 +3,26 @@ import {
     Image,
     Modal,
     Pressable,
+    RefreshControl,
     Text,
     TouchableOpacity,
     View
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { StyleSheet, ScrollView } from "react-native";
 import { Header } from "react-native-elements/dist/header/Header";
 import { Avatar, Badge, Icon } from "react-native-elements";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import imagePath, * as cover from "../../../../../constants/imagePath.js"
 import * as actions from "../../../../../action/contact.action"
+
+//
+import { io } from "socket.io-client";
+import { SOCKET_URL } from "../../../../../services/api.service";
+//
+const URL = SOCKET_URL;
 export default function DetailContact({ navigation, route, props }) {
     const styles = StyleSheet.create({
         container: {
@@ -68,6 +75,11 @@ export default function DetailContact({ navigation, route, props }) {
         }
     });
     const dispatch = useDispatch();
+
+    const socket = useRef();
+    socket.current = io(URL);
+
+    const [refreshing, setRefreshing] = useState(false);
     const detail = useSelector((state) => state.contact.detailContact);
     const [detailContact, setDetailContact] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -81,11 +93,21 @@ export default function DetailContact({ navigation, route, props }) {
             setDetailContact(detail);
         }
     }, [detail]);
-    console.log("Detaile", user)
-    console.log(idDetail)
     useEffect(() => {
         dispatch(actions.findUserByPhone(idDetail, user));
     }, [user])
+
+    // Refresh
+
+    const wait = (timeout) => {
+        return new Promise((resolve) => setTimeout(resolve, timeout));
+    };
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        dispatch(actions.findUserByPhone(idDetail, user));
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
     const renderButton = (status, id, lastname, firstname) => {
         if (status === 'none') {
             return (
@@ -122,6 +144,10 @@ export default function DetailContact({ navigation, route, props }) {
                                         },
                                     ]
                                 );
+                                socket.current.emit("sendUser", {
+                                    userReceive: id,
+                                    userSend: "Một người ",
+                                });
                             }
                             }
                         />
@@ -266,6 +292,10 @@ export default function DetailContact({ navigation, route, props }) {
                                     },
                                 ]
                             );
+                            socket.current.emit("sendUser", {
+                                userReceive: id,
+                                userSend: "Một người ",
+                            });
                         }
                         }
                     />
@@ -380,6 +410,10 @@ export default function DetailContact({ navigation, route, props }) {
                                     },
                                 ]
                             );
+                            socket.current.emit("sendUser", {
+                                userReceive: id,
+                                userSend: "Một người ",
+                            });
                         }
                         }
                     />
@@ -409,7 +443,11 @@ export default function DetailContact({ navigation, route, props }) {
                             }
                             onPress={() => {
                                 setChange1(2)
-                                dispatch(actions.acceptContact(user, 1))
+                                dispatch(actions.acceptContact(id, user))
+                                socket.current.emit("acceptUser", {
+                                    userReceive: "Một người",
+                                    userSend: id,
+                                });
                                 Alert.alert(
                                     "Bạn bè",
                                     "Đã trở thành bạn bè với " + firstname + " " + lastname,
@@ -420,6 +458,7 @@ export default function DetailContact({ navigation, route, props }) {
                                         },
                                     ]
                                 );
+
                             }
                             }
                         />
@@ -560,6 +599,10 @@ export default function DetailContact({ navigation, route, props }) {
                                     },
                                 ]
                             );
+                            socket.current.emit("sendUser", {
+                                userReceive: id,
+                                userSend: "Một người ",
+                            });
                         }
                         }
                     />
@@ -694,25 +737,32 @@ export default function DetailContact({ navigation, route, props }) {
                     justifyContent: "space-around",
                 }}
             />
-            <View style={{ height: 200, backgroundColor: 'black', width: '100%' }}>
-                <Image source={imagePath.coverImage} style={{ height: "100%", width: "100%" }} />
-            </View>
-            <View style={styles.container}>
-                <Avatar
-                    size={100}
-                    rounded
-                    source={{
-                        uri:
-                            detailContact ? detailContact.avartar : "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png",
-                    }}
-                />
-                <Text style={{ fontSize: 20 }}>{detailContact ? detailContact.firstname + " " + detailContact.lastname : "Người dùng"}</Text>
-
-                {detailContact ? renderStatus(detailContact.status) : <></>}
-                <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                    {detailContact ? renderButton(detailContact.status, detailContact.id, detailContact.lastname, detailContact.firstname) : <></>}
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+            >
+                <View style={{ height: 200, backgroundColor: 'black', width: '100%' }}>
+                    <Image source={imagePath.coverImage} style={{ height: "100%", width: "100%" }} />
                 </View>
-            </View>
+                <View style={styles.container}
+                >
+                    <Avatar
+                        size={100}
+                        rounded
+                        source={{
+                            uri:
+                                detailContact ? detailContact.avartar : "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png",
+                        }}
+                    />
+                    <Text style={{ fontSize: 20 }}>{detailContact ? detailContact.firstname + " " + detailContact.lastname : "Người dùng"}</Text>
+
+                    {detailContact ? renderStatus(detailContact.status) : <></>}
+                    <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                        {detailContact ? renderButton(detailContact.status, detailContact.id, detailContact.lastname, detailContact.firstname) : <></>}
+                    </View>
+                </View>
+            </ScrollView>
         </View>
     );
 }

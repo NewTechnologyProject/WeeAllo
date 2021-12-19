@@ -63,6 +63,9 @@ export default function ContactList({ navigation }) {
     dispatch(actions.fetchAllContact(user));
     wait(2000).then(() => setRefreshing(false));
   }, []);
+  const toDetail = (id) => {
+    navigation.navigate('DetailContact', { idDetail: id })
+  }
 
   return (
     <View style={styles.container}>
@@ -122,12 +125,15 @@ export default function ContactList({ navigation }) {
                   {c.firstname + " " + c.lastname}
                 </ListItem.Title>
               </ListItem.Content>
-              <Icon
-                name="comment-dots"
-                type="font-awesome-5"
-                color="gray"
-                size={20}
-              />
+              <TouchableOpacity
+                onPress={() => toDetail(c.phone)}>
+                <Icon
+                  name="ellipsis-h"
+                  type="font-awesome-5"
+                  color={"#868e96"}
+                  size={20}
+                />
+              </TouchableOpacity>
             </ListItem>
           ))}
         </ScrollView>

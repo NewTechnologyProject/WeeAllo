@@ -69,8 +69,9 @@ export default function DeviceContact({ navigation, route }) {
     }, []);
     const getContactInDevice = () => {
         if (contacts) {
+            setAnimate(true);
             dispatch(actions.getJsonString(contacts, 1));
-            wait(3000).then(() => setAnimate(false));
+
         }
     }
     const onRefresh = React.useCallback(() => {
@@ -157,33 +158,6 @@ export default function DeviceContact({ navigation, route }) {
                     justifyContent: 'space-around',
                 }}
             />
-
-            {
-                contacts.length ?
-                    <View>
-                        <SearchBar
-                            platform='default'
-                            lightTheme='white'
-                            cancelButtonTitle=''
-                            placeholder="Tìm danh bạ..."
-                            onChangeText={setTextSearch}
-                            value={textSearch}
-                            inputStyle={{
-                                color: 'black',
-                                width: 300,
-                                fontSize: 14,
-                            }}
-                            inputContainerStyle={{
-                                height: 35
-                            }}
-                            containerStyle={{
-                            }}
-                            placeholderTextColor='black'
-                        />
-                        <Text style={{ padding: 10 }}>Danh bạ trong máy</Text>
-                    </View>
-                    : null
-            }
             <ScrollView
                 refreshControl={
                     <RefreshControl
@@ -225,6 +199,8 @@ export default function DeviceContact({ navigation, route }) {
                             <Image source={imagePath.info}
                                 style={{ width: 200, height: 400 }}
                             />
+                            { }
+                            <ActivityIndicator size="large" color="#00ff00" animating={animate} />
                             <Text style={{ textAlign: 'center' }}>Kiểm tra danh bạ của bạn xem các tài khoản đã tham gia WeeAllo</Text>
                             <Button type="outline" title="KIỂM TRA DANH BẠ"
                                 onPress={() => {
@@ -252,7 +228,6 @@ export default function DeviceContact({ navigation, route }) {
                         </View>
                 }
             </ScrollView>
-            <ActivityIndicator size="large" color="#00ff00" animating={animate} />
         </View>
     );
 }

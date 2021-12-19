@@ -46,7 +46,6 @@ export default function Login({ navigation }) {
   const user = useSelector((state) => state.user.login);
   const user1 = useSelector((state) => state.user.userAuth);
   const dispatch = useDispatch();
-  console.log("userauth", user1);
 
   function onLoading() {
     setLoading(true);
@@ -78,23 +77,7 @@ export default function Login({ navigation }) {
         navigation.navigate("TabRoute", { screen: "Tin Nhắn" });
       }, 2000);
       const a = await AsyncStorage.getItem("user_authenticated");
-      console.log(JSON.stringify(a));
     }
-    //console.log("user id", user.id);
-    //console.log("async", AsyncStorage.getItem("user_authenticated"));
-    //console.log("userauth", user1);
-
-    //navigation.navigate("TabRoute");
-  };
-  const getMyStringValue = async () => {
-    try {
-      const a = await AsyncStorage.getItem("user_authenticated");
-      console.log(a);
-    } catch (e) {
-      // read error
-    }
-
-    console.log("Done.");
   };
   const register = () => {
     navigation.navigate("Register");

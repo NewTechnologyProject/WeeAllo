@@ -4,12 +4,14 @@ import { Camera } from 'expo-camera';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Button, Icon } from 'react-native-elements';
 import { Dialog } from 'react-native-elements';
+import { useIsFocused } from '@react-navigation/native';
 export default function Scanner({ navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [type, setType] = useState(Camera.Constants.Type.back);
     const [isActive, setIsActive] = useState(false);
     const [visible1, setVisible1] = useState(false);
     const [link, setLink] = useState('');
+    const isFocused = useIsFocused();
     useEffect(() => {
         (async () => {
             const { status } = await Camera.requestPermissionsAsync();
@@ -46,53 +48,56 @@ export default function Scanner({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} type={type}
-                onBarCodeScanned={isActive ? undefined : handleBarCodeScanned}
-                style={[StyleSheet.absoluteFillObject]}
-            >
-                <View style={styles.buttonContainer}>
-                    <Icon
-                        name="arrow-left"
-                        type="font-awesome-5"
-                        color={"white"}
-                        size={25}
-                        marginTop={23}
-                    />
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => {
-                            setType(
-                                type === Camera.Constants.Type.back
-                                    ? Camera.Constants.Type.front
-                                    : Camera.Constants.Type.back
-                            );
-                        }}>
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    {isActive && <Button
-                        containerStyle={{
-                            paddingBottom: 15,
-                            paddingRight: 10,
-                            alignContent: 'center',
-                            alignItems: 'center'
-                        }}
-                        buttonStyle={{
-                            height: 50,
-                            width: 140,
-                            borderRadius: 30,
-                            borderColor: "#EEEEEE",
-                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        }}
-                        titleStyle={
-                            {
-                                fontSize: 13,
-                                color: 'white'
+            {
+                isFocused &&
+                <Camera style={styles.camera} type={type}
+                    onBarCodeScanned={isActive ? undefined : handleBarCodeScanned}
+                    style={[StyleSheet.absoluteFillObject]}
+                >
+                    <View style={styles.buttonContainer}>
+                        <Icon
+                            name="arrow-left"
+                            type="font-awesome-5"
+                            color={"white"}
+                            size={25}
+                            marginTop={23}
+                        />
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => {
+                                setType(
+                                    type === Camera.Constants.Type.back
+                                        ? Camera.Constants.Type.front
+                                        : Camera.Constants.Type.back
+                                );
+                            }}>
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        {isActive && <Button
+                            containerStyle={{
+                                paddingBottom: 15,
+                                paddingRight: 10,
+                                alignContent: 'center',
+                                alignItems: 'center'
+                            }}
+                            buttonStyle={{
+                                height: 50,
+                                width: 140,
+                                borderRadius: 30,
+                                borderColor: "#EEEEEE",
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                            }}
+                            titleStyle={
+                                {
+                                    fontSize: 13,
+                                    color: 'white'
+                                }
                             }
-                        }
-                        title={'Quét lại 1 lần nữa'} onPress={() => setIsActive(false)} />}
-                </View>
-            </Camera>
+                            title={'Quét lại 1 lần nữa'} onPress={() => setIsActive(false)} />}
+                    </View>
+                </Camera>
+            }
 
 
             <Dialog
