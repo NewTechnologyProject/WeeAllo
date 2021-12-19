@@ -41,8 +41,9 @@ export const fetchAllRoom = (userId) => (dispatch) => {
     .listRoom(userId)
     .then((response) => {
       let data = response.data;
-      if (data.length > 0) {
-        data = data.reverse();
+
+      if (data.length >= 2) {
+        data = data.sort((a, b) => b.id - a.id);
       }
 
       dispatch({

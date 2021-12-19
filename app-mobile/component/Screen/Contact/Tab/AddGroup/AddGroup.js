@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon, Input, Button } from "react-native-elements";
 import { TouchableOpacity, View, StyleSheet } from "react-native";
@@ -13,6 +13,10 @@ import {
   uploadAvatar,
 } from "../../../../../action/roomchat.action";
 import { addUserGroup } from "../../../../../action/usergroup.action";
+import { SOCKET_URL } from "../../../../../services/api.service";
+import { io } from "socket.io-client";
+
+const URL = SOCKET_URL;
 
 const AddGroup = ({ navigation }) => {
   const [groupName, setGroupName] = useState("");
@@ -22,6 +26,7 @@ const AddGroup = ({ navigation }) => {
   const [avatar, setAvatar] = useState(null);
   const [chosenMembers, setChosenMembers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const socket = useRef();
 
   // const userId = "1";
   const userId = useSelector((state) => state.user.userAuth);
@@ -34,6 +39,20 @@ const AddGroup = ({ navigation }) => {
     dispatch(actions.fetchAllFriend(userId));
     dispatch(actions.findByIdUser(userId));
   }, [userId]);
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   const getChosenMembers = (members) => {
     setChosenMembers(members);
@@ -111,6 +130,8 @@ const AddGroup = ({ navigation }) => {
       .then((response) => {
         const newListMembers = [...chosenMembers, { id: userId }];
         createUserGroup(response.data.id, newListMembers);
+
+        socket.current.emit("newRoom", chosenMembers);
 
         //Need to reload rooms
         backTabRoute(response.data.id);

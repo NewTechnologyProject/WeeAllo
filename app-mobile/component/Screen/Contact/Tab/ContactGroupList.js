@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as actions from "../../../../action/user.action";
@@ -12,6 +12,10 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import { ListItem, Avatar } from "react-native-elements";
+import { SOCKET_URL } from "../../../../services/api.service";
+import { io } from "socket.io-client";
+
+const URL = SOCKET_URL;
 
 const styles = StyleSheet.create({
   container: {},
@@ -33,11 +37,12 @@ const styles = StyleSheet.create({
 
 export default function ContactGroupList({ navigation, route }) {
   const [listRooms, setListRooms] = useState([]);
+  const socket = useRef();
 
   // const userId = "1";
   const userId = useSelector((state) => state.user.userAuth);
-  const dispatch = useDispatch();
   const rooms = useSelector((state) => state.user.listRooms);
+  const dispatch = useDispatch();
 
   const loadRoomsHandler = useCallback(() => {
     dispatch(actions.fetchAllRoom(userId));
@@ -111,6 +116,67 @@ export default function ContactGroupList({ navigation, route }) {
   const toAddGroup = () => {
     navigation.navigate("AddGroup");
   };
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+
+    socket.current.on("getNewRoom", (data) => {
+      let user = data.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getNewMembers", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user && unmount) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getUpdatedRoom", (data) => {
+      const { room, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   return (
     <View style={styles.container}>

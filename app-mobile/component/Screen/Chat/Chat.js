@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
@@ -23,12 +23,17 @@ import {
 } from "../../../action/roomchat.action";
 import SearchBar from "react-native-elements/dist/searchbar/SearchBar-ios";
 import { set } from "react-hook-form";
+import { SOCKET_URL } from "../../../services/api.service";
+import { io } from "socket.io-client";
+
+const URL = SOCKET_URL;
 
 export default function Chat({ navigation, route }) {
   const [textSearch, setTextSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [listRooms, setListRooms] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const socket = useRef();
 
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -45,6 +50,67 @@ export default function Chat({ navigation, route }) {
   useEffect(() => {
     loadRoomsHandler();
   }, [loadRoomsHandler, route.params]);
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+
+    socket.current.on("getNewRoom", (data) => {
+      let user = data.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getNewMembers", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user && unmount) {
+        loadRoomsHandler();
+      }
+    });
+
+    socket.current.on("getUpdatedRoom", (data) => {
+      const { room, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user) {
+        loadRoomsHandler();
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);

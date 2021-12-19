@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon, ListItem, Avatar, BottomSheet } from "react-native-elements";
 import {
@@ -10,15 +10,23 @@ import {
 } from "react-native";
 
 import { deleteUserGroup } from "../../../../../action/usergroup.action";
-import { fetchAllMembers } from "../../../../../action/roomchat.action";
+import {
+  fetchAllMembers,
+  fetchAllMembersWithUserAdd,
+} from "../../../../../action/roomchat.action";
 import Alert from "./Alert";
 import { Header } from "react-native-elements/dist/header/Header";
+import { SOCKET_URL } from "../../../../../services/api.service";
+import { io } from "socket.io-client";
+
+const URL = SOCKET_URL;
 
 const GroupMembers = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [func, setFunc] = useState(null);
   const [memberId, setMemberId] = useState(null);
+  const socket = useRef();
 
   // const userId = "1";
   const userId = useSelector((state) => state.user.userAuth);
@@ -57,6 +65,11 @@ const GroupMembers = ({ navigation }) => {
         dispatch(fetchAllMembers(activeRoom.id));
         setOpen(false);
         setVisible(false);
+
+        socket.current.emit("removedMember", {
+          memberId: memberId,
+          roomId: activeRoom.id,
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -70,6 +83,61 @@ const GroupMembers = ({ navigation }) => {
     }
     return userAddName;
   };
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current = io(URL);
+
+    socket.current.on("getMemberOutRoom", (data) => {
+      if (data.roomId === activeRoom.id && unmount) {
+        dispatch(fetchAllMembers(activeRoom.id));
+        dispatch(fetchAllMembersWithUserAdd(activeRoom.id));
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   return (
     <View style={styles.container}>

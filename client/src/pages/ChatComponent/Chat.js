@@ -29,6 +29,7 @@ export default function Chat() {
   const [receivedRemovedMemberRoom, setReceivedRemovedMemberRoom] =
     useState(null);
   const [receivedUpdatedRoom, setReceivedUpdatedRoom] = useState(null);
+  const [receivedOutMember, setReceivedOutMember] = useState(null);
   const socket = useRef();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -83,6 +84,13 @@ export default function Chat() {
       if (user) {
         loadRoomsHandler();
       }
+    });
+
+    socket.current.on("getMemberOutRoom", (data) => {
+      if (data.newCreator) {
+        loadRoomsHandler();
+      }
+      setReceivedOutMember(data);
     });
   }, []);
 
@@ -158,6 +166,29 @@ export default function Chat() {
       unmount = false;
     };
   }, [receivedUpdatedRoom]);
+
+  useEffect(() => {
+    let unmount = true;
+
+    if (receivedOutMember && activeRoom) {
+      if (
+        receivedOutMember.roomId === activeRoom.id &&
+        unmount &&
+        receivedOutMember.newCreator
+      ) {
+        setActiveRoom((prevState) => {
+          return {
+            ...prevState,
+            creator: receivedOutMember.newCreator,
+          };
+        });
+      }
+    }
+
+    return () => {
+      unmount = false;
+    };
+  }, [receivedOutMember]);
 
   useEffect(() => {
     if (!activeRoom) {

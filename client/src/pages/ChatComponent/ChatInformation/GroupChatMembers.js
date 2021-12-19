@@ -28,6 +28,7 @@ const URL = SOCKET_URL;
 const GroupChatMember = (props) => {
   const [open, setOpen] = useState(false);
   const [memberId, setMemberId] = useState(null);
+  const [outMember, setOutMember] = useState(null);
   const socket = useRef();
 
   const userId = localStorage.getItem("user_authenticated");
@@ -43,8 +44,8 @@ const GroupChatMember = (props) => {
     socket.current = io(URL);
 
     socket.current.on("getMemberOutRoom", (data) => {
-      if (data.roomId === props.roomId && unmount) {
-        reload(data.memberId);
+      if (unmount) {
+        setOutMember(data);
       }
     });
 
@@ -60,6 +61,12 @@ const GroupChatMember = (props) => {
     });
   }, [userId]);
   // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    if (outMember && props.roomId === outMember.roomId) {
+      reload(outMember);
+    }
+  }, [outMember]);
 
   const handleClickOpen = () => {
     setOpen(true);
