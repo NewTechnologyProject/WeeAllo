@@ -2,8 +2,8 @@ import axios from "axios";
 
 // const SOCKET_URL = "ws://server-nodejs-demo.herokuapp.com/";
 // const baseApi = "http://weeallo-env.eba-xgex53xi.ap-southeast-1.elasticbeanstalk.com/api/";
-const baseApi = "http://192.168.1.13:4000/api/";
-const SOCKET_URL = "ws://192.168.1.13:3030/";
+const baseApi = "http://192.168.1.6:4000/api/";
+const SOCKET_URL = "ws://192.168.1.6:3030/";
 
 export default {
   user(url = baseApi + "user/") {

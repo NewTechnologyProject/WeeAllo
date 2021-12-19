@@ -68,6 +68,7 @@ export default function ForgotPass({ navigation }) {
   const [confirmPass, setConfirmPass] = React.useState("");
   const [errorOtp, setErrorOtp] = React.useState("");
   const [code, setCode] = React.useState("");
+  const dispatch = useDispatch();
   const [message, showMessage] = React.useState(
     !firebaseConfig || Platform.OS === "web"
       ? {
@@ -86,6 +87,7 @@ export default function ForgotPass({ navigation }) {
     : undefined;
   const [phone, setPhone] = React.useState("");
   const [phoneerror, setPhoneError] = React.useState(false);
+  const [hidePass, setHidePass] = useState(true);
   const showToastWithGravity = () => {
     ToastAndroid.showWithGravity(
       "Thay đổi mật khẩu thành công ! Đăng nhập ngay",
@@ -111,11 +113,13 @@ export default function ForgotPass({ navigation }) {
     setScreen(false);
   };
 
-  const onSubitOTP = async () => {
+  const onSubitOTP = () => {
+    console.log(phone);
+    console.log(confirmPass);
+    //  console.log("aloalo");
     const phoneNumber = phone;
-    const newpass = confirmPass;
-    console.log(phoneNumber);
-    console.log(newpass);
+    const passs = confirmPass;
+
     try {
       const credential = firebase.auth.PhoneAuthProvider.credential(
         verificationId,
@@ -125,11 +129,12 @@ export default function ForgotPass({ navigation }) {
       setErrorOtp("");
       showToastWithGravity();
       navigation.navigate("Login");
-      dispatch(actions.forgotpass(phoneNumber, newpass));
+      dispatch(actions.forgotpass(phoneNumber, passs));
     } catch (err) {
       setErrorOtp("Mã xác thực sai ! Vui lòng kiểm tra lại");
     }
   };
+
   return (
     <View style={styles.container}>
       <FirebaseRecaptchaVerifierModal
@@ -204,9 +209,11 @@ export default function ForgotPass({ navigation }) {
             {errorOtp}
           </Text>
           <Input
-            type="text"
+            // type="text"
+            ecureTextEntry={true}
             placeholder="Nhập mật khẩu mới"
             name="confirmpass"
+            secureTextEntry={hidePass ? true : false}
             onChangeText={(e) => setConfirmPass(e)}
             value={confirmPass}
             leftIcon={
@@ -215,6 +222,15 @@ export default function ForgotPass({ navigation }) {
                 type="font-awesome-5"
                 color={"#098524"}
                 style={{ paddingRight: 15 }}
+              />
+            }
+            rightIcon={
+              <Icon
+                name={hidePass ? "eye-slash" : "eye"}
+                type="font-awesome-5"
+                size={15}
+                color="grey"
+                onPress={() => setHidePass(!hidePass)}
               />
             }
           />

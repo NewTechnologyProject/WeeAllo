@@ -1,3 +1,4 @@
+import { PHONE_NUMBERS } from "expo-contacts";
 import React from "react";
 import { SectionList, StyleSheet, Text, View } from "react-native";
 
@@ -43,6 +44,9 @@ const styles = StyleSheet.create({
 export default function ForgotNewPass({ navigation }) {
   const [newPass, setNewPass] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
+  const { state } = useLocation();
+
+  const { phone } = state;
   // const initialFieldValues = {
   //   newpass : newpass,
   //   confirmPass:confirmPass,

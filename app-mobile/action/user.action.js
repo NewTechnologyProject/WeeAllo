@@ -18,6 +18,7 @@ export const ACTION_TYPES = {
   FINDUSERBYID: "FINDUSERBYID",
   UPDATEBYIDUSER: "UPDATEBYIDUSER",
   REGISTER: "REGISTER",
+  FORGOTPASS: "FORGOTPASS",
 };
 export const login = (phone, pass) => (dispatch) => {
   apiService
@@ -105,6 +106,18 @@ export const register = (userChat) => (dispatch) => {
     .then((response) => {
       dispatch({
         type: ACTION_TYPES.REGISTER,
+        payload: response.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+export const forgotpass = (phone, newpass) => (dispatch) => {
+  apiService
+    .user()
+    .forgotpass(phone, newpass)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.FORGOTPASS,
         payload: response.data,
       });
     })
