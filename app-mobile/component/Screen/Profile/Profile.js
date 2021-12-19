@@ -38,9 +38,13 @@ export default function Profile({ navigation }) {
       <Header
         statusBarProps={{ barStyle: "light-content" }}
         barStyle="light-content"
-        centerComponent={<Text>Cài đặt chung</Text>}
+        centerComponent={
+          <Text style={{ color: "#fff", fontWeight: "700" }}>
+            Cài đặt chung
+          </Text>
+        }
         containerStyle={{
-          backgroundColor: "#f2f2f2",
+          backgroundColor: "#37b24d",
           justifyContent: "space-around",
           height: 80,
         }}
@@ -56,10 +60,14 @@ export default function Profile({ navigation }) {
       />
       <Tab.Navigator
         screenOptions={{
-          tabBarLabelStyle: { fontSize: 12 },
-          tabBarActiveTintColor: "#098524",
-          tabBarPressColor: "black",
+          tabBarLabelStyle: { fontSize: 12, fontWeight: "700" },
+          tabBarActiveTintColor: "#000",
+          tabBarInactiveTintColor: "#adb5bd",
+          tabBarPressColor: "#ebfbee",
           tabBarStyle: { backgroundColor: "white" },
+          tabBarIndicatorStyle: {
+            backgroundColor: "#000",
+          },
         }}
       >
         <Tab.Screen name=" Thông tin cá nhân" component={Profile1} />

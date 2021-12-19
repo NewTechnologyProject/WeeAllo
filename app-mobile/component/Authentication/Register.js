@@ -6,6 +6,7 @@ import {
   Text,
   View,
   ToastAndroid,
+  Alert,
 } from "react-native";
 import { Avatar, Icon, Tab } from "react-native-elements";
 import { Button } from "react-native-elements/dist/buttons/Button";
@@ -74,11 +75,13 @@ export default function Register({ navigation }) {
   const [lastname, setLastname] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [phoneerror, setPhoneError] = React.useState(false);
-  const [firsterror, setFirstError] = React.useState(false);
+  const [firsterror, setFirstError] = React.useState("");
   const [lasterror, setLastError] = React.useState(false);
   const [passerror, setPassError] = React.useState(false);
   const [hidePass, setHidePass] = useState(true);
   const recaptchaVerifier = React.useRef(null);
+  const [user, setUser] = useState([]);
+  const [errors, setErrors] = useState({});
   const [verificationId, setVerificationId] = React.useState();
   const firebaseConfig = firebase.apps.length
     ? firebase.app().options
@@ -88,11 +91,18 @@ export default function Register({ navigation }) {
   const [message, showMessage] = React.useState(
     !firebaseConfig || Platform.OS === "web"
       ? {
-          text: "To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.",
-        }
+        text: "To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.",
+      }
       : undefined
   );
   const [screen, setScreen] = React.useState(true);
+  // let err = 0;
+  // user.map((user) => {
+  //   if (user.phone.toLowerCase() === fieldValues.phone.toLowerCase()) {
+  //     err = err + 1;
+  //   }
+  // });
+  // let temp = { ...errors };
   const handleSubmit = () => {
     const initialFieldValues = {
       phone: phone,
@@ -104,7 +114,7 @@ export default function Register({ navigation }) {
       createAt: null,
       updateAt: null,
       avartar:
-        "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1635056501152-user.png",
+        "https://file-upload-weeallo-02937.s3.ap-southeast-1.amazonaws.com/1639117409210-user.png",
       coverImage: null,
       status: null,
       contactList: null,
@@ -120,41 +130,51 @@ export default function Register({ navigation }) {
       /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]+$/;
     if (regfirst.test(firstname) === false) {
       setFirstError(true);
-      return false;
+    } else {
+      setFirstError(false);
     }
+
     return true;
   };
   const last = () => {
     const reglast =
       /^[A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưẠ-ỹ]+$/;
 
-    if (reglast.test(lastname) === false) {
-      setLastError(true);
-      return false;
-    }
+    if (reglast.test(lastname) === false) setLastError(true);
+    else setLastError(false);
+
     return true;
   };
   const phonee = () => {
     const regphone = /^[0]{1}\d{9}$/;
 
-    if (regphone.test(phone) === false) {
-      setPhoneError(true);
-      return false;
-    }
+    if (regphone.test(phone) === false) setPhoneError(true);
+    else setPhoneError(false);
     return true;
+
+    // if (err >= 1) {
+    //   Alert.alert(
+    //     "Thông báo!",
+    //     "Số điện thoại hoặc mật khẩu không chính xác - Vui lòng nhập lại !",
+    //     [
+    //       {
+    //         text: "Xác nhận",
+    //       },
+    //     ]
+    //   );
+    // }
   };
+
   const pass = () => {
     const regpass = /^\w{6,200}$/;
-    if (regpass.test(password) === false) {
-      setPassError(true);
-      return false;
-    }
+    if (regpass.test(password) === false) setPassError(true);
+    else setPassError(false);
+
     return true;
   };
 
   const validate = () => {
     first();
-    first1();
     last();
     phonee();
     pass();
@@ -244,11 +264,13 @@ export default function Register({ navigation }) {
               />
             }
           />
+
           <Input
             placeholder="Tên"
             name="lastname"
             onChangeText={(e) => setLastname(e)}
             value={lastname}
+            autoCorrect
             errorStyle={{ color: "red" }}
             errorMessage={lasterror ? "Tên sai định dạng" : ""}
             leftIcon={
@@ -260,11 +282,13 @@ export default function Register({ navigation }) {
               />
             }
           />
+
           <Input
             placeholder="Nhập số điện thoại"
             name="phone"
             onChangeText={(e) => setPhone(e)}
             value={phone}
+            autoFocusOnLoad={false}
             errorStyle={{ color: "red" }}
             errorMessage={phoneerror ? "Số điện thoại sai định dạng" : ""}
             leftIcon={
@@ -276,6 +300,7 @@ export default function Register({ navigation }) {
               />
             }
           />
+
           <Input
             ecureTextEntry={true}
             placeholder="Nhập mật khẩu"
@@ -283,6 +308,7 @@ export default function Register({ navigation }) {
             name="password"
             onChangeText={(e) => setPassword(e)}
             value={password}
+            autoFocusOnLoad={false}
             errorStyle={{ color: "red" }}
             errorMessage={passerror ? "Mật khẩu sai định dạng" : ""}
             leftIcon={
@@ -304,25 +330,6 @@ export default function Register({ navigation }) {
             }
           />
 
-          {/* <PasswordInputText
-            ecureTextEntry={true}
-            placeholder="Nhập mật khẩu"
-            secureTextEntry={true}
-            name="password"
-            onChangeText={(e) => setPassword(e)}
-            value={password}
-            errorStyle={{ color: "red" }}
-            errorMessage={passerror ? "Mật khẩu sai định dạng" : ""}
-            leftIcon={
-              <Icon
-                name="unlock-alt"
-                type="font-awesome-5"
-                color={"#098524"}
-                style={{ paddingRight: 15 }}
-              />
-            }
-          /> */}
-
           <Button
             title="ĐĂNG KÝ"
             type="outline"
@@ -336,8 +343,9 @@ export default function Register({ navigation }) {
             titleStyle={{
               color: "white",
             }}
-            // onPress={() => onSignInSubmit()}
-            onPress={() => sendOTP()}
+            onPress={() => onSignInSubmit()}
+          //onPress={() => sendOTP()}
+          //onKeyPress={validate()}
           />
         </View>
       ) : (
@@ -351,18 +359,18 @@ export default function Register({ navigation }) {
             onChangeText={(c) => {
               setCode(c);
             }}
-            // leftIcon={
-            //   <Icon
-            //     name="unlock-alt"
-            //     type="font-awesome-5"
-            //     color={"#098524"}
-            //     style={{ paddingRight: 15 }}
-            //   />
-            // }
-            // editable
-            // autoFocusOnLoad={false}
-            // codeInputFieldStyle={styles.underlineStyleBase}
-            // codeInputHighlightStyle={styles.underlineStyleHighLighted}
+          // leftIcon={
+          //   <Icon
+          //     name="unlock-alt"
+          //     type="font-awesome-5"
+          //     color={"#098524"}
+          //     style={{ paddingRight: 15 }}
+          //   />
+          // }
+          // editable
+          // autoFocusOnLoad={false}
+          // codeInputFieldStyle={styles.underlineStyleBase}
+          // codeInputHighlightStyle={styles.underlineStyleHighLighted}
           />
           <Text style={{ color: "red", paddingBottom: 10, paddingTop: 10 }}>
             {errorOtp}

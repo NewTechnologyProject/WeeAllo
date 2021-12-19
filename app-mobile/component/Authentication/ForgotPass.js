@@ -62,7 +62,7 @@ try {
     appId: "1:901919772342:web:24a4881f61fcacf70c2017",
     measurementId: "G-6WM7TLPPPQ",
   });
-} catch (err) {}
+} catch (err) { }
 
 export default function ForgotPass({ navigation }) {
   const [confirmPass, setConfirmPass] = React.useState("");
@@ -72,8 +72,8 @@ export default function ForgotPass({ navigation }) {
   const [message, showMessage] = React.useState(
     !firebaseConfig || Platform.OS === "web"
       ? {
-          text: "To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.",
-        }
+        text: "To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.",
+      }
       : undefined
   );
   const initialFieldValues = {
@@ -113,7 +113,7 @@ export default function ForgotPass({ navigation }) {
     setScreen(false);
   };
 
-  const onSubitOTP = () => {
+  const onSubitOTP = async () => {
     console.log(phone);
     console.log(confirmPass);
     //  console.log("aloalo");

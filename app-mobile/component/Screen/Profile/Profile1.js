@@ -93,9 +93,6 @@ export default function Profile1({ navigation }) {
     <View style={styles.container} on>
       <View>
         <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
         >
           <TouchableOpacity onPress={changeEdit}>
             <ListItem

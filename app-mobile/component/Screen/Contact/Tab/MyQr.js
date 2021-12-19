@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from 'react-native-elements';
 import ViewShot from "react-native-view-shot";
 import * as actions from "../../../../action/user.action"
+// import { RNFS } from "react-native-fs"
 // import Share from 'react-native-share';
 // import RNFS from "react-native link react-native-fs"
 export default function MyQr() {

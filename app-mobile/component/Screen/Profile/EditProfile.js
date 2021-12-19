@@ -150,8 +150,6 @@ export default function EditProfile({ navigation }) {
     }
   }, [userProfile]);
 
-  //console.log("userid", userId);
-
   const initialFieldValues = {
     firstname: firstname,
     lastname: lastname,
@@ -217,9 +215,18 @@ export default function EditProfile({ navigation }) {
       return;
     }
 
-    const result = await ImagePicker.launchCameraAsync();
+    const result = await ImagePicker.launchCameraAsync(
+      {
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.5,
+
+      }
+    );
+
     const formData = new FormData();
-    const imageUri = result.uri.replace("file:/data", "file:///data");
+    const imageUri = result.uri.replace("file:/data", "");
     const imageType = result.uri.split(".")[1];
 
     formData.append("file", {
@@ -227,23 +234,11 @@ export default function EditProfile({ navigation }) {
       type: `image/${imageType}`,
       name: `photo.${imageType}`,
     });
-
+    console.log(formData)
     if (!result.cancelled) {
       action.uploadAvatar(formData).then((response) => {
         setImage(response.data);
-        console.log(response.data);
-        //console.log(image);
       });
-      // axios
-      //   .post(
-      //     "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
-      //     formData
-      //   )
-      //   .then((response) => {
-      //     setImage(response.data);
-      //     console.log(response.data);
-      //     //console.log(image);
-      //   });
     }
   };
 
@@ -268,33 +263,12 @@ export default function EditProfile({ navigation }) {
     if (!result.cancelled) {
       action.uploadAvatar(formData).then((response) => {
         setImage(response.data);
-        console.log(response.data);
-        //console.log(image);
       });
-      // axios
-      //   .post(
-      //     "http://192.168.1.12:4000/api/storage/uploadFile?key=file",
-      //     formData
-      //   )
-      //   .then((response) => {
-      //     setImage(response.data);
-      //     //console.log(response.data);
-      //     //console.log(image);
-      //   });
     }
   };
   const backToProfile = () => {
     navigation.navigate("TabRoute");
   };
-  // function onDisable() {
-  //   if (firstname === "" && lastname === "") {
-  //     return (btnDisable = true);
-  //   } else {
-  //     return (btnDisable = false);
-  //   }
-  // }
-  console.log("userAuth", user);
-
   return (
     <>
       <Header

@@ -71,7 +71,6 @@ export default function DeviceContact({ navigation, route }) {
         if (contacts) {
             setAnimate(true);
             dispatch(actions.getJsonString(contacts, 1));
-
         }
     }
     const onRefresh = React.useCallback(() => {
