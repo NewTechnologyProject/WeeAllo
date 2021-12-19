@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Image, Icon } from "react-native-elements";
 import {
@@ -13,12 +13,18 @@ import {
 import { FlatGrid } from "react-native-super-grid";
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../../action/roomchat.action";
+import { SOCKET_URL } from "../../../../../services/api.service";
+import { io } from "socket.io-client";
+
+const URL = SOCKET_URL;
 
 const GroupMedia = ({ navigation }) => {
   const [listMedia, setListMedia] = useState([]);
   const dispatch = useDispatch();
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
   const listMessages = useSelector((state) => state.roomchat.listMessages);
+  const userId = useSelector((state) => state.user.userAuth);
+  const socket = useRef();
 
   useEffect(() => {
     if (activeRoom) {
@@ -37,6 +43,48 @@ const GroupMedia = ({ navigation }) => {
       }
     }
   }, [listMessages]);
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+  }, []);
+
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   const backToGroupInformation = () => {
     navigation.navigate("GroupInformation");

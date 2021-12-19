@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon, ListItem, Avatar, Input, Button } from "react-native-elements";
 import { TouchableOpacity, View, StyleSheet } from "react-native";
@@ -18,6 +18,10 @@ import Alert from "./Alert";
 import Spinner from "react-native-loading-spinner-overlay";
 import { color } from "react-native-elements/dist/helpers";
 import UpdateAvatar from "./UpdateAvatar";
+import { SOCKET_URL } from "../../../../../services/api.service";
+import { io } from "socket.io-client";
+
+const URL = SOCKET_URL;
 
 const GroupInformation = ({ navigation, route }) => {
   const [expanded, setExpanded] = useState(false);
@@ -27,7 +31,10 @@ const GroupInformation = ({ navigation, route }) => {
   const [roomName, setRoomName] = useState("");
   const [roomAvatar, setRoomAvatar] = useState(null);
   const [open, setOpen] = useState(false);
+  const [outMember, setOutMember] = useState(null);
+  const [newMembers, setNewMembers] = useState(null);
   const [helperText, setHelperText] = useState({ error: false, text: "" });
+  const socket = useRef();
 
   const dispatch = useDispatch();
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
@@ -37,9 +44,102 @@ const GroupInformation = ({ navigation, route }) => {
 
   useEffect(() => {
     dispatch(fetchAllMembers(activeRoom.id));
-
     dispatch(fetchAllMembersWithUserAdd(activeRoom.id));
   }, [fetchAllMembers, activeRoom.id, route.params]);
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current = io(URL);
+
+    socket.current.on("getMemberOutRoom", (data) => {
+      if (unmount) {
+        setOutMember(data);
+      }
+    });
+
+    socket.current.on("getNewMembers", (data) => {
+      const { roomId, members } = data;
+      if (unmount) {
+        setNewMembers(data);
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    socket.current.on("getUpdatedRoom", (data) => {
+      const { room, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount && room.id === activeRoom.id) {
+        dispatch({ type: "SET ACTIVE ROOM", payload: { ...room } });
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    if (outMember && activeRoom) {
+      if (outMember.roomId === activeRoom.id) {
+        dispatch(fetchAllMembers(activeRoom.id));
+        dispatch(fetchAllMembersWithUserAdd(activeRoom.id));
+
+        if (outMember.newCreator) {
+          dispatch({
+            type: "SET ACTIVE ROOM",
+            payload: { ...activeRoom, creator: outMember.newCreator },
+          });
+        }
+      }
+    }
+  }, [outMember]);
+
+  useEffect(() => {
+    if (newMembers && activeRoom) {
+      if (newMembers.roomId === activeRoom.id) {
+        dispatch(fetchAllMembers(activeRoom.id));
+        dispatch(fetchAllMembersWithUserAdd(activeRoom.id));
+      }
+    }
+  }, [newMembers]);
 
   const toggleOverlay = (item) => {
     setVisible(!visible);
@@ -117,12 +217,20 @@ const GroupInformation = ({ navigation, route }) => {
 
     console.log(newMembers, newCreator, creator);
     updateCreator(roomId, newCreator);
+
+    return newCreator;
   };
 
   const removeGroupChat = () => {
     deleteRoomChat(activeRoom.id)
       .then((response) => {
         console.log("removed");
+
+        socket.current.emit("deletedRoom", {
+          roomId: activeRoom.id,
+          members: listMembers.filter((mem) => mem.id !== Number(userId)),
+        });
+
         backToChat();
       })
       .catch((error) => {
@@ -131,16 +239,28 @@ const GroupInformation = ({ navigation, route }) => {
   };
 
   const outGroupChat = () => {
-    if (listMembers.length <= 2) {
+    let newCreator = null;
+    if (listMembers.length <= 1) {
       removeGroupChat();
     } else {
       if (Number(userId) === activeRoom.creator) {
-        changeAdmin(activeRoom.id, listMembers, activeRoom.creator);
+        newCreator = changeAdmin(
+          activeRoom.id,
+          listMembers,
+          activeRoom.creator
+        );
       }
 
       deleteUserGroup(activeRoom.id, userId)
         .then((response) => {
           console.log("out");
+
+          socket.current.emit("memberOutRoom", {
+            memberId: userId,
+            roomId: activeRoom.id,
+            newCreator: newCreator,
+          });
+
           backToChat();
         })
         .catch((error) => {
@@ -238,6 +358,11 @@ const GroupInformation = ({ navigation, route }) => {
         // reload data
         dispatch({ type: "SET ACTIVE ROOM", payload: { ...newRoom } });
         dispatch(fetchAllRoom(userId));
+
+        socket.current.emit("updatedRoom", {
+          room: newRoom,
+          members: listMembers.filter((mem) => mem.id !== userId),
+        });
       })
       .catch((error) => {
         console.log(error);

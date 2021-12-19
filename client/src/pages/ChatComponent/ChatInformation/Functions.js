@@ -50,8 +50,10 @@ const Functions = (props) => {
     const newMembers = members.filter((member) => member.id !== creator);
     const newCreator = newMembers[0].id;
 
-    console.log(newMembers, newCreator, creator);
+    // console.log(newMembers, newCreator, creator);
     updateCreator(roomId, newCreator);
+
+    return newCreator;
   };
 
   const removeGroupChat = () => {
@@ -72,11 +74,12 @@ const Functions = (props) => {
   };
 
   const outGroupChat = () => {
+    let newCreator = null;
     if (props.members.length <= 1) {
       removeGroupChat();
     } else {
       if (Number(userId) === props.creator) {
-        changeAdmin(props.roomId, props.members, props.creator);
+        newCreator = changeAdmin(props.roomId, props.members, props.creator);
       }
 
       deleteUserGroup(props.roomId, userId)
@@ -88,6 +91,7 @@ const Functions = (props) => {
           socket.current.emit("memberOutRoom", {
             memberId: userId,
             roomId: props.roomId,
+            newCreator: newCreator,
           });
         })
         .catch((error) => {

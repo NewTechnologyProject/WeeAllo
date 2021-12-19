@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon, ListItem } from "react-native-elements";
 import {
@@ -11,12 +11,18 @@ import {
 
 import { Header } from "react-native-elements/dist/header/Header";
 import * as actions from "../../../../../action/roomchat.action";
+import { SOCKET_URL } from "../../../../../services/api.service";
+import { io } from "socket.io-client";
+
+const URL = SOCKET_URL;
 
 const GroupFile = ({ navigation }) => {
   const [listFiles, setListFiles] = useState([]);
   const dispatch = useDispatch();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const activeRoom = useSelector((state) => state.roomchat.activeRoom);
+  const userId = useSelector((state) => state.user.userAuth);
+  const socket = useRef();
 
   useEffect(() => {
     if (activeRoom) {
@@ -41,6 +47,48 @@ const GroupFile = ({ navigation }) => {
       }
     }
   }, [listMessages]);
+
+  // ----------------------------------------------------------------------
+  //Real time
+  useEffect(() => {
+    socket.current = io(URL);
+  }, []);
+
+  useEffect(() => {
+    let unmount = true;
+
+    socket.current.on("getDeletedRoom", (data) => {
+      const { roomId, members } = data;
+      let user = members.find((member) => member.id === Number(userId));
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    socket.current.on("getRemovedMember", (data) => {
+      const { roomId, memberId } = data;
+      let user = memberId === Number(userId);
+      if (user && unmount) {
+        navigation.navigate("TabRoute", {
+          screen: "Tin Nhắn",
+        });
+      }
+    });
+
+    return () => {
+      unmount = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.current.emit("addUser", Number(userId));
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [userId]);
+  // ----------------------------------------------------------------------
 
   const getFileName = (str) => {
     const str1 = str.split("/")[3];

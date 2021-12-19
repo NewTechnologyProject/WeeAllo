@@ -15,7 +15,6 @@ import {
   updateInfo,
   uploadAvatar,
 } from "src/actions/roomchat.action";
-import { fetchAllRoom } from "src/actions/customer.action";
 import ModalAddMember from "./ModalAddMembers/ModalAddMember";
 import GroupChatMember from "./GroupChatMembers";
 import ImagesShow from "./ImagesShow";
@@ -43,6 +42,7 @@ export default function ChatInfomation(props) {
   const [helperText, setHelperText] = useState({ error: false, text: " " });
   const [listFiles, setListFiles] = useState({ files: [], media: [] });
   const [needLoadMembers, setNeedLoadMembers] = useState({ name: "new" });
+  const [newMembers, setNewMembers] = useState(null);
   const socket = useRef();
   const listMessages = useSelector((state) => state.roomchat.listMessages);
   const newMessage = useSelector((state) => state.message.message);
@@ -53,6 +53,10 @@ export default function ChatInfomation(props) {
   //Real time
   useEffect(() => {
     socket.current = io(URL_NODE);
+
+    socket.current.on("getNewMembers", (data) => {
+      setNewMembers(data);
+    });
   }, []);
 
   useEffect(() => {
@@ -62,6 +66,15 @@ export default function ChatInfomation(props) {
     });
   }, [userId]);
   // ----------------------------------------------------------------------
+
+  useEffect(() => {
+    if (newMembers && props.activeRoom) {
+      if (newMembers.roomId === props.activeRoom.id) {
+        getListMembers(props.activeRoom.id);
+      }
+    }
+    console.log(newMembers, props.activeRoom);
+  }, [newMembers]);
 
   const getListMembers = useCallback((roomId) => {
     fetchAllMembers(roomId)
