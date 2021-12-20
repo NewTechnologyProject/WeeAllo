@@ -105,8 +105,8 @@ export default function ChatContent({ navigation, route }) {
         user: {
           _id: arrivalMessage.userId.id,
           name: `${arrivalMessage.userId.firstname} ${arrivalMessage.userId.lastname}`,
-          avatar: arrivalMessage.userId.avatar
-            ? arrivalMessage.userId.avatar
+          avatar: arrivalMessage.userId.avartar
+            ? arrivalMessage.userId.avartar
             : "",
         },
       };
@@ -200,7 +200,7 @@ export default function ChatContent({ navigation, route }) {
               user: {
                 _id: message.userId.id,
                 name: `${message.userId.firstname} ${message.userId.lastname}`,
-                avatar: message.userId.avatar ? message.userId.avatar : "",
+                avatar: message.userId.avartar ? message.userId.avartar : "",
               },
             },
             ...prevState,
@@ -244,8 +244,8 @@ export default function ChatContent({ navigation, route }) {
           user: {
             _id: response.data.userId.id,
             name: `${response.data.userId.firstname} ${response.data.userId.lastname}`,
-            avatar: response.data.userId.avatar
-              ? response.data.userId.avatar
+            avatar: response.data.userId.avartar
+              ? response.data.userId.avartar
               : "",
           },
         };
@@ -699,9 +699,8 @@ export default function ChatContent({ navigation, route }) {
         statusBarProps={{ barStyle: "light-content" }}
         barStyle="light-content"
         centerComponent={{
-          text: `${
-            activeRoom.roomName ? activeRoom.roomName : showNameHandler()
-          }`,
+          text: `${activeRoom.roomName ? activeRoom.roomName : showNameHandler()
+            }`,
           style: { color: "#fff" },
         }}
         leftComponent={

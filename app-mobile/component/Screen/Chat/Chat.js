@@ -174,6 +174,29 @@ export default function Chat({ navigation, route }) {
     return name;
   };
 
+  //show avatar depend on group members
+  const showAvatarHandler = (roomId) => {
+    let avatar = "dummy.js";
+    if (listRooms.length > 0) {
+      const neededRoom = listRooms.find((room) => room.id === roomId);
+
+      if (
+        neededRoom &&
+        neededRoom.userGroupList &&
+        neededRoom.userGroupList.length === 2
+      ) {
+        let roomAvatar =
+          neededRoom.userGroupList[0].id === Number(userId)
+            ? neededRoom.userGroupList[1].avartar
+            : neededRoom.userGroupList[0].avartar;
+
+        avatar = roomAvatar ? roomAvatar : "dummy.js";
+      }
+    }
+
+    return avatar;
+  };
+
   const toChatContent = (room, name) => {
     dispatch({ type: "SET ACTIVE ROOM", payload: { ...room } });
     navigation.navigate("ChatContent", { room: room });
@@ -245,8 +268,12 @@ export default function Chat({ navigation, route }) {
           data={getFilteredRooms(rooms, textSearch)}
           renderItem={(item) => {
             let groupName = item.item.roomName;
+            let groupAvatar = item.item.avatar;
             if (!item.item.roomName) {
               groupName = showNameHandler(item.item.id);
+            }
+            if (!item.item.avatar) {
+              groupAvatar = showAvatarHandler(item.item.id);
             }
             return (
               <TouchableOpacity>
@@ -258,7 +285,7 @@ export default function Chat({ navigation, route }) {
                     rounded
                     size={50}
                     source={{
-                      uri: `${item.item.avatar ? item.item.avatar : "dummy"}`,
+                      uri: `${item.item.avatar ? item.item.avatar : groupAvatar}`,
                     }}
                   />
                   <ListItem.Content>

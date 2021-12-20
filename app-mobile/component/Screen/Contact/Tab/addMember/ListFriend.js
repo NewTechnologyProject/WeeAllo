@@ -84,7 +84,7 @@ const ListFriends = (props) => {
             <TouchableHighlight
               activeOpacity={0.8}
               underlayColor="#c3fae8"
-              onPress={() => {}}
+              onPress={() => { }}
             >
               <ListItem>
                 <Avatar
@@ -92,7 +92,7 @@ const ListFriends = (props) => {
                   size={50}
                   icon={{ name: "user", type: "font-awesome" }}
                   source={{
-                    uri: `${item.item.avatar ? item.item.avatar : "dummy.js"}`,
+                    uri: `${item.item.avartar ? item.item.avartar : "dummy.js"}`,
                   }}
                 />
                 <ListItem.Content>

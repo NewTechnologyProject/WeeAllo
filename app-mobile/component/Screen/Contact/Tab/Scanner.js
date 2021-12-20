@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Linking } from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import * as RNImagePicker from 'expo-image-picker'
+
 import { Button, Icon } from 'react-native-elements';
 import { Dialog } from 'react-native-elements';
 import { useIsFocused } from '@react-navigation/native';
@@ -27,6 +29,37 @@ export default function Scanner({ navigation }) {
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
+    const decode = async () => {
+        try {
+            const { status } = await RNImagePicker.requestMediaLibraryPermissionsAsync()
+            console.log(status)
+            if (status === 'granted') {
+                const result = await RNImagePicker.launchImageLibraryAsync({
+                    mediaTypes: RNImagePicker.MediaTypeOptions.All,
+                })
+                if (result && result.uri) {
+                    const results = await BarCodeScanner.scanFromURLAsync(result.uri)
+                    let regex = /^[0]{1}\d{9}$/
+                    setIsActive(true);
+                    if (regex.test(results[0].data)) {
+                        navigation.navigate('DetailContact', { idDetail: results[0].data })
+                    } else {
+                        let re = /^(https?: \/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})$/
+                        if (re.test(results[0].data)) {
+                            toggleDialog1()
+                            setLink(results[0].data)
+                        }
+                        else {
+                            Alert.alert("Kết quả tìm thấy: " + results[0].data)
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.debug(error)
+        }
+    }
+
     const handleBarCodeScanned = ({ type, data }) => {
         let regex = /^[0]{1}\d{9}$/
         setIsActive(true);
@@ -42,7 +75,6 @@ export default function Scanner({ navigation }) {
             else {
                 Alert.alert("Kết quả tìm thấy: " + data)
             }
-
         }
     };
 
@@ -54,6 +86,7 @@ export default function Scanner({ navigation }) {
                     onBarCodeScanned={isActive ? undefined : handleBarCodeScanned}
                     style={[StyleSheet.absoluteFillObject]}
                 >
+
                     <View style={styles.buttonContainer}>
                         <Icon
                             name="arrow-left"
@@ -74,10 +107,20 @@ export default function Scanner({ navigation }) {
                         </TouchableOpacity>
                     </View>
                     <View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <Icon
+                                    raised
+                                    name='image'
+                                    type='font-awesome'
+                                    color='black'
+                                    onPress={decode} />
+                                <Text style={{ color: 'white' }}>Chọn từ thư viện</Text>
+                            </View>
+                        </View>
                         {isActive && <Button
                             containerStyle={{
                                 paddingBottom: 15,
-                                paddingRight: 10,
                                 alignContent: 'center',
                                 alignItems: 'center'
                             }}

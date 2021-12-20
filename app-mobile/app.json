@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "app-mobile",
-    "slug": "app-mobile",
+    "name": "WeeAllo",
+    "slug": "WeeAllo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/image/logo.png",
@@ -26,14 +26,16 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/image/logo.png",
         "backgroundColor": "#FFFFFF"
       },
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.WRITE_CONTACTS",
+        "android.permission.READ_CONTACTS"
       ],
       "package": "weealloio.expo.client"
     },
@@ -45,6 +47,13 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos."
         }
       ]
     ]

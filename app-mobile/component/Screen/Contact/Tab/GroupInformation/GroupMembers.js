@@ -225,17 +225,17 @@ const GroupMembers = ({ navigation }) => {
                         icon={{ name: "user", type: "font-awesome" }}
                         size={50}
                         source={{
-                          uri: `${item.item.userId.avatar
-                              ? item.item.userId.avatar
-                              : "dummy.js"
+                          uri: `${item.item.userId.avartar
+                            ? item.item.userId.avartar
+                            : "dummy.js"
                             }`,
                         }}
                       />
                       <ListItem.Content>
                         <ListItem.Title>{`${item.item.userId.firstname} ${item.item.userId.lastname}`}</ListItem.Title>
                         <ListItem.Subtitle>{`${activeRoom.creator === item.item.userId.id
-                            ? "Trưởng nhóm"
-                            : `Thêm bởi ${getUserAddName(item.item)}`
+                          ? "Trưởng nhóm"
+                          : `Thêm bởi ${getUserAddName(item.item)}`
                           }`}</ListItem.Subtitle>
                       </ListItem.Content>
                     </ListItem>
